@@ -3,7 +3,7 @@
     author:		rush
     email:		
 	
-    purpose:	
+    purpose:	newtonjson的扩展
 *********************************************************************/
 using System;
 using System.Collections.Generic;

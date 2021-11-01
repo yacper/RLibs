@@ -3,7 +3,7 @@
     author:		rush
     email:		
 	
-    purpose:	
+    purpose:	对fluentftp的扩展
 *********************************************************************/
 using System;
 using System.Collections.Generic;

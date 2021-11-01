@@ -21,7 +21,7 @@ namespace RLib.Base
                minMill<=0)
                 throw new ArgumentException(string.Format("Bad Args [%0,%1]:%2", minMill, maxMill));
 
-            int delay = RMath.Random(minMill, maxMill);
+            int delay = MathEx.Random(minMill, maxMill);
             System.Threading.Thread.Sleep(delay);
         }
 

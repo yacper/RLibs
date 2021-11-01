@@ -1,4 +1,4 @@
-﻿/********************************************************************
+/********************************************************************
     created:	2017/12/7 16:02:11
     author:	rush
     email:		
@@ -10,12 +10,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NPOI.OpenXml4Net.Util;
 
 namespace RLib.Base
 {
-    public static class EnumHelper
+    public static class EnumEx
     {
+        public static bool  IsEnum(this object obj) 
+        {
+            if (obj.GetType().BaseType.FullName == "System.Enum")
+                return true;
+            else
+                return false;
+        }
+        public static bool  IsEnum(this Type t) 
+        {
+            if (t.BaseType != null &&
+				t.BaseType.FullName == "System.Enum")
+                return true;
+            else
+                return false;
+        }
+        public static bool  IsPOTEnum(this Type t)                                // 是否是0，2，4可以或的ENum
+        {
+            if (!IsEnum(t))
+                return false;
+
+            Array ar = Enum.GetValues(t);
+            foreach (var v in ar)
+            {
+                if ((int)v != 0 && 
+                    !MathEx.IsPowerOfTwo((int) v))
+                    return false;
+
+            }
+
+            return true;
+        }
+
+
         public static T Next<T>(this T e) where T : Enum
         {
             var ar = Enum.GetValues(e.GetType()).OfType<T>();
@@ -25,7 +57,7 @@ namespace RLib.Base
         {
             var ar = Enum.GetValues(e.GetType()).OfType<T>();
             var ret = ar.Next(e);
-            if (RMath.IsPowerOfTwo(Convert.ToInt32(ret)))
+            if (MathEx.IsPowerOfTwo(Convert.ToInt32(ret)))
                 return ret;
             else
                 return ret.NextPot();
@@ -39,7 +71,7 @@ namespace RLib.Base
         {
             var ar = Enum.GetValues(e.GetType()).OfType<T>();
             var ret = ar.Previous(e);
-            if (RMath.IsPowerOfTwo(Convert.ToInt32(ret)) ||
+            if (MathEx.IsPowerOfTwo(Convert.ToInt32(ret)) ||
                 Convert.ToInt32(ret) == 0)
                 return ret;
             else
@@ -49,7 +81,7 @@ namespace RLib.Base
 
         public static int? Pot(this Enum e)
         {
-            if(RMath.IsPowerOfTwo(Convert.ToInt32(e)))
+            if(MathEx.IsPowerOfTwo(Convert.ToInt32(e)))
                 return (int)Math.Log2(Convert.ToInt32(e));
 
             return null;
@@ -65,45 +97,7 @@ namespace RLib.Base
         }
 
 
-        public static bool  IsEnum(this object obj)
-        {
-            return obj.GetType().IsEnum;
-        }
-      
 
-        public static bool  IsPOTEnum(this Enum e)                               
-        {
-            if (!e.IsEnum())
-                return false;
-
-            Array ar = Enum.GetValues(e.GetType());
-            foreach (var v in ar)
-            {
-                if ((int)v != 0 && 
-                    !RMath.IsPowerOfTwo((int) v))
-                    return false;
-
-            }
-
-            return true;
-        }
-
-        public static bool  IsPOTEnum(Type t)                                // 是否是0，2，4可以或的ENum
-        {
-            if (!IsEnum(t))
-                return false;
-
-            Array ar = Enum.GetValues(t);
-            foreach (var v in ar)
-            {
-                if ((int)v != 0 && 
-                    !RMath.IsPowerOfTwo((int) v))
-                    return false;
-
-            }
-
-            return true;
-        }
 
         public static T FromString<T>(string val) where T : Enum// 打印Enum
         { 
@@ -117,10 +111,10 @@ namespace RLib.Base
                     foreach (string v in vals)
                     {
                         T o = (T)Enum.Parse(typeof(T), v);
-                        //if (ret == null)
-                        //    ret = o;
-                        //else
-                        Set(ref ret, o, true);
+                        if (ret == null)
+                            ret = o;
+                        else
+                            Set(ref ret, o, true);
                     }
                 }
                 else
@@ -164,13 +158,12 @@ namespace RLib.Base
         //    return ret;
         //}
 
-
-        public static string Tostring<T>(T val)                          // 打印Enum
+        public static string ToString<T>(this T val) where T :Enum                           // 打印Enum
         {
-            return Tostring(val.GetType(), val);
+            return ToString(val.GetType(), val);
         }
 
-        public static string Tostring(Type t, object val)                          // 打印Enum
+        public static string ToString(this Type t, object val)                          // 打印Enum
         {
             StringBuilder sb = new StringBuilder();
 
@@ -179,7 +172,7 @@ namespace RLib.Base
                 Array ar = Enum.GetValues(t);
                 foreach (var v in ar)
                 {
-                    if (RMath.IsPowerOfTwo((int) v) && // 只检查2的幂次项
+                    if (MathEx.IsPowerOfTwo((int) v) && // 只检查2的幂次项
                         ((int) v & Convert.ToInt32(val)) != 0)
                     {
                         if (sb.Length != 0)
@@ -211,7 +204,7 @@ namespace RLib.Base
             Array ar = Enum.GetValues(t);
             foreach (var v in ar)
             {
-                if (RMath.IsPowerOfTwo((int)v) && // 只检查2的幂次项
+                if (MathEx.IsPowerOfTwo((int)v) && // 只检查2的幂次项
                     ((int)v & Convert.ToInt32(val)) != 0)
                 {
                     ret.Add(v);
@@ -228,7 +221,7 @@ namespace RLib.Base
             Array ar = Enum.GetValues(t);
             foreach (var v in ar)
             {
-                if (RMath.IsPowerOfTwo((int)v))
+                if (MathEx.IsPowerOfTwo((int)v))
                 {
                     ret.Add(v);
                 }
@@ -248,7 +241,7 @@ namespace RLib.Base
 			Array ar = Enum.GetValues(t);
 			foreach(var v in ar)
 			{
-				if(RMath.IsPowerOfTwo((int)v) && // 只检查2的幂次项
+				if(MathEx.IsPowerOfTwo((int)v) && // 只检查2的幂次项
 					((int)v & Convert.ToInt32(val)) != 0)
 				{
 					if(sb.Length != 0)

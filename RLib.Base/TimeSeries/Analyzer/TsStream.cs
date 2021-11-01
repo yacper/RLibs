@@ -430,7 +430,7 @@ namespace RLib.Base
 //            get { return m_bIsVisible; }
 //            set
 //            {
-//                if (RMath.Equal(IsVisibleProperty, value))
+//                if (MathEx.Equal(IsVisibleProperty, value))
 //                    return;
 
 //                m_bIsVisible = value;
@@ -449,7 +449,7 @@ namespace RLib.Base
 //            }
 //            set
 //            {
-//                if (RMath.Equal(ColorProperty, value))
+//                if (MathEx.Equal(ColorProperty, value))
 //                    return;
 
 //                m_cColor = value;
@@ -464,7 +464,7 @@ namespace RLib.Base
 //            get { return m_eLineStyle; }
 //            set
 //            {
-//                if (RMath.Equal(LineStyleProperty, value))
+//                if (MathEx.Equal(LineStyleProperty, value))
 //                    return;
 
 //                m_eLineStyle = value;
@@ -481,7 +481,7 @@ namespace RLib.Base
 //            }
 //            set
 //            {
-//                if (RMath.Equal(LineWidthProperty, value))
+//                if (MathEx.Equal(LineWidthProperty, value))
 //                    return;
 
 //                m_nLineWidth = value;

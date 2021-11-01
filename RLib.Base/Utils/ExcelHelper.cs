@@ -53,7 +53,7 @@ namespace RLib.Base
                     cell.SetCellValue((string)o);
                 else if(o is bool)
                     cell.SetCellValue((bool)o);
-                else if(RReflector.IsNumber(o))
+                else if(o.IsNumber())
                     cell.SetCellValue((double)o);
                 else if (o is DateTime)
                     cell.SetCellValue((DateTime) o);

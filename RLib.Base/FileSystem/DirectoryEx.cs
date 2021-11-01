@@ -1,4 +1,4 @@
-﻿/********************************************************************
+/********************************************************************
     created:	2018/8/9 17:21:03
     author:		rush
     email:		
@@ -100,9 +100,8 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger.Error($"GetFilesRecursively:{dir}\n{e}");
+                throw new Exception($"GetFilesRecursively:{dir}\n{e}");
             }
-
 
             return ret;
 		}

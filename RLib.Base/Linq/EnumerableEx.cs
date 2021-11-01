@@ -138,7 +138,7 @@ namespace RLib.Base
 	        if (source.Count() == 0)
 	            return default(TSource);
 
-	        int index = RMath.Random(0, source.Count());
+	        int index = MathEx.Random(0, source.Count());
 
 	        return source.ElementAt(index);
 	    }

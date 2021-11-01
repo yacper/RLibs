@@ -1,5 +1,5 @@
-﻿/********************************************************************
-    created:	2018/11/14 11:00:15
+/********************************************************************
+    created:	2019/9/16 15:43:27
     author:		rush
     email:		
 	
@@ -9,13 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RLib.Base
 {
-    public static class AppEx
+	public static class AppEx
     {
         public static bool  IsExeRunnging(string exeName)                   // 是否exe正在运行
         {

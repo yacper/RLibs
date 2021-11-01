@@ -66,7 +66,7 @@ namespace RLib.Base
 
                 m_pValueType = value;
 
-                if (RReflector.IsNullableType(value))
+                if (value.IsNullableType())
                 {
                     Nullable = true;
                     m_pValueType = System.Nullable.GetUnderlyingType(value);
@@ -89,7 +89,7 @@ namespace RLib.Base
             get { return m_pMinVal;}
             set
             {
-                if (RMath.Equals(m_pMinVal, value))
+                if (MathEx.Equals(m_pMinVal, value))
                     return;
                     m_pMinVal = value;
                     RaisePropertyChanged("Min");
@@ -99,7 +99,7 @@ namespace RLib.Base
             get { return m_pMaxVal; }
             set
             {
-                if (RMath.Equals(m_pMaxVal, value))
+                if (MathEx.Equals(m_pMaxVal, value))
                     return;
                 m_pMaxVal = value;
                 RaisePropertyChanged("Max");
@@ -272,7 +272,7 @@ namespace RLib.Base
             }
             set
             {
-                if (RMath.Equal(Value, value))
+                if (MathEx.Equal(Value, value))
                     return;
 
                 if (m_pPI != null)

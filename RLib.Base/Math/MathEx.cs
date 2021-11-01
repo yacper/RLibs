@@ -14,7 +14,7 @@ using System.Text;
 
 namespace RLib.Base
 {
-    public static class RMath
+    public static class MathEx
     {
         public const float  Epsilon = 1e-005f;
         public const float  DoubleEpsilon = 1e-007f;
@@ -108,7 +108,7 @@ namespace RLib.Base
 		    else if (v < Math.Pow(num, 2))  // 小于m的
 		    {
 		        double v2 = v / num;
-		        if (RMath.IsIntegear(v2))
+		        if (MathEx.IsIntegear(v2))
 		            ret= v2 + "K";
 		        else
 		            ret = v.ToString();
@@ -116,7 +116,7 @@ namespace RLib.Base
 		    else // 超过m的
 		    {
 		        double v2 = v / (num*num);
-		        if (RMath.IsIntegear(v2))
+		        if (MathEx.IsIntegear(v2))
 		            ret= v2 + "m";
 		        else
 		            ret= v.ToString();

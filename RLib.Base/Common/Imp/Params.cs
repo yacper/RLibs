@@ -163,7 +163,7 @@ namespace RLib.Base
             string type = splits[0];
             string value = splits[1];
 
-            m_oValue = EnumHelper.FromString(System.Type.GetType(type), value);
+            m_oValue = EnumEx.FromString(System.Type.GetType(type), value);
         }                         // 反序列化
 
         public override string ToString { get { return m_oValue.ToString();} }

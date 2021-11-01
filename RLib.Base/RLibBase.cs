@@ -21,6 +21,5 @@ namespace RLib.Base
 
         public static FtpClient  FtpClient { get; set; }                              // ftpclient
 
-        public static LanguageManager  LanguageManager { get; set; }                              // ftpclient
     }
 }

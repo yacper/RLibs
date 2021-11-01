@@ -1,4 +1,4 @@
-﻿/********************************************************************
+/********************************************************************
     created:	2018/1/26 11:10:25
     author:	rush
     email:		
@@ -17,49 +17,6 @@ using System.Threading.Tasks;
 
 namespace RLib.Base
 {
-    //public interface IObservable
-    //{
-
-        
-    //}
-
-
-
-
-    public interface IReadonlyObservableCollection : IEnumerable, INotifyCollectionChanged, INotifyPropertyChanged
-    {
-        object              this[int index] { get; }
-        int                 Count { get; }
-
-        object              Front();
-        object              Back();
-    }
-
-    //public interface IObservableCollection : IEnumerable, INotifyCollectionChanged, INotifyPropertyChanged
-    //{
-    //    object              this[int index] { get; set; }
-    //    int                 Count { get; }
-
-    //    object              Front();
-    //    object              Back();
-    //}
-
-    public interface IReadonlyObservableCollection<T> : IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
-    {
-        T                   Front();
-        T                   Back();
-    }
-
-    public interface IObservableCollection<T>:IList<T>, INotifyCollectionChanged, INotifyPropertyChanged
-    {
-        void                AddRange(IEnumerable<T> co);
-        void                RemoveRange(IEnumerable<T> co);
-
-        T                   Front();
-        T                   Back();
-    }
-
-
     public interface IObservableDictionary<TKey, TValue> : IDictionary<TKey, TValue>,
         ICollection<KeyValuePair<TKey, TValue>>,
         IEnumerable<KeyValuePair<TKey, TValue>>,

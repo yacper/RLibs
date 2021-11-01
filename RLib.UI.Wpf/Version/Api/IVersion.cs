@@ -108,7 +108,7 @@ public class VersionDM                  // version 数据
 
 		public bool			Equals(VersionFile x, VersionFile y)
 		{
-			if (RMath.Equal(x.File, y.File))
+			if (MathEx.Equal(x.File, y.File))
 			{
 				if (x.DM.zipMd5.IsNullOrWhiteSpace() && y.DM.zipMd5.IsNullOrWhiteSpace())
 					return Md5HashEx.Equal(x.ZipMd5, y.ZipMd5);

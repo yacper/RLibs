@@ -55,10 +55,10 @@ namespace RLib.UI.Drawing
 
         public static bool      Equal(this RawColor4 a, RawColor4 b)
         {
-            if (RMath.Equal(a.A, b.A) &&
-                RMath.Equal(a.R, b.R) &&
-                RMath.Equal(a.G, b.G) &&
-                RMath.Equal(a.B, b.B) 
+            if (MathEx.Equal(a.A, b.A) &&
+                MathEx.Equal(a.R, b.R) &&
+                MathEx.Equal(a.G, b.G) &&
+                MathEx.Equal(a.B, b.B) 
             )
                 return true;
             else

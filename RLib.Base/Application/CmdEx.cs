@@ -1,4 +1,4 @@
-﻿/********************************************************************
+/********************************************************************
     created:	2019/9/16 15:43:27
     author:		rush
     email:		
@@ -8,13 +8,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RLib.Base.Utils
+namespace RLib.Base
 {
- public static class CmdUtil
+	 public static class CmdEx
     {
         /// <summary>
         /// Execute command without output under cmd.

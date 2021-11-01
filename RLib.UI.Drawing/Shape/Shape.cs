@@ -45,7 +45,7 @@ namespace RLib.Base.Shape
         public static bool  GetKB(Point p1, Point p2, out double k, out double b) // 根据2点构成的直线，求k,b  [根据Line基本公式 y= kx + b]
         {
             // 如果是垂直的 
-            if (RMath.Equal(p1.X, p2.X))
+            if (MathEx.Equal(p1.X, p2.X))
             {
                 k = double.NaN;
                 b = double.NaN;
@@ -60,14 +60,14 @@ namespace RLib.Base.Shape
 
         public static double?  GetY(Point p1, Point p2, double x)            // 2点构成的直线，给定一个x，求直线的y  [根据直线的2点式计算]
         {
-            if (RMath.Equal(p1.X, p2.X))
+            if (MathEx.Equal(p1.X, p2.X))
             {
-                if (RMath.Equal(p1.X, x))
+                if (MathEx.Equal(p1.X, x))
                     return x;
                 else
                     return null;
             }
-            else if (RMath.Equal(p1.Y, p2.Y))
+            else if (MathEx.Equal(p1.Y, p2.Y))
             {
                 return p1.Y;
             }
@@ -114,14 +114,14 @@ namespace RLib.Base.Shape
 
         public bool         IsVerticle
         {
-            get { return RMath.Equal(Start.X, End.X); }
+            get { return MathEx.Equal(Start.X, End.X); }
         }                             // 是否是垂直线
 
         public bool         IsHorizontal
         {
             get
             {
-                return RMath.Equal(Start.Y, End.Y); 
+                return MathEx.Equal(Start.Y, End.Y); 
             }
         } // 是否是横线
 
@@ -170,7 +170,7 @@ namespace RLib.Base.Shape
 
         public bool                IsCircle
         {
-            get { return RMath.Equal(RadiusX, RadiusY); }
+            get { return MathEx.Equal(RadiusX, RadiusY); }
         }
 
 

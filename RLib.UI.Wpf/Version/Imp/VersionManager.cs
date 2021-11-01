@@ -261,7 +261,7 @@ namespace RLib.Base
                             var versInfo = FileVersionInfo.GetVersionInfo(exePath);
                             String ver = versInfo.FileVersion;
 
-                            if (!RMath.Equal(ver, dm.num)) // 如果exe和dm的版本不同，说明当前版本已经过时，认为其无效
+                            if (!MathEx.Equal(ver, dm.num)) // 如果exe和dm的版本不同，说明当前版本已经过时，认为其无效
                                 return null;
                         }
                     }

@@ -84,8 +84,8 @@ namespace RLib.Base
 
         public static bool operator ==(RVector2 vector1, RVector2 vector2)
         {
-            if (RMath.Equal(vector1.X , vector2.X))
-                return RMath.Equal(vector1.Y , vector2.Y);
+            if (MathEx.Equal(vector1.X , vector2.X))
+                return MathEx.Equal(vector1.Y , vector2.Y);
 
             //if (vector1.X == vector2.X)
             //    return vector1.Y == vector2.Y;
@@ -355,8 +355,8 @@ namespace RLib.Base
         public static RVector2 Lerp(RVector2 from, RVector2 to, double t)    // //     Linearly interpolates between two vectors.
         {
             return new RVector2(
-                RMath.Lerp(from.X, to.X, t),
-                RMath.Lerp(from.Y, to.Y, t));
+                MathEx.Lerp(from.X, to.X, t),
+                MathEx.Lerp(from.Y, to.Y, t));
         }
 
 #endregion

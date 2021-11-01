@@ -69,14 +69,14 @@ namespace RLib.Base
 
         public static bool SetIfChanged(this ref double l, double r)
         {
-            if (RMath.Equal(l, r))
+            if (MathEx.Equal(l, r))
                 return false;
             l = r;
             return true;
         }
         public static bool SetIfChanged(this ref double? l, double r)
         {
-            if (RMath.Equal(l, r))
+            if (MathEx.Equal(l, r))
                 return false;
             l = r;
             return true;
@@ -127,7 +127,7 @@ namespace RLib.Base
 		    else if (v < Math.Pow(num, 2))  // 小于m的
 		    {
 		        double v2 = v / num;
-		        if (RMath.IsIntegear(v2))           // 到k
+		        if (MathEx.IsIntegear(v2))           // 到k
 		            ret= v2 + "K";
                 else if (precicion != null)
                 {
@@ -139,7 +139,7 @@ namespace RLib.Base
 		    else if (v < Math.Pow(num, 3))// 超过m的
 		    {
 		        double v2 = v / (num*num);
-		        if (RMath.IsIntegear(v2))
+		        if (MathEx.IsIntegear(v2))
 		            ret= v2 + "M";
                 else if (precicion != null)
                 {
@@ -151,7 +151,7 @@ namespace RLib.Base
             else// 超亿
             {
 		        double v2 = v / (num*num * 100);
-		        if (RMath.IsIntegear(v2))
+		        if (MathEx.IsIntegear(v2))
 		            ret= v2 + "亿";
                 else if (precicion != null)
                 {

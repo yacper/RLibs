@@ -61,7 +61,7 @@ namespace RLib.Base
         //    set
         //    {
         //        if (value == null ||
-        //            !RMath.Equal(m_pValue, value)
+        //            !MathEx.Equal(m_pValue, value)
         //            )
         //        {
         //            m_pValue = value;

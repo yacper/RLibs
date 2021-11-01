@@ -78,7 +78,7 @@ namespace RLib.Base
 #region IArea
         public override bool Contains(RVector2 pt)
         {
-            return RMath.PointInTriangle(X, Y, Z, pt);
+            return MathEx.PointInTriangle(X, Y, Z, pt);
         }
 
         public override RVector2 CenterPoint
@@ -251,19 +251,19 @@ namespace RLib.Base
         char                __ExistInsideTriangle()
         {
             char posName = 'n'; //‘n’代表没有内三角
-            if (RMath.PointInTriangle(X, Y, Z, W))
+            if (MathEx.PointInTriangle(X, Y, Z, W))
             {
                 posName = 'w';
             }
-            else if (RMath.PointInTriangle(Y, Z, W, X))
+            else if (MathEx.PointInTriangle(Y, Z, W, X))
             {
                 posName = 'x';
             }
-            else if (RMath.PointInTriangle( Z, W,X, Y))
+            else if (MathEx.PointInTriangle( Z, W,X, Y))
             {
                 posName = 'y';
             }
-            else if (RMath.PointInTriangle(X, Y, W, Z))
+            else if (MathEx.PointInTriangle(X, Y, W, Z))
             {
                 posName = 'z';
             }

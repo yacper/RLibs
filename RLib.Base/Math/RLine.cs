@@ -41,7 +41,7 @@ namespace RLib.Base
         {
             return true;            // float 精度不够
             
-            if (RMath.Equal(GetY((float)p.X), p.Y))
+            if (MathEx.Equal(GetY((float)p.X), p.Y))
                 return true;
             else
                 return false;
@@ -66,7 +66,7 @@ namespace RLib.Base
             }
 
 
-            if (RMath.Equal(K, other.K))  // 斜率相同，无交点
+            if (MathEx.Equal(K, other.K))  // 斜率相同，无交点
                 return null;
 
             ret.X = (other.B - B)/(K - other.K);
@@ -82,7 +82,7 @@ namespace RLib.Base
             if(IsXVerticle)
                 return new RLine(0, (float)p.Y);
 
-            if (RMath.Equal(K, 0f))
+            if (MathEx.Equal(K, 0f))
             {
                 return new RLine((float)p.X);
             }
@@ -129,7 +129,7 @@ namespace RLib.Base
         }
         public             RLine(RVector2 a, RVector2 b)                   // 2点确定一直线
         {
-            if (RMath.Equal(a.X, b.X))
+            if (MathEx.Equal(a.X, b.X))
                 X = (float)a.X;
             else
             {

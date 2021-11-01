@@ -454,7 +454,7 @@ namespace RLib.Base
             get { return m_strLabel; }
             set
             {
-                if (RMath.Equal(LabelProperty, value))
+                if (MathEx.Equal(LabelProperty, value))
                     return;
 
                 m_strLabel = value;
@@ -471,7 +471,7 @@ namespace RLib.Base
             get { return m_bIsVisible; }
             set
             {
-                if (RMath.Equal(IsVisibleProperty, value))
+                if (MathEx.Equal(IsVisibleProperty, value))
                     return;
 
                 m_bIsVisible = value;
@@ -490,7 +490,7 @@ namespace RLib.Base
             }
             set
             {
-                if (RMath.Equal(ColorProperty, value))
+                if (MathEx.Equal(ColorProperty, value))
                     return;
 
                 m_cColor = value;
@@ -505,7 +505,7 @@ namespace RLib.Base
             get { return m_eLineStyle; }
             set
             {
-                if (RMath.Equal(LineStyleProperty, value))
+                if (MathEx.Equal(LineStyleProperty, value))
                     return;
 
                 m_eLineStyle = value;
@@ -522,7 +522,7 @@ namespace RLib.Base
             }
             set
             {
-                if (RMath.Equal(LineWidthProperty, value))
+                if (MathEx.Equal(LineWidthProperty, value))
                     return;
 
                 m_nLineWidth = value;
@@ -536,12 +536,12 @@ namespace RLib.Base
 
         public virtual T    Min(int from, int to)                           // 获取最大
         {
-            return RMath.Min(this, from, to);
+            return MathEx.Min(this, from, to);
         }
 
         public virtual T    Max(int from, int to)                           // 获取最小
         {
-            return RMath.Max(this, from, to);
+            return MathEx.Max(this, from, to);
         }
 
         public virtual T    Avg(int from, int to)                           // 平均值
@@ -705,12 +705,12 @@ namespace RLib.Base
 
         public override float Avg(int from, int to)                           // 平均值
         {
-            return RMath.Avg(this, from, to);
+            return MathEx.Avg(this, from, to);
         }
 
         public override float Sum(int from, int to)                           // 总共
         {
-            return RMath.Sum(this, from, to);
+            return MathEx.Sum(this, from, to);
         }
 
 #region C&D
@@ -728,12 +728,12 @@ namespace RLib.Base
     {
         public override double Avg(int from, int to)                           // 平均值
         {
-            return RMath.Avg(this, from, to);
+            return MathEx.Avg(this, from, to);
         }
 
         public override double Sum(int from, int to)                           // 总共
         {
-            return RMath.Sum(this, from, to);
+            return MathEx.Sum(this, from, to);
         }
 
 #region C&D

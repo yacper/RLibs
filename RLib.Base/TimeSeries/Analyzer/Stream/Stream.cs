@@ -555,7 +555,7 @@
 //            get { return m_strLabel; }
 //            set
 //            {
-//                if (RMath.Equal(Label, value))
+//                if (MathEx.Equal(Label, value))
 //                    return;
 
 //                m_strLabel = value;
@@ -572,7 +572,7 @@
 //            get { return m_bIsVisible; }
 //            set
 //            {
-//                if (RMath.Equal(IsVisible, value))
+//                if (MathEx.Equal(IsVisible, value))
 //                    return;
 
 //                m_bIsVisible = value;
@@ -593,7 +593,7 @@
 //            }
 //            set
 //            {
-//                if (RMath.Equal(Color, value))
+//                if (MathEx.Equal(Color, value))
 //                    return;
 
 //                m_cColor = value;
@@ -650,7 +650,7 @@
 //            get { return m_eLineStyle; }
 //            set
 //            {
-//                if (RMath.Equal(LineStyle, value))
+//                if (MathEx.Equal(LineStyle, value))
 //                    return;
 
 //                m_eLineStyle = value;
@@ -667,7 +667,7 @@
 //            }
 //            set
 //            {
-//                if (RMath.Equal(LineWidth, value))
+//                if (MathEx.Equal(LineWidth, value))
 //                    return;
 
 //                m_nLineWidth = value;
@@ -693,13 +693,13 @@
 
 //        public virtual T    Min(int from, int to)                           // 获取最大
 //        {
-//            //return RMath.Min(this, from, to);
+//            //return MathEx.Min(this, from, to);
 //            throw new NotImplementedException();
 //        }
 
 //        public virtual T    Max(int from, int to)                           // 获取最小
 //        {
-//            //return RMath.Max(this, from, to);
+//            //return MathEx.Max(this, from, to);
 //            throw new NotImplementedException();
 //        }
 
@@ -869,21 +869,21 @@
 
 //        public override float Min(int from, int to) // 获取最大
 //        {
-//            return RMath.Min(this, from, to);
+//            return MathEx.Min(this, from, to);
 //        }
 
 //        public override float Max(int from, int to) // 获取最小
 //        {
-//            return RMath.Max(this, from, to);
+//            return MathEx.Max(this, from, to);
 //        }
 //        public override float Avg(int from, int to)                           // 平均值
 //        {
-//            return RMath.Avg(this, from, to);
+//            return MathEx.Avg(this, from, to);
 //        }
 
 //        public override float Sum(int from, int to)                           // 总共
 //        {
-//            return RMath.Sum(this, from, to);
+//            return MathEx.Sum(this, from, to);
 //        }
 
 //#region C&D
@@ -904,12 +904,12 @@
 
 //        public override double Avg(int from, int to)                           // 平均值
 //        {
-//            return RMath.Avg(this, from, to);
+//            return MathEx.Avg(this, from, to);
 //        }
 
 //        public override double Sum(int from, int to)                           // 总共
 //        {
-//            return RMath.Sum(this, from, to);
+//            return MathEx.Sum(this, from, to);
 //        }
 
 //#region C&D

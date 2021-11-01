@@ -86,7 +86,7 @@ namespace RLib.Base
         }
         public bool         Equals(RColor other)
         {
-            return (RMath.Equal(ToArgb(), other.ToArgb()));
+            return (MathEx.Equal(ToArgb(), other.ToArgb()));
         }
 
         public static RColor FromObject(object value) //     
@@ -281,10 +281,10 @@ namespace RLib.Base
         public RColor(int a, int r, int g, int b)
         {
             System.Diagnostics.Debug.Assert(
-                RMath.IsBetween(a, 0, 255) &&
-                RMath.IsBetween(r, 0, 255) &&
-                RMath.IsBetween(g, 0, 255) &&
-                RMath.IsBetween(b, 0, 255) 
+                MathEx.IsBetween(a, 0, 255) &&
+                MathEx.IsBetween(r, 0, 255) &&
+                MathEx.IsBetween(g, 0, 255) &&
+                MathEx.IsBetween(b, 0, 255) 
                 );
 
             this = FromArgb((byte)a, (byte)r, (byte)g, (byte)b);

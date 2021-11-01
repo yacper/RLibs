@@ -404,7 +404,7 @@ namespace RLib.Base
 
             if (info.PropertyType.BaseType.FullName == "System.Enum") // enum 必须单独出来
             {
-                cell.SetCellValue(EnumHelper.Tostring(info.GetValue(o)));   // 写enum的string表示
+                cell.SetCellValue(EnumEx.ToString(info.PropertyType, info.GetValue(o)));   // 写enum的string表示
             }
             else
             {

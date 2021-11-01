@@ -86,11 +86,11 @@ namespace DataModel
         //{
         //    if (Op < ECompareOp.Between)
         //    {
-        //        return EnumHelper.Tostring(Op) +" " + Left;
+        //        return EnumEx.Tostring(Op) +" " + Left;
         //    }
         //    else
         //    {
-        //        return Left + " " + EnumHelper.Tostring(Op) + " " + Right;
+        //        return Left + " " + EnumEx.Tostring(Op) + " " + Right;
         //    }
         //}
 
@@ -98,11 +98,11 @@ namespace DataModel
         {
             if (Op < ECompareOp.Between)
             {
-                return EnumHelper.Tostring(Op) +" " + Left*100 +"%";
+                return EnumEx.ToString(Op) +" " + Left*100 +"%";
             }
             else
             {
-                return Left*100 + "% " + EnumHelper.Tostring(Op) + " " + Right*100+"%";
+                return Left*100 + "% " + EnumEx.ToString(Op) + " " + Right*100+"%";
             }
         }
 
@@ -127,12 +127,12 @@ namespace DataModel
 
             if ((object) l != null)
             {
-                if (l.Op == r.Op && RMath.Equal(l.Left, r.Left))
+                if (l.Op == r.Op && MathEx.Equal(l.Left, r.Left))
                 {
                     if (l.HasRight == r.HasRight)
                     {
                         if (l.HasRight)
-                            return RMath.Equal(l.Right, r.Right);
+                            return MathEx.Equal(l.Right, r.Right);
                         else
                             return true;
                     }
@@ -154,10 +154,10 @@ namespace DataModel
             switch (Op)
             {
                     case ECompareOp.Equal:
-                        return RMath.Equal(Left, Right);
+                        return MathEx.Equal(Left, Right);
                     break;
                     case ECompareOp.NotEqual:
-                        return !RMath.Equal(Left, Right);
+                        return !MathEx.Equal(Left, Right);
                     break;
                     case ECompareOp.Greater:
                         return val > Left;
@@ -190,13 +190,13 @@ namespace DataModel
             string[] strs = str.Split(' ');
             if (strs.Length == 2)
             {
-                Op = EnumHelper.FromString<DataModel.ECompareOp>(strs[0]);
+                Op = EnumEx.FromString<DataModel.ECompareOp>(strs[0]);
                 Left = Convert.ToDouble(strs[1]);
             }
             else if (strs.Length == 3)
             {
                 Left = Convert.ToDouble(strs[0]);
-                Op = EnumHelper.FromString<DataModel.ECompareOp>(strs[1]);
+                Op = EnumEx.FromString<DataModel.ECompareOp>(strs[1]);
                 Right = Convert.ToDouble(strs[2]);
             }
         }
@@ -263,11 +263,11 @@ namespace DataModel
         //            {
         //                if (op < ECompareOp.Between)
         //                {
-        //                    return EnumHelper.Tostring(op) + " " + Left;
+        //                    return EnumEx.Tostring(op) + " " + Left;
         //                }
         //                else
         //                {
-        //                    return Left + " " + EnumHelper.Tostring(op) + " " + Right;
+        //                    return Left + " " + EnumEx.Tostring(op) + " " + Right;
         //                }
         //            }
         //        case ETimeRange.Span:

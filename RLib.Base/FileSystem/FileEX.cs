@@ -1,4 +1,4 @@
-﻿/********************************************************************
+/********************************************************************
     created:	2018/8/10 17:23:51
     author:		rush
     email:		
@@ -109,10 +109,8 @@ namespace RLib.Base
             }
             catch (Exception e)
 	        {
-                RLibBase.Logger.Debug($"NonBlockReadAll{path}:{e}");
+                throw new Exception($"NonBlockReadAll:{path}:{e}");
 	        }
-
-	        return null;
 	    }
 
 

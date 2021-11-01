@@ -133,7 +133,7 @@ namespace RLib.Base
 
                     // 如果是默认值，设置def
                     if (p.DefValue != null &&
-                       object.Equals(p.Value, RReflector.GetDefaultValue(p.ValueType)))
+                       object.Equals(p.Value, p.ValueType.GetDefaultValue()))
                     {
                         p.Value = p.DefValue;
                     }

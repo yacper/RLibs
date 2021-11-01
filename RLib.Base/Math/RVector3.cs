@@ -28,9 +28,9 @@ namespace RLib.Base
         }
         public bool         Equals(RVector3 other)
         {
-            return (RMath.Equal(X, other.X) && 
-                RMath.Equal(Y, other.Y) &&
-                RMath.Equal(Z, other.Z)
+            return (MathEx.Equal(X, other.X) && 
+                MathEx.Equal(Y, other.Y) &&
+                MathEx.Equal(Z, other.Z)
                 );
         }
 
@@ -129,9 +129,9 @@ namespace RLib.Base
         }
         public static bool operator ==(RVector3 lhs, RVector3 rhs)
         {
-            if (RMath.Equal(lhs.X, rhs.X) &&
-                RMath.Equal(lhs.Y, rhs.Y) &&
-                RMath.Equal(lhs.Z, rhs.Z)
+            if (MathEx.Equal(lhs.X, rhs.X) &&
+                MathEx.Equal(lhs.Y, rhs.Y) &&
+                MathEx.Equal(lhs.Z, rhs.Z)
                 )
                 return true;
             else
@@ -204,9 +204,9 @@ namespace RLib.Base
         public static RVector3 Lerp(RVector3 from, RVector3 to, float t)
         {
             return new RVector3(
-                RMath.Lerp(from.X, to.X, t),
-                RMath.Lerp(from.Y, to.Y, t),
-                RMath.Lerp(from.Z, to.Z, t)
+                MathEx.Lerp(from.X, to.X, t),
+                MathEx.Lerp(from.Y, to.Y, t),
+                MathEx.Lerp(from.Z, to.Z, t)
                 );
         }
      

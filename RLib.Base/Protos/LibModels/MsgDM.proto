@@ -1,0 +1,61 @@
+syntax = "proto2";
+import "Protos/CommonDm.proto";
+import "Protos/LibModels/AccountDM.proto";
+package  DataModel;
+
+enum EMsgType
+{
+    AnyType         = 0;            
+    Notification    = 1;             // 通知 泛指服务器端发到客户端的通知
+    Calendar        = 2;            // 日历事件
+    Local			= 4;            // 本地事件
+
+	// 严重程度
+	Info			= 128;			// 
+	Warn			= 256;			// 
+	Error			= 512;			// 
+}
+
+//enum EMsgBroadcastObject
+//{
+//    All             = 1;            // 所有人
+//    Online          = 2;            // 在线所有人
+//}
+
+
+message MsgDM									//账户数据模型
+{
+	required string			ID				= 1;		//ID
+    required EMsgType      type			= 2;
+    required int64          time			= 3;
+
+    required bool           read			= 5;        // 是否已读
+
+    required SimpleAccountDM sAccountCascade = 6;
+//    required string         fromAccName     = 7;
+	
+
+    required string         title			= 10;
+    optional string         content			= 11;
+
+    optional MsgLinkDM     linkCascade		= 15;
+}
+
+message MsgLinkDM									//代表一个网页链接
+{
+	required string	url		= 1;			// URl
+	optional string urlPic	= 2;			// pic 也是URl表示
+	required string	desc	= 3;
+}
+
+
+message MsgInfo			                // 推送消息
+{
+	repeated MsgDM          infos = 1;
+
+	enum ProtoModID		{ ModID = 2; }
+	enum ProtoFunID		{ FunID = 1; }
+	enum ProtoRouteDest { Route = 0; }
+}
+
+

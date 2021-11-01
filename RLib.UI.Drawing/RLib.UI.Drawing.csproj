@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net5.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon />
+		<OutputType>Library</OutputType>
+		<StartupObject />
+		<Platforms>AnyCPU;x64</Platforms>
+	</PropertyGroup>
+
+
+	<ItemGroup>
+		
+		<PackageReference Include="Google.Protobuf" Version="3.17.3" />
+	
+		<PackageReference Include="log4net" Version="2.0.12" />
+
+		<PackageReference Include="SharpDX" version="4.2.0"/>
+		<PackageReference Include="SharpDX.D3DCompiler" version="4.2.0"  />
+		<PackageReference Include="SharpDX.Direct2D1" version="4.2.0"  />
+		<PackageReference Include="SharpDX.Direct3D11" version="4.2.0" />
+		<PackageReference Include="SharpDX.Direct3D9" version="4.2.0"  />
+		<PackageReference Include="SharpDX.DXGI" version="4.2.0"  />
+		<PackageReference Include="SharpDX.Mathematics" version="4.2.0"  />
+
+	</ItemGroup>
+
+
+	<ItemGroup>
+	  <ProjectReference Include="..\RLib.Base\RLib.Base.csproj" />
+
+	</ItemGroup>
+
+
+
+</Project>

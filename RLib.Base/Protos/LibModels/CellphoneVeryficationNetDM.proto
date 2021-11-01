@@ -1,0 +1,20 @@
+/********************************************************************
+    created:	2018/8/17 15:40:52
+    author:		rush
+    email:		
+	
+    purpose:	仅仅是发送一条请求verify
+*********************************************************************/
+syntax = "proto2";
+
+package  DataModel;
+
+
+message VerifyPhoneReq				//账户注册请求
+{
+	required string		phone = 1;		//帐号信息
+
+	enum ProtoModID		{ ModID = 11; }
+	enum ProtoFunID		{ FunID = 1; }
+	enum ProtoRouteDest { Route = 0; }
+}

@@ -1,0 +1,240 @@
+/********************************************************************
+    created:	2016/8/18 11:44:52
+    author:		rush
+    email:		
+	
+    purpose:	
+*********************************************************************/
+syntax = "proto2";
+package DataModel;
+
+import "google/protobuf/timestamp.proto";
+import "Protos/CommonDm.proto";
+import "Protos/Neo/NeoCommon.proto";
+
+
+
+enum EExchange
+{
+    EExchange_Unknown   = 0;
+    SHEX                = 1; 
+    SZEX                = 2; 
+
+    HKEX                = 4; 
+
+    NYSE                = 8; 
+    AMEX                = 16; 
+    NASDAQ              = 32;
+
+    // 中国期货
+    CFFEX               = 256;      //中国金融期货交易所
+	ZCE                 = 512;      // 郑州商品交易所
+	SHFE                = 1024;     //上海期货交易所
+	DCE                 = 2048;     //大连商品交易所
+	INE                 = 4096;     //上期能源
+
+    FXCM                = 16384;      
+
+//    CNStock             = 3;
+//    HKStock             = 4;        //
+//    USStock             = 56;
+}
+
+message  ExchangeDM
+{
+    required string             Id = 1;                                     // guid
+    required EExchange          Code = 2;
+
+    optional string             Name = 11;
+    optional ECountry           Country= 13;
+    optional ECurrency          Currency= 14;
+}
+
+enum EExchangeSector      // 交易所子版块
+{
+    EExchangeSector_Unknown             = 0; //            
+    EExchangeSector_Main                = 1; // 主板          
+    EExchangeSector_CY                  = 2; // 创业板
+    EExchangeSector_ZX                  = 4; // 中小板
+    EExchangeSector_KC                  = 8; // 科创板
+}
+
+enum ESecurityType
+{
+    ESecurityType_Unknown                = 0;
+    Stock               = 1;            // 股票
+    Index               = 2;            // 指数
+    Future              = 4;            // 期货
+    Option              = 8;            // 期权
+    Forex               = 16;           // 外汇
+    Spot                = 32;           // 现货
+
+    REIT                = 512;            // REIT
+    Wrt                 = 1024;         // warrent
+    Etf                 = 2048;         // etf
+    ClosedEndFund       = 4196;         // 封闭式基金
+    ADR                 = 8192;         // ADR
+    NYRS                = 16384;        // Nyrs
+    Unit                = 32768;       // 空头公司
+    Mlp                 = 65536;       // 
+    LtdPart             = 131072;       // 
+    RoyaltyTrst         = 262144;       // 
+    Bond                = 524288;      
+    MutualFund          = 1048576;
+    PreferredShare      = 2097152;
+    PreferredStock      = 4194304;
+}
+
+enum ESubSecurityType
+{
+     ///  现货分类
+    ESubSecurityType_Unknown                = 0;
+    SpotForex           = 1;
+    SpotIndices         = 2;
+    SpotCommodity       = 3;
+    SpotTreasury        = 4;
+    SpotBullion         = 5;
+    SpotShares          = 6;
+    SpotFXIndex         = 7;
+    SpotCFDShares       = 8;
+    SpotCrypto          = 9; 
+
+    // 期货分类
+    FutuBlackMetal      = 21;   //黑色金属
+    FutuNonFerrous      = 22;   //有色金属
+    FutuPrecious        = 23;   //贵金属
+    FutuEnergy          = 24;   //能源化工
+    FutuCoal            = 25;   //煤炭
+    FutuFarm            = 26;   //农产品
+    FutuGrease          = 27;   //油脂油料
+    FutuFinancial       = 28;   //金融
+
+}
+
+//message SecurityDM 
+//{
+//    required uint64              Id = 1;
+//    optional string              Ric = 2;
+//
+//    required string              Code = 10;
+//    required string              Name = 11;
+//    optional string              Description = 12;
+//    required EExchange           Exchange = 13;
+//    optional EExchangeSector     ExchangeSector = 14;
+//    required ESecurityType       SecurityType = 15;
+//    optional ESubSecurityType    SubSecurityType = 16;
+//    optional ECurrency           Currency= 17;
+//    optional bool                Delete = 18;                           // 软删除标志
+//}
+
+
+message SymbolDM 
+{
+    required string              Id = 1;
+    optional string              Ric = 2;
+
+    required string              Code = 10;
+    required string              Name = 11;
+    optional string              Desc    = 12;
+
+    required ESecurityType       SecurityType = 20;
+    optional ESubSecurityType    SubSecurityType = 21;
+
+    required EExchange           Exchange = 25;
+    optional EExchangeSector     ExchangeSector = 26;
+    required ECurrency           Currency= 27;
+
+    optional double             PointSize = 30;					            // 点差
+    optional double             LotSize = 31;                               // 每手
+    optional double             LimitRate = 32;                             // 涨跌幅限制
+    optional double             MarginRate = 33;                            // 保障金率
+    optional string             MarketTimeId = 35;                       // 交易时间
+
+    optional google.protobuf.Timestamp ListDate =41;                // 上市日
+    optional google.protobuf.Timestamp DelistDate =42;              // 下市日
+
+    /// future
+    optional string             FutureContractId=51;
+
+}
+
+
+message FutureContractDM
+{
+    required string              Id = 1;
+
+    required string              Code = 10;
+    required string              Name = 11;
+    optional string              Desc    = 12;
+    optional ESubSecurityType    SubSecurityType=13;
+
+    required EExchange          Exchange =15;       //
+    required double             LotSize =16;       //
+    required double             PointSize =17;       //
+
+    optional double             LimitRate = 32;                             // 涨跌幅限制
+    optional double             MarginRate = 33;                            // 保障金率
+    optional string             MarketTimeId = 35;                          // 交易时间
+
+    optional int32              LastTradeDay = 40;                         // 最后交易日
+    repeated int32              SettlementMonths = 41;                       // 交割月份
+}
+
+message FundOwnershipDM
+{
+    required uint64     Id = 1;
+    required uint64     SecurityId = 2;
+    optional string     Symbol =3;
+
+    optional string     Name =4;
+    optional double     Share =5;
+    optional double     Change = 6;
+
+    optional google.protobuf.Timestamp FilingDate =7;
+
+    optional double PortfolioPercent = 8;
+}
+
+//message InsiderTransactionDM
+//{
+//    required uint64     Id = 1;
+//    required uint64     SecurityId = 2;
+//    optional string     Symbol =3;
+//
+//    required string     Name = 5;
+//    optional double     Share =6;
+//    optional double     Change = 7;
+//
+//    optional google.protobuf.Timestamp FilingDate =8;
+//
+//    optional google.protobuf.Timestamp TransactionDate =9;
+//    optional string     TransactionCode =12;
+//    optional double     TransactionPrice =13;
+//}
+
+
+message DividendDM
+{
+    required uint64     Id = 1;
+    required uint64     SecurityId = 2;
+    optional string     Symbol =3;
+
+    optional google.protobuf.Timestamp Date = 6;
+    optional ECurrency  Currency =7;
+    optional double     Amount =8;
+    optional double     AdjustedAmount =9;
+    optional google.protobuf.Timestamp PayDate =10;
+    optional google.protobuf.Timestamp RecordDate =11;
+    optional google.protobuf.Timestamp DeclarationDate =12;
+}
+
+message IndexComponentDM
+{
+    required uint64     Id = 1;
+    required uint64     SecurityId = 2;
+    optional string     Symbol =3;
+
+    optional int64     Key =5;
+    required uint64     ComponentSecurityId =6;
+    optional string     ComponentSymbol =7;
+}

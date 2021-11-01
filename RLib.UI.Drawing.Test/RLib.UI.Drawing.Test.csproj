@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ctp.png" />
+    <None Remove="Db.png" />
+    <None Remove="File.png" />
+    <None Remove="futu.png" />
+    <None Remove="fxcm.png" />
+    <None Remove="Snowball.png" />
+    <None Remove="Yahoo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RLib.UI.Drawing\RLib.UI.Drawing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ctp.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+    <Resource Include="Db.png" />
+    <Resource Include="File.png" />
+    <Resource Include="futu.png" />
+    <Resource Include="fxcm.png" />
+    <Resource Include="Snowball.png" />
+    <Resource Include="Yahoo.png" />
+  </ItemGroup>
+
+</Project>

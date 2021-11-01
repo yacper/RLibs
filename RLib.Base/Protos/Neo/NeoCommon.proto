@@ -1,0 +1,381 @@
+/********************************************************************
+    created:	2016/8/18 11:44:52
+    author:		rush
+    email:		
+	
+    purpose:	
+*********************************************************************/
+syntax = "proto2";
+
+package DataModel;
+import "google/protobuf/duration.proto";
+import "Protos/CommonDm.proto";
+
+enum ETimeFrame
+{
+	ETimeFrame_None		= 0;
+    t1			= 1;			// 一个tick
+	
+    m1			= 2;			// 1分钟bar
+    m3			= 4;			// 3分钟bar
+    m5			= 8;			// 5分钟bar
+    m15			= 16;			// 15分钟bar
+    m30			= 32;			// 15分钟bar
+
+    H1			= 64;			// 1小时
+//    H2			= 128;			// 2小时
+    H4			= 256;			// 4小时
+
+	Day			= 1024;
+
+    Week		= 2048;			// 1周
+
+    Month		= 4096;			// 1月
+
+    Year		= 8192;			// 年
+
+    Minutes     = 62;           // 所有分钟
+    Hours       = 448;          // 所有小时
+    AllTF       = 15871;         // 所有tf
+}
+
+enum ETradingSessionType
+{
+    PreAuction  = 1;           // 盘前竞价
+    Daytime     = 2;           // 日盘   // 比如美股9:30-16:00
+    Forenoon    = 8;           // 上午盘
+    Afternoon   = 16;          // 下午盘
+    Night       = 32;          // 夜盘
+    AfterAuction  = 64;        // 盘后竞价
+
+}
+
+message TradingSessionDm
+{ 
+    required ETradingSessionType Type= 1;       // 类型
+
+    required EWeek  StartDayOfWeek = 2;
+    required string StartTime  = 3;
+
+    required EWeek  EndDayOfWeek = 4;
+    required string EndTime  = 5;
+
+}
+
+message DaySessionDm
+{ 
+    required EWeek MainDayOfWeek = 1;
+
+    repeated TradingSessionDm Sessions =2;
+}
+
+message MarketTimeDm
+{
+    required string Id =1;
+    optional string Name =2;
+    optional string Desc =3;
+
+    optional int32  TimeZone =4;
+
+    repeated DaySessionDm DaySessions =5;
+}
+
+enum ESex
+{
+    ESex_Unknow = 0;
+    Male = 1;
+    Female =2;
+}
+
+enum ECountry
+{
+    ECountry_Unknown    = 0;
+    CN                  = 1; 
+    Hk                  = 2; 
+    TW                  = 4; 
+    US                  = 8; 
+}
+
+enum EImpact			// 影响类型
+{
+	NoneImpact  = 1;
+	LowImpact	= 2;
+	MedImpact	= 4;
+	HighImpact	= 8;
+	AllImpact   = 15;
+}
+
+enum EEconomicCEType
+{
+	Growth			= 1;
+	Inflation		= 2;
+	Employment		= 4;
+	CentralBank		= 8;
+	Bonds			= 16;
+	Housing			= 32;
+	ConsumerSurveys = 64;
+	BusinessSurveys = 128;
+	Speeches		= 256;
+	Misc			= 512;
+	CalendarEventTypeAll = 1023;
+}
+
+enum ECurrency
+{
+	PLY				= 0;				// 虚拟币
+	AUD				= 1;
+	CAD				= 2;
+	CHF				= 4;
+	CNY				= 8;
+	EUR				= 16;
+	GBP				= 32;
+	JPY				= 64;
+	NZD				= 128;
+	USD				= 256;
+	HKD				= 512;
+	CalendarCurrencyAll = 1023;
+}
+
+message TimeValueDM
+{
+	required int64		Time			= 1;
+    required double		Value			= 2;
+
+	optional int64		LastTime		= 3;			// 上一个bar的时间，如果不填说明没有，就是第一个bar
+}
+
+//message TickDM
+//{
+//	required int64		Time			= 1;
+//    required double		Value			= 2;
+//    required int64		Volume	        = 3;
+//
+//	optional int64		LastTime		= 4;			// 上一个bar的时间，如果不填说明没有，就是第一个bar
+//}
+
+
+message OfferDM		// 一个报价
+{
+	required uint64		ID			= 1;		// Offer 报价必须是连续的，否则就说明有遗漏
+	required string		Instrument	= 2;
+	required int64		DateTime	= 3;
+    required double		Bid			= 4;
+    required double		Ask			= 5;
+}
+
+
+//message BarDM		
+//{
+//	required int64		Time	= 1;
+//
+//    required double		Open	= 2;
+//    required double		High	= 3;
+//    required double		Low		= 4;
+//    required double		Close	= 5;
+//       
+//    required double		Volume	= 6;
+//}
+
+message ForexBarDM		
+{
+	required int64		Time		= 1;
+
+    required double		AskOpen		= 2;
+    required double		AskHigh		= 3;
+    required double		AskLow		= 4;
+    required double		AskClose	= 5;
+
+    required double		BidOpen		= 6;
+    required double		BidHigh		= 7;
+    required double		BidLow		= 8;
+    required double		BidClose	= 9;
+       
+    required double		Volume		= 10;
+}
+
+enum ECalendarEvent      // 事件类型
+{
+    Economic            =   1;              // 经济数据
+    Earnings            =   2;              // 财报
+    Dividend            =   4;              // 分红/除息
+    IPO                 =   8;              // 新股
+    CompanyHeadline     =   16;             // 公司要闻
+}
+
+message CalendarEventDM
+{
+//	required int64		dataTimeTicks		= 1;
+	required string		dateTm		= 1;
+	required uint64		eventID				= 2;
+    required ECalendarEvent type            = 3;
+    required string		name				= 4;
+	required int64		ceGenreIndex		= 5;
+    required EImpact	impact				= 6;
+	required string		extra				= 7;
+	optional string		actual				= 8;
+	optional string		forecast			= 9;
+	optional string		previous			= 10;
+}
+
+enum EEconomicCEValueType
+{
+	CEVT_None	    = 0;			// 无数据事件
+	CEVT_Numeric	= 1;			// 普通计数
+	CEVT_Percentage = 2;			// 分数
+	CEVT_Pair		= 3;			// 组队
+}
+
+message EconomicCEGenreDM
+{
+	required int64		index				= 1;
+	required ECurrency  currency		    = 2;
+	required EImpact	usualImpact			= 3;		// 通常的impact
+    required EEconomicCEType	type		= 4;
+	required string		name				= 5;
+	required EEconomicCEValueType valueType = 6;
+
+	optional string		source				= 7;
+	optional string		sourceWebsite		= 8;
+	optional string		latestWebsite		= 9;
+	optional string		measures			= 10;
+	optional string		usualEffect			= 11;
+	optional string		frequency			= 12;
+	optional string		notes				= 13;
+	optional string		whyTradersCare		= 14;
+	optional string		alsoCalled			= 15;
+	optional string		derivedVia			= 16;
+	optional string		acroExpand			= 17;
+}
+
+message InstrumentDM		
+{
+    required string		Code	= 1;					// 代码
+    required string		Name	= 2;					// 名字
+    required string		Genre	= 3;					// 名字
+    optional string		Desc	= 4;					// 名字
+    optional double     PointSize= 5;					// 名字
+
+    optional ETimeFrame BaseTimeFrame   = 6;			        // 基准timeFrame
+    optional int64		StartTime       = 7;					// 开始有数据的时间
+    optional int64		EndTime         = 8;					// 结束时间 max代表没有结束
+
+    optional int64		LastUpdateTime  = 9;					// 名字
+    optional double		Value           = 10;					// 名字
+    optional double		Bid		        = 11;					// 名字
+    optional double		Ask		        = 12;					// 名字
+
+	required string		Type			= 19;					// Instrument 类型
+    optional string     ID            = 20;					// 统一识别码，用于本地反序列化匹配
+}
+
+
+enum EBoardColumn			// 板块显示栏
+{
+	BCNone			    = 0;
+    Code                = 1;        // 代码
+    Name                = 2;        // 名称
+    ChangePercent       = 4;        // 涨跌百分比
+    Change              = 8;        // 涨跌
+    Price               = 16;       // 现价 
+    Open                = 32;       // 开盘
+    High                = 64;       // 最高
+    Low                 = 128;      // 最低
+    Ask                 = 256;      // 卖价
+    Bid                 = 512;      // 买价
+    SecurityType        = 1024;     // 类别
+}
+
+enum EBoardType             // 板块类型
+{
+    System              = 1;        // 
+    Plugin              = 2;        // plugin 的board
+    F6Custome           = 4;        // f6
+    Custome             = 8;        // 普通custome
+}
+
+message BoardDM		
+{
+    required string      id          = 1;
+    required EBoardType type        = 2;
+    required string		name	    = 3;					// 名字
+    optional string		desc	    = 4;					// 名字
+    repeated EBoardColumn columns   = 5;                    //
+    repeated InstrumentDM     instruments = 6;                    // 工具
+}
+
+message BoardMandDM
+{
+
+	repeated BoardDM boards = 2;
+}
+
+message WorkspaceDM		
+{
+    required string     current	    = 1;					// 当前
+    repeated string     wss         = 2;
+}
+
+
+message StockAppDm
+{
+
+
+//    optional bool filterssinglerow =12;             //paraeditor描述多行或单行显示。
+//    optional int32  woncolor =15;
+//    optional int32  lostcolor=16;
+//    optional int32  herocolor=17;
+
+//    optional string     loginEmail  = 20;
+//    optional string     loginPwd  = 21;
+//    optional bool       isAutoLogin= 22;
+
+}
+
+message AccountConfigDM
+{
+	required uint64				ID		=1;			// 针对的Player
+	optional StockAppDm		appCascade			= 2;
+
+//	optional FiltersManDM		filtersCascade		= 3;		// filter 信息
+//	optional HudMangerDm		hudManCascade		= 4;		// hud man 信息
+//	optional ReportsDm			reportsCascade		= 5;		// reportsDm 信息
+//	optional RangeInfoManagerDM rangeinfosCascade	= 6;		//
+}
+
+
+message FeederDm
+{
+	required string		id			= 1;
+	required string		type		= 2;
+	repeated KVDM		kvs			= 3;
+}
+
+message FeederManDm
+{
+	repeated FeederDm feeders		= 1;
+}
+
+message ScriptDM				// Script 的表示
+{
+	required string		id			= 1;
+	required string		type		= 2;
+	repeated KVDM		kvs			= 3;
+	optional bool		isPreset	= 4;									// 是否是预置项
+}
+message ScriptGroupDM
+{
+	required string		name		= 1;	
+	repeated ScriptDM	scripts     = 2;
+}
+
+message ScriptManDm
+{
+	repeated ScriptGroupDM scriptGroups		= 1;
+}
+
+message NeoSettings
+{
+	required string		Id			= 1;
+	required string		Key			= 2;
+	required VarDM		Value		= 3;
+}

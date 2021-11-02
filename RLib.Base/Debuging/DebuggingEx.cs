@@ -29,14 +29,20 @@ namespace RLib.Base
         //    return false;
         //}
 
-        public static void EnsureArgRange<T>(T val, T min, T max) where T:IComparable            // arg 符合range
+        public static void  EnsureNotNull(this object o)                         // not null
+        {
+            if (o == null)
+                throw new ArgumentNullException("Null Arg");
+        }
+
+        public static void EnsureArgRange<T>(this T val, T min, T max) where T:IComparable            // arg 符合range
         {
             if (val.CompareTo(min) < 0||
                 val.CompareTo(max) > 0)
                 throw new ArgumentException(string.Format("Bad Args [%0,%1]:%2", min, max, val));
         }
 
-        public static void EnsureNonempty<T>(T col) where T:ICollection        // collection 非空
+        public static void EnsureNonempty<T>(this T col) where T:ICollection        // collection 非空
         {
             if (col.Count == 0)
                 throw new ArgumentException(string.Format("Collecion is Empty!"));

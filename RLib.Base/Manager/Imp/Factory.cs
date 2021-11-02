@@ -112,19 +112,19 @@ namespace RLib.Base
             if (o != null)
             {
                 // 对nesting property赋初值
-                foreach (IPara p in o.GetType().GetParas())
-                {
-                    if (p.NestingParas != null)
-                    {
-                        object nest = null;
-                        if (p.ValueType.IsInterface)
-                            nest = App.Instance.Container.Resolve(p.ValueType);
-                        else
-                            nest = Activator.CreateInstance(p.ValueType);
+                //foreach (IPara p in o.GetType().GetParas())
+                //{
+                //    if (p.NestingParas != null)
+                //    {
+                //        object nest = null;
+                //        if (p.ValueType.IsInterface)
+                //            nest = App.Instance.Container.Resolve(p.ValueType);
+                //        else
+                //            nest = Activator.CreateInstance(p.ValueType);
 
-                        (p as Para).PI.SetValue(o, nest);
-                    }
-                }
+                //        (p as Para).PI.SetValue(o, nest);
+                //    }
+                //}
 
                 // 设置para
                 foreach (IPara p in o.GetParas())
@@ -132,22 +132,22 @@ namespace RLib.Base
                     //object def = RReflector.GetDefaultValue(p.ValueType);
 
                     // 如果是默认值，设置def
-                    if (p.DefValue != null &&
-                       object.Equals(p.Value, p.ValueType.GetDefaultValue()))
+                    if (p.Attribute.Default != null &&
+                       object.Equals(p.Value, p.PropertyType.GetDefaultValue()))
                     {
-                        p.Value = p.DefValue;
+                        p.Value = p.Attribute.Default;
                     }
 
 
                     // 内部复合参数
-                    if (p.DefValue==null && p.NestingParas != null)
-                    {// 生成一个默认的对象，并对其赋嵌套para
+                    //if (p.DefValue==null && p.NestingParas != null)
+                    //{// 生成一个默认的对象，并对其赋嵌套para
 
-                        foreach (IPara n in p.NestingParas)
-                        {
-                            n.Value = n.DefValue;
-                        }
-                    }
+                    //    foreach (IPara n in p.NestingParas)
+                    //    {
+                    //        n.Value = n.DefValue;
+                    //    }
+                    //}
 
 
                 }

@@ -19,7 +19,7 @@ namespace RLib.Base
     {
         public static ILog Logger { get; set; }
 
-        public static FtpClient  FtpClient { get; set; }                              // ftpclient
+//        public static FtpClient  FtpClient { get; set; }                              // ftpclient
 
     }
 }

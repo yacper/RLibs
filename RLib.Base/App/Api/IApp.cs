@@ -28,7 +28,7 @@ namespace RLib.Base
     {
         string              Name { get; set; }
 
-        Autofac.IContainer     Container { get; }
+        Autofac.IContainer  Container { get; }
 
         void                Run(float fps=0f);                              // 运行fps-帧率, 0代表事件驱动
 

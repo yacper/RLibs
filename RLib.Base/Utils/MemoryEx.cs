@@ -14,9 +14,9 @@ using System.Threading.Tasks;
 
 namespace RLib.Base
 {
-    public class MemoryEx
+    public static class MemoryEx
     {
-        public static int   ObjectSize(object o)                            // 基本度量object size
+        public static int   MemomrySize(this object o)                      // 基本度量占据的内存空间
         {
             return Marshal.ReadInt32(o.GetType().TypeHandle.Value, 4);
         }

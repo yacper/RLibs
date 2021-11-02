@@ -12,7 +12,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Media;
 using DataModel;
 using Google.Protobuf.WellKnownTypes;
 using Microsoft.VisualBasic;
@@ -118,7 +117,7 @@ namespace RLib.Base.Tests
             string n = typeof(NumRange).FullName;
             n = typeof(string).FullName;
             n = typeof(Range).FullName;
-            n = typeof(Color).FullName;
+            //n = typeof(Color).FullName;
             n = typeof(FontDM).FullName;
             n = typeof(TimeRange).FullName;
 

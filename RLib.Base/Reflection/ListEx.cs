@@ -17,13 +17,21 @@ namespace RLib.Base
 {
     public static class ListEx
     {
+        public static Type ListType => typeof(System.Collections.IList);
+        public static Type ArrayType => typeof(System.Array);
+
         public static bool  IsList(this Type t)
         {
-            if (typeof (System.Collections.IList).IsAssignableFrom(t) &&
-                !typeof (System.Array).IsAssignableFrom(t))
+            if (ListType.IsAssignableFrom(t) &&
+                !ArrayType.IsAssignableFrom(t))
                 return true;
             else
                 return false;
+        }
+
+        public static bool  IsList(this object o)
+        {
+            return o.GetType().IsList();
         }
 
         public static IList MakeList(this Type t)                           // 对这个t做一个List<T>

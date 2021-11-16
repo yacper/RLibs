@@ -85,8 +85,8 @@ namespace RLib.Base.Tester.Utils
             AA a = new AA(1);
 			Assert.AreEqual(LAEmpty.LastOrDefault(0, a), a);
 
-			Assert.AreEqual(LLOrdered.Last(), 9);
-			Assert.AreEqual(LLOrdered.Last(1), 8);
+			Assert.AreEqual(LAOrdered.Last().O, 4);
+			Assert.AreEqual(LAOrdered.Last(1).O, 3);
 
             try
             {

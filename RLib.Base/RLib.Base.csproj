@@ -4,6 +4,19 @@
 		<OutputType>Library</OutputType>
 		<Platforms>AnyCPU;x64</Platforms>
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="Protos\CommonDm.proto" />
+	  <None Remove="Protos\Country2.proto" />
+	  <None Remove="Protos\Country3.proto" />
+	  <None Remove="Protos\LibModels\AccountDM.proto" />
+	  <None Remove="Protos\LibModels\CalendarEventDM.proto" />
+	  <None Remove="Protos\LibModels\CellphoneVeryficationNetDM.proto" />
+	  <None Remove="Protos\LibModels\MsgDM.proto" />
+	  <None Remove="Protos\Neo\Company.proto" />
+	  <None Remove="Protos\Neo\MarketData.proto" />
+	  <None Remove="Protos\Neo\NeoCommon.proto" />
+	  <None Remove="Protos\Neo\Security.proto" />
+	</ItemGroup>
 
 
 	<ItemGroup>
@@ -24,11 +37,26 @@
 		<PackageReference Include="System.Management" Version="5.0.0" />
 	</ItemGroup>
 
+
 	<ItemGroup>
+	  <Protobuf Include="Protos\CommonDm.proto" />
+	  <Protobuf Include="Protos\Country2.proto" />
+	  <Protobuf Include="Protos\Country3.proto" />
+	  <Protobuf Include="Protos\LibModels\AccountDM.proto" />
+	  <Protobuf Include="Protos\LibModels\CalendarEventDM.proto" />
+	  <Protobuf Include="Protos\LibModels\CellphoneVeryficationNetDM.proto" />
+	  <Protobuf Include="Protos\LibModels\MsgDM.proto" />
+	  <Protobuf Include="Protos\Neo\Company.proto" />
+	  <Protobuf Include="Protos\Neo\MarketData.proto" />
+	  <Protobuf Include="Protos\Neo\NeoCommon.proto" />
+	  <Protobuf Include="Protos\Neo\Security.proto" />
+	</ItemGroup>
+
+	<!--<ItemGroup>
 		<Protobuf Include="Protos\*.proto" OutputDir="ProtoMessages" CompileOutputs="false" />
 		<Protobuf Include="Protos\LibModels\*.proto" OutputDir="ProtoMessages" CompileOutputs="false" />
 		<Protobuf Include="Protos\Neo\*.proto" OutputDir="ProtoMessages" CompileOutputs="false" />
-	</ItemGroup>
+	</ItemGroup>-->
 
 
 </Project>

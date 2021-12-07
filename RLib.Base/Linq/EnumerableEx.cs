@@ -16,10 +16,9 @@ namespace RLib.Base
     public static class EnumerableEx
     {
 
-        public static TSource Last<TSource>(this IEnumerable<TSource> source, int offset)
+        public static TSource Last<TSource>(this IEnumerable<TSource> source, int offset = 0)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            source.EnsureNotNull();
 
             if (source is IList<TSource> sourceList)
             {
@@ -35,7 +34,7 @@ namespace RLib.Base
             throw new Exception($"No Element:{nameof(source)}");
         }
 
-        public static TSource LastOrDefault<TSource>(this IEnumerable<TSource> source, int offset, TSource def = default(TSource))
+        public static TSource LastOrDefault<TSource>(this IEnumerable<TSource> source, int offset = 0, TSource def = default(TSource))
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));

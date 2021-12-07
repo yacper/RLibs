@@ -21,49 +21,49 @@ namespace RLib.Base
         public static object CreateInstance(this Type t, params object[] args) // 主要目的是设置Para DefaultValue
         {
             object o = Activator.CreateInstance(t, args);
-            if (o != null)
-            {
-                // 对nesting property赋初值
-                foreach (IPara p in o.GetType().GetParas())
-                {
-                    if (p.NestingParas != null)
-                    {
-                        object nest = null;
-                        if (p.ValueType.IsInterface)
-                            nest = App.Instance.Container.Resolve(p.ValueType);
-                        else
-                            nest = Activator.CreateInstance(p.ValueType);
+            //if (o != null)
+            //{
+            //    // 对nesting property赋初值
+            //    foreach (IPara p in o.GetType().GetParas())
+            //    {
+            //        if (p.NestingParas != null)
+            //        {
+            //            object nest = null;
+            //            if (p.ValueType.IsInterface)
+            //                nest = App.Instance.Container.Resolve(p.ValueType);
+            //            else
+            //                nest = Activator.CreateInstance(p.ValueType);
 
-                        (p as Para).PI.SetValue(o, nest);
-                    }
-                }
+            //            (p as Para).PI.SetValue(o, nest);
+            //        }
+            //    }
 
-                // 设置para
-                foreach (IPara p in o.GetParas())
-                {
-                    //object def = RReflector.GetDefaultValue(p.ValueType);
+            //    // 设置para
+            //    foreach (IPara p in o.GetParas())
+            //    {
+            //        //object def = RReflector.GetDefaultValue(p.ValueType);
 
-                    // 如果是默认值，设置def
-                    if (p.DefValue != null &&
-                       object.Equals(p.Value, p.ValueType.GetDefaultValue()))
-                    {
-                        p.Value = p.DefValue;
-                    }
-
-
-                    // 内部复合参数
-                    if (p.DefValue==null && p.NestingParas != null)
-                    {// 生成一个默认的对象，并对其赋嵌套para
-
-                        foreach (IPara n in p.NestingParas)
-                        {
-                            n.Value = n.DefValue;
-                        }
-                    }
+            //        // 如果是默认值，设置def
+            //        if (p.DefValue != null &&
+            //           object.Equals(p.Value, p.ValueType.GetDefaultValue()))
+            //        {
+            //            p.Value = p.DefValue;
+            //        }
 
 
-                }
-            }
+            //        // 内部复合参数
+            //        if (p.DefValue==null && p.NestingParas != null)
+            //        {// 生成一个默认的对象，并对其赋嵌套para
+
+            //            foreach (IPara n in p.NestingParas)
+            //            {
+            //                n.Value = n.DefValue;
+            //            }
+            //        }
+
+
+            //    }
+            //}
 
             return o;
         }
@@ -108,6 +108,7 @@ namespace RLib.Base
         public static Type GetNotNullableType(this Type type)               // 如果是nullable，获取其underlying
         {
             if (IsNullableType(type))
+                //return System.Nullable.GetUnderlyingType(value);
                 return type.GetGenericArguments().Single();
             else
                 return type;

@@ -16,17 +16,12 @@ using RLib.Base;
 
 namespace RLib.Fin
 {
-    public interface IReadonlyTimeValue :  IComparable
+    public interface ITimeValue :  IComparable
     {
         DateTime            Time { get; }
     }
 
-    public interface ITimeValue : IReadonlyTimeValue
-    {
-        new DateTime        Time { get; set; }
-    }
-
-    public interface ITimeValueSeries : IReadOnlyList<IReadonlyTimeValue>
+    public interface ITimeValues : IReadOnlyList<ITimeValue>
     {
 
     }

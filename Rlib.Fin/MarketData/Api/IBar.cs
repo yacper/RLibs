@@ -22,7 +22,7 @@ namespace RLib.Fin
         Even        = 3         // 持平
     }
 
-    public interface IBar:IReadonlyTimeValue
+    public interface IBar:ITimeValue
     {
         double              Open { get; }
         double              High { get; }
@@ -33,7 +33,7 @@ namespace RLib.Fin
         double              Volume { get; }
         double              Turnover { get; }
 
-        EBarType            Type { get; }
+        EBarType            BarType { get; }
         double              Range { get; }                                  // 总区间
         double              Solid { get; }                                  // 实体距离
         double              TopShadow { get; }                              // 上影线距离

@@ -39,6 +39,17 @@ enum ETimeFrame
     AllTF       = 15871;         // 所有tf
 }
 
+enum EExchangeStatus
+{
+	Unknown         = 0;                  // 无
+	Auction         = 1;                //  竞价撮合
+	AucPausing      = 2;                //  竞价暂停
+	Trading         = 3;                //  连续交易
+	Pausing         = 4;                //  交易暂停
+	Closed          = 5;                //  交易闭市
+}
+
+
 enum ETradingSessionType
 {
     PreAuction  = 1;           // 盘前竞价

@@ -24,38 +24,38 @@ namespace RLib.Fin
         public static readonly Bar Zero = new Bar() { Open = 0, High = 0, Low = 0, Close = 0};
         public static readonly Bar One = new Bar() { Open = 1, High = 1, Low = 1, Close = 1 };
 
-        public static List<Tick> EmulateTicks(IBar b, ETimeFrame tf, bool leftAsOpen = true, int scale = 2)                  // 根据bar模拟出一系列的ticks
-        {// 使用福汇的模拟方式 https://fxcodebase.com/wiki/index.php/Price_Simulation
-            // 每个bar会被模拟成连续的8个点
-            List<Tick> ret = new List<Tick>(8);
-            List<DateTime> times = b.Time.Split(tf, 8, leftAsOpen);
-            double vol = b.Volume / 8;
-            if (b.Type == EBarType.Rise ||
-                b.Type == EBarType.Even)
-            {
-                ret.Add(new Tick() { Time = times[0], LastPrice = b.Open, Volume = vol });
-                ret.Add(new Tick() { Time = times[1], LastPrice = Math.Round(b.Open - b.BottomShadow / 2, scale), Volume = vol });
-                ret.Add(new Tick() { Time = times[2], LastPrice = b.Low, Volume = vol });
-                ret.Add(new Tick() { Time = times[3], LastPrice = Math.Round(b.Low + b.Range / 3, scale), Volume = vol });
-                ret.Add(new Tick() { Time = times[4], LastPrice = Math.Round(b.High -  (b.Range / 3), scale), Volume = vol });
-                ret.Add(new Tick() { Time = times[5], LastPrice = b.High, Volume = vol });
-                ret.Add(new Tick() { Time = times[6], LastPrice = Math.Round(b.High - b.TopShadow / 2, scale), Volume = vol });
-                ret.Add(new Tick() { Time = times[7], LastPrice = b.Close, Volume = vol });            
-            }
-            else
-            {
-                ret.Add(new Tick() { Time = times[0], LastPrice = b.Open, Volume = vol });
-                ret.Add(new Tick() { Time = times[1], LastPrice = Math.Round(b.Open + b.TopShadow / 2, scale), Volume = vol });
-                ret.Add(new Tick() { Time = times[2], LastPrice = b.High, Volume = vol });
-                ret.Add(new Tick() { Time = times[3], LastPrice = Math.Round(b.High - b.Range / 3, scale), Volume = vol });
-                ret.Add(new Tick() { Time = times[4], LastPrice = Math.Round(b.High - 2 * (b.Range / 3), scale), Volume = vol });
-                ret.Add(new Tick() { Time = times[5], LastPrice = b.Low, Volume = vol });
-                ret.Add(new Tick() { Time = times[6], LastPrice = Math.Round(b.Low + b.BottomShadow / 2, scale), Volume = vol });
-                ret.Add(new Tick() { Time = times[7], LastPrice = b.Close, Volume = vol });
-            }
+        //public static List<Tick> EmulateTicks(IBar b, ETimeFrame tf, bool leftAsOpen = true, int scale = 2)                  // 根据bar模拟出一系列的ticks
+        //{// 使用福汇的模拟方式 https://fxcodebase.com/wiki/index.php/Price_Simulation
+        //    // 每个bar会被模拟成连续的8个点
+        //    List<Tick> ret = new List<Tick>(8);
+        //    List<DateTime> times = b.Time.Split(tf, 8, leftAsOpen);
+        //    double vol = b.Volume / 8;
+        //    if (b.Type == EBarType.Rise ||
+        //        b.Type == EBarType.Even)
+        //    {
+        //        ret.Add(new Tick() { Time = times[0], LastPrice = b.Open, Volume = vol });
+        //        ret.Add(new Tick() { Time = times[1], LastPrice = Math.Round(b.Open - b.BottomShadow / 2, scale), Volume = vol });
+        //        ret.Add(new Tick() { Time = times[2], LastPrice = b.Low, Volume = vol });
+        //        ret.Add(new Tick() { Time = times[3], LastPrice = Math.Round(b.Low + b.Range / 3, scale), Volume = vol });
+        //        ret.Add(new Tick() { Time = times[4], LastPrice = Math.Round(b.High -  (b.Range / 3), scale), Volume = vol });
+        //        ret.Add(new Tick() { Time = times[5], LastPrice = b.High, Volume = vol });
+        //        ret.Add(new Tick() { Time = times[6], LastPrice = Math.Round(b.High - b.TopShadow / 2, scale), Volume = vol });
+        //        ret.Add(new Tick() { Time = times[7], LastPrice = b.Close, Volume = vol });            
+        //    }
+        //    else
+        //    {
+        //        ret.Add(new Tick() { Time = times[0], LastPrice = b.Open, Volume = vol });
+        //        ret.Add(new Tick() { Time = times[1], LastPrice = Math.Round(b.Open + b.TopShadow / 2, scale), Volume = vol });
+        //        ret.Add(new Tick() { Time = times[2], LastPrice = b.High, Volume = vol });
+        //        ret.Add(new Tick() { Time = times[3], LastPrice = Math.Round(b.High - b.Range / 3, scale), Volume = vol });
+        //        ret.Add(new Tick() { Time = times[4], LastPrice = Math.Round(b.High - 2 * (b.Range / 3), scale), Volume = vol });
+        //        ret.Add(new Tick() { Time = times[5], LastPrice = b.Low, Volume = vol });
+        //        ret.Add(new Tick() { Time = times[6], LastPrice = Math.Round(b.Low + b.BottomShadow / 2, scale), Volume = vol });
+        //        ret.Add(new Tick() { Time = times[7], LastPrice = b.Close, Volume = vol });
+        //    }
 
-            return ret;
-        }
+        //    return ret;
+        //}
 
         //public static IEnumerable<Bar> ToLeftOpen(this IEnumerable<Bar> bars)
         //{
@@ -177,7 +177,7 @@ namespace RLib.Fin
         public double       PreClose { get; set; }                               // 可能没有,nan表示
       
 
-        public EBarType     Type
+        public EBarType     BarType
         {
             get
             {

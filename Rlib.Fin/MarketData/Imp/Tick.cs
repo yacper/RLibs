@@ -20,7 +20,7 @@ namespace RLib.Fin
     {
         public override string ToString()
         {
-            return $"{Time} Price:{LastPrice,-10} Bid:{Bid,-10} Ask:{Ask,-10} Volume:{Volume,-10} SeqID:{SequenceID}";
+            return $"{Time} Price:{LastPrice,-10} Bid:{BidPrice,-10} Ask:{AskPrice,-10} Volume:{LastVolume,-10} SeqID:{SequenceID}";
         }
 
         public object       Clone()
@@ -28,23 +28,23 @@ namespace RLib.Fin
             return this.MemberwiseClone();
         }
 
-        public Bar          ToBar(ETimeFrame tf, bool leftAsOpen = true)
-        {
-            return new Bar(Time.ModTimeFrame(tf, leftAsOpen), LastPrice, LastPrice, LastPrice, LastPrice, Volume);
-        }
+        //public Bar          ToBar(ETimeFrame tf, bool leftAsOpen = true)
+        //{
+        //    return new Bar(Time.ModTimeFrame(tf, leftAsOpen), LastPrice, LastPrice, LastPrice, LastPrice, Volume);
+        //}
 
-        public IMessage  ToDm() // 序列化成protobufdm
-        {
-            throw new NotImplementedException();
-            //return new TickDM()
-            //{
-            //    //time = _time.Ticks,
-            //    //ask = _ask,
-            //    //bid = _bid,
-            //    //askVol = _askVolume,
-            //    //bidVol = _bidVolume
-            //};
-        }
+        //public IMessage  ToDm() // 序列化成protobufdm
+        //{
+        //    throw new NotImplementedException();
+        //    //return new TickDM()
+        //    //{
+        //    //    //time = _time.Ticks,
+        //    //    //ask = _ask,
+        //    //    //bid = _bid,
+        //    //    //askVol = _askVolume,
+        //    //    //bidVol = _bidVolume
+        //    //};
+        //}
        
 
         public string       SequenceID { get; set; }                             // 标识符
@@ -52,31 +52,30 @@ namespace RLib.Fin
 
         public ETickerDirection   Dir { get; set; }                                    //TickerDirection, 买卖方向
 
-        public double       LastPrice { get; set; }                              // 成交价
-        public double       LastSize { get; set; }                               // 成交价
 
-        // 注意：这两个量，在不同平台上意义有区别，有的是当前tick的交易量
-        // 有的是当前分钟的，有的是当日的
-        public double       Volume { get; set; }                                 // 交易量
-        public double       TurnOver { get; set; }                               // 交易额
+        public double              LastPrice { get; set; }                              // 上一个成交价
+        public double              LastVolume { get; set; }                                // 上一个成交量
+        public double              LastTurnover { get; set; }                           // 上一个成交额
 
-        public double       Ask { get; set; }
-        public double       Bid { get; set; }
-        public double       AskVol { get; set; }
-        public double       BidVol { get; set; }
-        public double       Spread => Ask - Bid;
+        public double              TotalVolume { get; set; }                    // 当日成交量
+        public double              TotalTurnover { get; set; }                  // 当日成交额
+
+        // 1档数据
+        public double AskPrice => BidDepth != 0 ? AskLevels[0].Price : double.NaN;
+        public double AskVolume => AskLevels[0].Volume;
+        public double AskOrders => AskLevels[0].Orders;
+        public double BidPrice => BidLevels[0].Price;
+        public double BidVolume => BidLevels[0].Volume;
+        public double BidOrders => BidLevels[0].Orders;
+        public double Spread => AskPrice - BidPrice;
+
 
         // 大部分平台，不提供多档数据
-        public double[]     Bids { get; set; }
-        public double[]     Asks { get; set; }
-        public double[]     BidVols { get; set; }
-        public double[]     AskVols { get; set; }
-        public double[]     BidOrders { get; set; }
-        public double[]     AskOrders { get; set; }
-
+        public Level[]            BidLevels { get; set; }
+        public Level[]            AskLevels { get; set; }
         // bid / ask 档位可以不对称
-        public byte         BidDepth { get; set; }
-        public byte         AskDepth { get; set; }
+        public byte                BidDepth { get; set; }
+        public byte                AskDepth { get; set; }
 
         // 如果有，指当天的
         public double       PreClose { get; set; }
@@ -84,33 +83,40 @@ namespace RLib.Fin
         public double       High { get; set; }
         public double       Low { get; set; }
 
+        public double              UpLimitPrice { get; set; }            // 涨停价
+        public double              LowLimitPrice { get; set; }           // 跌停价
+
+        // 期货
+        public double              OpenInterest { get; set; }       // 持仓
+        public double              PreOpenInterest { get; set; }        // 昨持仓
+
+        public EExchangeStatus    ExchangeStatus { get; set; }                         //交易所状态
+
+
         public Tick()
         {
             LastPrice = double.NaN;
-            LastSize = double.NaN;
+            LastVolume = double.NaN;
+            LastTurnover = double.NaN;
 
-            Volume= double.NaN;
-            TurnOver = double.NaN;
+            TotalVolume= double.NaN;
+            TotalTurnover = double.NaN;
 
-            Ask = double.NaN;
-            Bid = double.NaN;
-            AskVol = double.NaN;
-            BidVol = double.NaN;
-
-            Bids = null;
-            Asks = null;
-            BidVols = null;
-            AskVols = null;
-            BidOrders = null;
-            AskOrders = null;
-
-            BidDepth = 0;
-            AskDepth = 0;
+            BidDepth = 1;
+            AskDepth = 1;
 
             PreClose = double.NaN;
             Open = double.NaN;
             High = double.NaN;
             Low = double.NaN;
+
+            UpLimitPrice = double.NaN;
+            LowLimitPrice = double.NaN;
+
+            OpenInterest = double.NaN;
+            PreOpenInterest = double.NaN;
+
+            ExchangeStatus = EExchangeStatus.Unknown;
         }
 
     }

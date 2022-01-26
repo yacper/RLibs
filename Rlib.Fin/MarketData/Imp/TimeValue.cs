@@ -27,7 +27,7 @@ namespace RLib.Fin
 
         public virtual int CompareTo(object obj)                            // 比较时间，而不是值
         {
-            return (int)(Time.Ticks - (obj as IReadonlyTimeValue).Time.Ticks);
+            return (int)(Time.Ticks - (obj as ITimeValue).Time.Ticks);
         }
 #endregion
 
@@ -75,6 +75,15 @@ namespace RLib.Fin
 //        protected DateTime  m_dt;
 #endregion
     }
+
+
+    public class TimeValues : List<ITimeValue>, ITimeValues
+    {
+
+    }
+
+
+
 
     public class    ObjTv : TimeValue
     {

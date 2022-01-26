@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataModel;
 using RLib.Base;
 
 namespace RLib.Fin
@@ -22,49 +23,67 @@ namespace RLib.Fin
         Neutral = 3,
     }
 
-
-    public interface ITick:IReadonlyTimeValue,ICloneable                               // 基本tick
+    public struct Level         // 1档数据
     {
-        string              SequenceID { get; }                             // 平台的tick标识符
+        public double Price = double.NaN;      // 价格
+        public double Volume = double.NaN;     // 量
+        public double Orders = double.NaN; // 订单数
+    }
 
-        double              LastPrice { get; }                              // 成交价
-        double              LastSize { get; }                               // 成交价
+    public interface ITick:ITimeValue,ICloneable                    // 基本tick 大部分数据可能没有
+    {
+        double              LastPrice { get; }                              // 上一个成交价
+        double              LastVolume { get; }                                // 上一个成交量
+        double              LastTurnover { get; }                           // 上一个成交额
 
-        // 注意：这两个量，在不同平台上意义有区别，有的是当前tick的交易量
-        // 有的是当前分钟的，有的是当日的
-        double              Volume { get; }                                 // 交易量
-        double              TurnOver { get; }                               // 交易额
+        double              TotalVolume { get; }                    // 当日成交量
+        double              TotalTurnover { get; }                  // 当日成交额
 
-        double              Ask { get; }
-        double              Bid { get; }
-        double              AskVol { get; }
-        double              BidVol { get;}
+        // 1档数据
+        double              AskPrice { get; }
+        double              AskVolume { get; }
+        double              AskOrders { get; }
+        double              BidPrice { get; }
+        double              BidVolume { get; }
+        double              BidOrders { get; }
         double              Spread { get; }
 
-        // 大部分平台，不提供多档数据
-        double[]            Bids { get; }
-        double[]            Asks { get; }
-        double[]            BidVols { get; }
-        double[]            AskVols { get; }
-        double[]            BidOrders { get; }
-        double[]            AskOrders { get; }
 
+        // 大部分平台，不提供多档数据
+        Level[]            BidLevels { get; }
+        Level[]            AskLevels { get; }
         // bid / ask 档位可以不对称
         byte                BidDepth { get; }
         byte                AskDepth { get; }
 
 
         // 如果有，指当天的
-        double              PreClose { get; set; }
-        double              Open { get; set; }
-        double              High { get; set; }
-        double              Low { get; set; }
+        double              PreClose { get; }
+        double              Open { get; }
+        double              High { get; }
+        double              Low { get; }
 
+        double              UpLimitPrice { get; }            // 涨停价
+        double              LowLimitPrice { get; }           // 跌停价
 
-        //TradingStatus TradingStatus { get; set; }
-        //TradingPeriod TradingPeriod { get; set; }
-        ETickerDirection    Dir { get; }                                    //TickerDirection, 买卖方向
+        // 期货
+        double              OpenInterest { get; }       // 持仓
+        double              PreOpenInterest { get; }        // 昨持仓
+
+        EExchangeStatus    ExchangeStatus { get; }                         //交易所状态
     }
+
+//    public interface ICnFutureTick : ITick              // 中国期货市场Tick
+//    {
+//
+//        // 注意：这两个量，在不同平台上意义有区别，有的是当前tick的交易量
+//        // 有的是当前分钟的，有的是当日的
+//        double              Volume { get; }                                 // 交易量
+//        double              TurnOver { get; }                               // 交易额
+//
+//    }
+
+
 
     //public interface IForexTick : ITick
     //{

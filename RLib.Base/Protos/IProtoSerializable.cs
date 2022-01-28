@@ -14,7 +14,7 @@ using Google.Protobuf;
 
 namespace RLib.Base
 {
-    public interface ISerializable
+    public interface IProtoSerializable
     {
         IMessage         ToDm();                                         // 序列化成protobufdm
     }

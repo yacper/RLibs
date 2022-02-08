@@ -16,7 +16,7 @@ using DataModel;
 
 namespace RLib.Base
 {
-    public interface IPara:INotifyPropertyChanged, ISerializable
+    public interface IPara:INotifyPropertyChanged, IProtoSerializable
     {
         object              Host { get; }
         PropertyInfo        PI { get; } 

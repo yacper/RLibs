@@ -15,7 +15,7 @@ using System.Xml;
 
 namespace RLib.Base
 {
-    public interface IAppConfig:INotifyPropertyChanged, ISerializable
+    public interface IAppConfig:INotifyPropertyChanged, IProtoSerializable
     {
         string              Path { get; }
         bool                Load();

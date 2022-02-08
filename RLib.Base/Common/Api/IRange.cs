@@ -17,7 +17,7 @@ using DataModel;
 
 namespace RLib.Base
 {
-    public interface IRange: ISerializable, ICloneable
+    public interface IRange: IProtoSerializable, ICloneable
     {
         string              ToString();
 

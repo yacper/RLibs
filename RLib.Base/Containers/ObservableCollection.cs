@@ -103,13 +103,13 @@ namespace RLib.Base
 
         public static T     Front<T>(this ObservableCollection<T> p) 
         {
-            DebuggingEx.EnsureNonempty(p);
+            Debugging.EnsureNonempty(p);
 
             return p[0];
         }
         public static T     Back<T>(this ObservableCollection<T> p)
         {
-            DebuggingEx.EnsureNonempty(p);
+            Debugging.EnsureNonempty(p);
 
             return p[p.Count -1];
         }

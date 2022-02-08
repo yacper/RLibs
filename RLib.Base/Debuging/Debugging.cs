@@ -16,18 +16,20 @@ using System.Threading.Tasks;
 
 namespace RLib.Base
 {
-    public static class DebuggingEx
+    public static class Debugging
     {
-        //public static bool CheckEmpty(ICollection c)
-        //{
-        //    if (c.Count == 0)
-        //    {
-        //        throw new Exception("Empty Collection");
-        //        return true;
-        //    }
+        public static bool IsDebug          // 是否debug状态
+        {
+            get
+            {
+#if DEBUG
+                return true;
+#else
+                return false;
+#endif
+            }
+        }
 
-        //    return false;
-        //}
 
         public static void  EnsureNotNull(this object o)                         // not null
         {

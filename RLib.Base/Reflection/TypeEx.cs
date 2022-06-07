@@ -11,7 +11,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Autofac;
 using NPOI.SS.Formula.Functions;
 
 namespace RLib.Base
@@ -95,6 +94,11 @@ namespace RLib.Base
                 : t;
 
             return rt.FullName == "System.Double";
+        }
+
+        public static bool IsString(this Type t)
+        {
+            return t == typeof(string);
         }
 
         public static bool IsNullableType(this Type type)                        // 是否是系统类型， Enum也作为系统类型

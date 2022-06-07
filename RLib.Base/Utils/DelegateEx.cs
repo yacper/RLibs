@@ -17,12 +17,12 @@ namespace RLib.Base
 {
     public static class DelegateEx
     {
-        public static void InvokeInMainThread(this Action d)
-        {
-            Debug.Assert(App.Instance != null);
+        //public static void InvokeInMainThread(this Action d)
+        //{
+        //    Debug.Assert(App.Instance != null);
 
-            App.Instance?.RunInMainThread(d);
-        }
+        //    App.Instance?.RunInMainThread(d);
+        //}
 
 
 

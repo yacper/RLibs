@@ -1,26 +1,26 @@
-﻿/********************************************************************
-    created:	2017/5/20 16:46:11
-    author:		rush
-    email:		
+﻿///********************************************************************
+//    created:	2017/5/20 16:46:11
+//    author:		rush
+//    email:		
 	
-    purpose:	
+//    purpose:	
 
-*********************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+//*********************************************************************/
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
 
-namespace RLib.Base
-{
-    public class GroupItem<T>:HaveIDAndObservable<T>, IGroupItem<T>
-    {
-#region C&D
-        public              GroupItem(T id)
-            : base(id)
-        {
-        }
-#endregion
-    }
-}
+//namespace RLib.Base
+//{
+//    public class GroupItem<T>:HaveIDAndObservable<T>, IGroupItem<T>
+//    {
+//#region C&D
+//        public              GroupItem(T id)
+//            : base(id)
+//        {
+//        }
+//#endregion
+//    }
+//}

@@ -11,7 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
-using DataModel;
 
 namespace RLib.Base
 {

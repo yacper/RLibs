@@ -234,7 +234,7 @@ namespace RLib.Base
 
                 return new RColor(a, r, g, b);
             }
-            catch (Exception e)
+            catch (Exception )
             {
                 RLibBase.Logger.Error("无法解析RColor:" + hexString);
                 return RColor.Empty;

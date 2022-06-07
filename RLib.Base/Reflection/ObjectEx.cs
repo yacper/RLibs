@@ -154,16 +154,6 @@ namespace RLib.Base
             pi.SetValue(obj, value);
         }
 
-        public static object  GetProperty(this object obj, string property)  
-		{
-            PropertyInfo pi = obj.GetType().GetProperty(property);
-            if (pi == null)
-            {
-                throw new ArgumentException();
-            }
-
-            return pi.GetValue(obj);
-        }
 
 		public static object  Call(this object obj, string func, params object[] parameters)  
 		{

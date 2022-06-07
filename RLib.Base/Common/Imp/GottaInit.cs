@@ -1,54 +1,54 @@
-﻿/********************************************************************
-    created:	2017/5/20 16:09:32
-    author:		rush
-    email:		
+﻿///********************************************************************
+//    created:	2017/5/20 16:09:32
+//    author:		rush
+//    email:		
 	
-    purpose:	
+//    purpose:	
 
-*********************************************************************/
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+//*********************************************************************/
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
 
 
-namespace RLib.Base
-{
-    public class GottaInit: ObservableObject, IGottaInit
-    {
-#region IGottaInit
-#region properties
-        public EInitState   InitStat { get { return _InitStat; } set { Set("InitStat", ref _InitStat, value); } }                         // init 状态
-#endregion
+//namespace RLib.Base
+//{
+//    public class GottaInit: ObservableObject, IGottaInit
+//    {
+//#region IGottaInit
+//#region properties
+//        public EInitState   InitStat { get { return _InitStat; } set { Set("InitStat", ref _InitStat, value); } }                         // init 状态
+//#endregion
 
-#region virtuals
-	    public virtual void Init()
-	    {
-		    InitStat = EInitState.Initing;
+//#region virtuals
+//	    public virtual void Init()
+//	    {
+//		    InitStat = EInitState.Initing;
 
-			OnIniting();
+//			OnIniting();
 
-		    InitStat = EInitState.Inited;
-	    }
+//		    InitStat = EInitState.Inited;
+//	    }
 
-	    public virtual void UnInit()
-	    {
-		    InitStat = EInitState.Uniniting;
+//	    public virtual void UnInit()
+//	    {
+//		    InitStat = EInitState.Uniniting;
 
-			OnUnIniting();
+//			OnUnIniting();
 
-		    InitStat = EInitState.Uninited;
-	    }
+//		    InitStat = EInitState.Uninited;
+//	    }
 
-	    public virtual void	OnIniting(){}
-	    public virtual void	OnUnIniting(){}
-#endregion
+//	    public virtual void	OnIniting(){}
+//	    public virtual void	OnUnIniting(){}
+//#endregion
 
-#region Members
-	    protected EInitState _InitStat;
-#endregion
+//#region Members
+//	    protected EInitState _InitStat;
+//#endregion
 
-#endregion
-    }
-}
+//#endregion
+//    }
+//}

@@ -27,5 +27,15 @@ public static class MemoryStreamEx
         return Encoding.ASCII.GetString(stream.GetBuffer(), 0, (int)stream.Length);
     }
 
+    public static MemoryStream ToMemoryStreamUtf8(this string s)
+    {
+        byte[] byteArray = Encoding.UTF8.GetBytes(s);
+        return new MemoryStream(byteArray);
+    }
+    public static MemoryStream ToMemoryStreamAscii(this string s)
+    {
+        byte[] byteArray = Encoding.ASCII.GetBytes(s);
+        return new MemoryStream(byteArray);
+    }
 
 }

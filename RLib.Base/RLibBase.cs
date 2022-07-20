@@ -4,6 +4,8 @@
     email:		
 	
     purpose:	
+		<!--key:oy2mrtcmyvlorumct4waynl4eooi45qenhtinrc53kap3e-->
+		<!--dotnet nuget push RLib.Base.0.0.2.nupkg --api-key oy2mrtcmyvlorumct4waynl4eooi45qenhtinrc53kap3e --source https://api.nuget.org/v3/index.json-->
 *********************************************************************/
 using System;
 using System.Collections.Generic;

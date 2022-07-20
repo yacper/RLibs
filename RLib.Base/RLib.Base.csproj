@@ -3,8 +3,13 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<OutputType>Library</OutputType>
 		<Platforms>AnyCPU;x64</Platforms>
-	</PropertyGroup>
 
+		<PackageId>RLib.Base</PackageId>
+		<Version>0.0.2</Version>
+		<Authors>Rush Wang(yacper@gmail.com)</Authors>
+		<Company>Neosoft</Company>
+		<Description>Basic Library</Description>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="CompareNETObjects" Version="4.66.0" />

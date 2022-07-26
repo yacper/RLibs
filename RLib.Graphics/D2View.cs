@@ -54,9 +54,9 @@ public class D2View : ObservableObject, ID2View
         OnRender();
 
         // 绘制
-        foreach (KeyValuePair<int, List<DrawingInfo>> kv in DrawingInfos_)
+        foreach (var kv in DrawingInfos_.Values)
         {
-            foreach (DrawingInfo d in kv.Value) { RenderDrawingInfo_(d); }
+            foreach (DrawingInfo d in kv as List<DrawingInfo>) { RenderDrawingInfo_(d); }
         }
 
         OnRendered?.Invoke(this);

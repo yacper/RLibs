@@ -25,24 +25,61 @@ internal class DrawingInfo //
     public virtual EDrawing Type   { get { throw new NotImplementedException(); } }
     public         int      ZIndex { get; set; }
     public         Rect?    Clip   { get; set; } // 如果有
+
+    public          Stroke   Stroke { get; set; }
+    public          Fill     Fill   { get; set; }
+    public          Shadow   Shadow  { get; set; }
+
+    public override int GetHashCode()
+    {
+        int ret = 0;
+        if (Stroke != null)
+            ret ^= Stroke.GetHashCode();
+       if (Fill != null)
+            ret ^= Fill.GetHashCode();
+       if (Shadow != null)
+            ret ^= Shadow.GetHashCode();
+       return ret;
+    }
+
+
+    public virtual void OnDraw(ICanvas c)
+    {
+
+    }
 }
 
 internal class LineInfo : DrawingInfo // 代表连续的线
 {
     public override EDrawing Type   { get { return EDrawing.Line; } }
-    public          Stroke   Stroke { get; set; }
 
     public         List<Point> Nodes = new();
     public virtual int         Count { get { return Nodes.Count / 2; } }
+
+    public override void OnDraw(ICanvas c)
+    {
+        for (int i = 0; i <= Nodes.Count - 2; i++) { c.DrawLine(Nodes[i], Nodes[1]); }
+    }
 }
 
 internal class RectangleInfo : DrawingInfo
 {
     public override EDrawing Type   { get { return EDrawing.Rectangle; } }
-    public          Stroke   Stroke { get; set; }
-    public          Fill     Fill   { get; set; }
 
     public Rect Rect { get; set; }
+
+    public override void OnDraw(ICanvas c)
+    {
+        if (Fill != null)
+        {
+            if(Fill.Color != null)
+                c.FillRectangle(Rect);
+
+            if(Fill.Paint != null)
+                c.SetFillPaint(Fill.Paint, Rect);
+        }
+        c.DrawRectangle(Rect);
+    }
 }
 
 //public class TriangleInfo:LineInfo

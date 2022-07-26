@@ -26,8 +26,8 @@ public class D2View : ObservableObject, ID2View
     public double Width  { get => Width_;  set => SetProperty(ref Width_, value); }
     public double Height { get => Height_; set => SetProperty(ref Height_, value); }
 
-    public bool EnableBatching { get; set; } // 开启batching的时候,不保证绘图顺序，须通过zindex自己控制
-    public bool IsDirty        { get; set; } // 是否dirty，如果dirty，需要重新绘制
+    public bool EnableBatching { get; set; } = false; // 开启batching的时候,不保证绘图顺序，须通过zindex自己控制
+    public bool IsDirty        { get; set; }          // 是否dirty，如果dirty，需要重新绘制
 
     public Color Background
     {
@@ -53,13 +53,28 @@ public class D2View : ObservableObject, ID2View
 
         OnRender();
 
+        // draw background
+        DrawRectangle(new Rect(0, 0, Width, Height), null, new Fill(){Color = Background}, null, -1);
+
         // 绘制
-        foreach (var kv in DrawingInfos_.Values)
+        foreach (Dictionary<int, List<DrawingInfo>> infos in DrawingInfos_.OrderBy(p=>p.Key).Select(p=>p.Value))
         {
-            foreach (DrawingInfo d in kv as List<DrawingInfo>) { RenderDrawingInfo_(d); }
+            foreach (List<DrawingInfo> l in infos.Values)
+            {
+                Canvas.SaveState();
+                var info = l.FirstOrDefault();
+                Canvas.Apply(info.Shadow);
+                Canvas.Apply(info.Stroke);
+                Canvas.Apply(info.Fill);
+
+                foreach (DrawingInfo d in l) { d.OnDraw(Canvas); }
+
+                Canvas.RestoreState();
+            }
         }
 
         OnRendered?.Invoke(this);
+        IsDirty = false;
     }
 
     internal void RenderDrawingInfo_(DrawingInfo d)
@@ -71,7 +86,7 @@ public class D2View : ObservableObject, ID2View
                 //Canvas.SaveState();
                 LineInfo info = d as LineInfo; 
                 Canvas.Apply(info.Stroke);
-
+             
                 if (info.Clip != null)
                     Canvas.ClipRectangle(d.Clip.Value);
 
@@ -81,143 +96,143 @@ public class D2View : ObservableObject, ID2View
                 //Canvas.RestoreState();
                 break;
             }
-            //case EDrawing.Rectangle:
-            //{
-            //    //Canvas.SaveState();
-            //    RectangleInfo info = d as RectangleInfo;
-            //    if (info.Stroke != null)
-            //        Canvas.Apply(info.Stroke);
-            //    if (info.Fill != null)
-            //        Canvas.Apply(info.Fill);
+            case EDrawing.Rectangle:
+                {
+                    //Canvas.SaveState();
+                    RectangleInfo info = d as RectangleInfo;
+                    if (info.Stroke != null)
+                        Canvas.Apply(info.Stroke);
+                    if (info.Fill != null)
+                        Canvas.Apply(info.Fill);
 
-            //    if (info.Clip != null)
-            //        Canvas.ClipRectangle(d.Clip.Value);
-
-
-            //    //renderTarget.DrawRectangle(info.Rects[i].ToRawRectangleF(), strokeColor, info.StrokWidth);
-            //    if (fillColor != null)
-            //    {
-            //        renderTarget.FillRectangle(info.Rect.ToRawRectangleF(), fillColor);
-            //        if (strokeColor != fillColor)
-            //            renderTarget.DrawRectangle(info.Rect.ToRawRectangleF(), strokeColor, info.StrokWidth);
-            //    }
-            //    else
-            //        renderTarget.DrawRectangle(info.Rect.ToRawRectangleF(), strokeColor, info.StrokWidth);
+                    if (info.Clip != null)
+                        Canvas.ClipRectangle(d.Clip.Value);
 
 
-            //    break;
-            //}
-            //case EDrawing.Geometry:
-            //{
-            //    //todo: style 后面做
-            //    GeometryInfo                      info        = d as GeometryInfo;
-            //    SharpDX.Direct2D1.SolidColorBrush strokeColor = ResolveSolidColorBrush(info.StrokeColor);
-            //    SharpDX.Direct2D1.SolidColorBrush fillColor   = null;
-            //    if (info.FillColor != null)
-            //        fillColor = ResolveSolidColorBrush(info.FillColor.Value);
-
-            //    using (PathGeometry geo = new PathGeometry(renderTarget.Factory))
-            //    {
-            //        using (GeometrySink geo_Sink = geo.Open())
-            //        {
-            //            geo_Sink.BeginFigure(info.Nodes[0].ToRawVector2(), FigureBegin.Filled);
-            //            for (int i = 1; i != info.Nodes.Count; ++i)
-            //                geo_Sink.AddLine(info.Nodes[i].ToRawVector2());
-            //            geo_Sink.EndFigure(FigureEnd.Closed);
-
-            //            geo_Sink.Close();
-            //        }
-
-            //        renderTarget.DrawGeometry(geo, strokeColor, info.StrokWidth);
-            //        if (info.FillColor != null)
-            //            renderTarget.FillGeometry(geo, fillColor);
-            //    }
-
-            //    break;
-            //}
+                    ////renderTarget.DrawRectangle(info.Rects[i].ToRawRectangleF(), strokeColor, info.StrokWidth);
+                    //if (fillColor != null)
+                    //{
+                    //    renderTarget.FillRectangle(info.Rect.ToRawRectangleF(), fillColor);
+                    //    if (strokeColor != fillColor)
+                    //        renderTarget.DrawRectangle(info.Rect.ToRawRectangleF(), strokeColor, info.StrokWidth);
+                    //}
+                    //else
+                    //    renderTarget.DrawRectangle(info.Rect.ToRawRectangleF(), strokeColor, info.StrokWidth);
 
 
-            //case EDrawing.Text:
-            //{
-            //    //todo: style 后面做
-            //    TextInfo                          info        = d as TextInfo;
-            //    SharpDX.Direct2D1.SolidColorBrush strokeColor = ResolveSolidColorBrush(info.ForegroundColor);
+                    break;
+                }
+                //case EDrawing.Geometry:
+                //{
+                //    //todo: style 后面做
+                //    GeometryInfo                      info        = d as GeometryInfo;
+                //    SharpDX.Direct2D1.SolidColorBrush strokeColor = ResolveSolidColorBrush(info.StrokeColor);
+                //    SharpDX.Direct2D1.SolidColorBrush fillColor   = null;
+                //    if (info.FillColor != null)
+                //        fillColor = ResolveSolidColorBrush(info.FillColor.Value);
 
-            //    // 绘制背景
-            //    if (info.BackroundColor != null)
-            //    {
-            //        SharpDX.Direct2D1.SolidColorBrush fillColor = fillColor = ResolveSolidColorBrush(info.BackroundColor.Value);
-            //        renderTarget.FillRectangle(info.Rect.ToRawRectangleF(), fillColor);
-            //    }
+                //    using (PathGeometry geo = new PathGeometry(renderTarget.Factory))
+                //    {
+                //        using (GeometrySink geo_Sink = geo.Open())
+                //        {
+                //            geo_Sink.BeginFigure(info.Nodes[0].ToRawVector2(), FigureBegin.Filled);
+                //            for (int i = 1; i != info.Nodes.Count; ++i)
+                //                geo_Sink.AddLine(info.Nodes[i].ToRawVector2());
+                //            geo_Sink.EndFigure(FigureEnd.Closed);
 
-            //    info._Format.TextAlignment      = (SharpDX.DirectWrite.TextAlignment)info.TextAlignment;
-            //    info._Format.ParagraphAlignment = (SharpDX.DirectWrite.ParagraphAlignment)info.ParagraphAlignment;
+                //            geo_Sink.Close();
+                //        }
 
-            //    renderTarget.DrawText(info.Text, info._Format, info.Rect.ToRawRectangleF(), strokeColor);
+                //        renderTarget.DrawGeometry(geo, strokeColor, info.StrokWidth);
+                //        if (info.FillColor != null)
+                //            renderTarget.FillGeometry(geo, fillColor);
+                //    }
 
-            //    break;
-            //}
-
-            //case EDrawing.Image:
-            //{
-            //    //todo: style 后面做
-            //    ImageInfo                info   = d as ImageInfo;
-            //    SharpDX.Direct2D1.Bitmap bitmap = string.IsNullOrWhiteSpace(info.ImagePath) ? ResolveBitmap(info.ImageId, info.Image) : ResolveBitmap(info.ImagePath);
-
-            //    renderTarget.DrawBitmap(bitmap, info.DestRect.ToRawRectangleF(), info.Opacity, (SharpDX.Direct2D1.BitmapInterpolationMode)info.InterpolationMode, info.SrcRect.ToRawRectangleF());
-
-            //    break;
-            //}
-
-
-            //case EDrawing.Triangle:
-            //    GL.LineWidth((d as LineInfo).Thinkness);
-
-            //    GL.Begin(BeginMode.Triangles);
-            //    GL.Color3(Color.FromArgb(d.Color.ToArgb()));
-            //    foreach (var n in (d as TriangleInfo).Nodes)
-            //        GL.Vertex2(n.X, n.Y);
-            //    GL.End();
-            //    break;
-
-            //case EDrawing.Quad:
-            //    GL.LineWidth((d as LineInfo).Thinkness);
-
-            //    GL.Begin(BeginMode.Quads);
-            //    GL.Color3(Color.FromArgb(d.Color.ToArgb()));
-            //    foreach (var n in (d as QuadInfo).Nodes)
-            //        GL.Vertex2(n.X, n.Y);
-            //    GL.End();
-            //    break;
-
-            //case EDrawing.Text:
-            //{
-            //    GL.MatrixMode(MatrixMode.Projection);
-            //    GL.LoadIdentity();
-            //    GL.Ortho(0, Width, Height, 0, -1, 1);
-            //    GL.Viewport(0, 0, Width, Height); // Use all of the glControl painting area
-
-            //    GL.MatrixMode(MatrixMode.Modelview);
-            //    GL.LoadIdentity();
-
-            //    TextInfo ti = d as TextInfo;
-
-            //    ti.Rect = new RectangleF((float)ti.Point.X, (float)(Height - ti.Point.Y - ti.Extents.BoundingBox.Height), ti.Extents.BoundingBox.Width+5, ti.Extents.BoundingBox.Height);
+                //    break;
+                //}
 
 
-            //    m_pTextPrinter.Print(ti.Text, ti.Font, Color.FromArgb(ti.Color.ToArgb()), ti.Rect, TextPrinterOptions.Default, ti.Alignment);
+                //case EDrawing.Text:
+                //{
+                //    //todo: style 后面做
+                //    TextInfo                          info        = d as TextInfo;
+                //    SharpDX.Direct2D1.SolidColorBrush strokeColor = ResolveSolidColorBrush(info.ForegroundColor);
+
+                //    // 绘制背景
+                //    if (info.BackroundColor != null)
+                //    {
+                //        SharpDX.Direct2D1.SolidColorBrush fillColor = fillColor = ResolveSolidColorBrush(info.BackroundColor.Value);
+                //        renderTarget.FillRectangle(info.Rect.ToRawRectangleF(), fillColor);
+                //    }
+
+                //    info._Format.TextAlignment      = (SharpDX.DirectWrite.TextAlignment)info.TextAlignment;
+                //    info._Format.ParagraphAlignment = (SharpDX.DirectWrite.ParagraphAlignment)info.ParagraphAlignment;
+
+                //    renderTarget.DrawText(info.Text, info._Format, info.Rect.ToRawRectangleF(), strokeColor);
+
+                //    break;
+                //}
+
+                //case EDrawing.Image:
+                //{
+                //    //todo: style 后面做
+                //    ImageInfo                info   = d as ImageInfo;
+                //    SharpDX.Direct2D1.Bitmap bitmap = string.IsNullOrWhiteSpace(info.ImagePath) ? ResolveBitmap(info.ImageId, info.Image) : ResolveBitmap(info.ImagePath);
+
+                //    renderTarget.DrawBitmap(bitmap, info.DestRect.ToRawRectangleF(), info.Opacity, (SharpDX.Direct2D1.BitmapInterpolationMode)info.InterpolationMode, info.SrcRect.ToRawRectangleF());
+
+                //    break;
+                //}
 
 
-            //    GL.MatrixMode(MatrixMode.Projection);
-            //    GL.LoadIdentity();
-            //    GL.Ortho(0, Width, 0, Height, -1, 1); // Bottom-left corner pixel has coordinate (0, 0)
-            //    GL.Viewport(0, 0, Width, Height); // Use all of the glControl painting area
+                //case EDrawing.Triangle:
+                //    GL.LineWidth((d as LineInfo).Thinkness);
 
-            //    GL.MatrixMode(MatrixMode.Modelview);
-            //    GL.LoadIdentity();
+                //    GL.Begin(BeginMode.Triangles);
+                //    GL.Color3(Color.FromArgb(d.Color.ToArgb()));
+                //    foreach (var n in (d as TriangleInfo).Nodes)
+                //        GL.Vertex2(n.X, n.Y);
+                //    GL.End();
+                //    break;
 
-            //}
-            //    break;
+                //case EDrawing.Quad:
+                //    GL.LineWidth((d as LineInfo).Thinkness);
+
+                //    GL.Begin(BeginMode.Quads);
+                //    GL.Color3(Color.FromArgb(d.Color.ToArgb()));
+                //    foreach (var n in (d as QuadInfo).Nodes)
+                //        GL.Vertex2(n.X, n.Y);
+                //    GL.End();
+                //    break;
+
+                //case EDrawing.Text:
+                //{
+                //    GL.MatrixMode(MatrixMode.Projection);
+                //    GL.LoadIdentity();
+                //    GL.Ortho(0, Width, Height, 0, -1, 1);
+                //    GL.Viewport(0, 0, Width, Height); // Use all of the glControl painting area
+
+                //    GL.MatrixMode(MatrixMode.Modelview);
+                //    GL.LoadIdentity();
+
+                //    TextInfo ti = d as TextInfo;
+
+                //    ti.Rect = new RectangleF((float)ti.Point.X, (float)(Height - ti.Point.Y - ti.Extents.BoundingBox.Height), ti.Extents.BoundingBox.Width+5, ti.Extents.BoundingBox.Height);
+
+
+                //    m_pTextPrinter.Print(ti.Text, ti.Font, Color.FromArgb(ti.Color.ToArgb()), ti.Rect, TextPrinterOptions.Default, ti.Alignment);
+
+
+                //    GL.MatrixMode(MatrixMode.Projection);
+                //    GL.LoadIdentity();
+                //    GL.Ortho(0, Width, 0, Height, -1, 1); // Bottom-left corner pixel has coordinate (0, 0)
+                //    GL.Viewport(0, 0, Width, Height); // Use all of the glControl painting area
+
+                //    GL.MatrixMode(MatrixMode.Modelview);
+                //    GL.LoadIdentity();
+
+                //}
+                //    break;
         }
     }
 
@@ -407,11 +422,21 @@ public class D2View : ObservableObject, ID2View
 
     internal void AddDrawingInfo_(DrawingInfo d)
     {
-        // 后期渲染合并优化在这做，先不做优化
-        if (!DrawingInfos_.Contains(d.ZIndex))
-            DrawingInfos_.Add(d.ZIndex, new List<DrawingInfo>() { d });
+        // 根据state hashcode分组
+
+        Dictionary<int, List<DrawingInfo>> dic = null;
+        if (!DrawingInfos_.TryGetValue(d.ZIndex, out dic))
+        {
+            DrawingInfos_.Add(d.ZIndex, new() { });
+            DrawingInfos_.TryGetValue(d.ZIndex, out dic);
+        }
+
+        int               code = d.GetHashCode();
+        List<DrawingInfo> l    = null;
+        if (!dic.TryGetValue(code, out l))
+            dic[code] = new List<DrawingInfo>(){d};
         else
-            (DrawingInfos_[d.ZIndex] as List<DrawingInfo>).Add(d);
+           l.Add(d);
     }
 
     public void Reset() // 删除所有绘制元素
@@ -436,8 +461,8 @@ public class D2View : ObservableObject, ID2View
 
 
     //protected OrderedDictionary  DrawingInfos_ = new OrderedDictionary<int, List<DrawingInfo>>();
-    protected OrderedDictionary  DrawingInfos_ = new();
-    protected Color                                     Background_   = Colors.Black;
+    internal Dictionary<int, Dictionary<int, List<DrawingInfo>>> DrawingInfos_ = new();
+    protected Color                         Background_   = Colors.Black;
 //    protected List<TextFormat>                          _TextFormats  = new List<TextFormat>();
 
     internal static ObjectPool<LineInfo> LineInfoPool = new ObjectPool<LineInfo>(200000);

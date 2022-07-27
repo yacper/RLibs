@@ -12,25 +12,25 @@ namespace RLib.Graphics;
 
 public class Stroke
 	{
-    public Color    StrokeColor       { get; set; } = Colors.Black;
-    public float    StrokeSize        { get; set; } = 1;
-    public LineJoin StrokeLineJoin    { get; set; } = LineJoin.Miter;
+    public Color    Color       { get; set; } = Colors.Black;
+    public float    Size        { get; set; } = 1;
+    public LineJoin LineJoin    { get; set; } = LineJoin.Miter;
     public float    MiterLimit        { get; set; } = float.NaN;
-    public LineCap  StrokeLineCap     { get; set; } = LineCap.Butt;
-    public float[]  StrokeDashPattern { get; set; } = { };
-    public float    StrokeDashOffset  { get; set; } = float.NaN;
+    public LineCap  LineCap     { get; set; } = LineCap.Butt;
+    public float[]  DashPattern { get; set; } = { };
+    public float    DashOffset  { get; set; } = float.NaN;
 
     public override int GetHashCode()
     {
         unchecked
         {
-            int hashcode = StrokeColor.GetHashCode();
-            hashcode = hashcode  ^ StrokeSize.GetHashCode();
-            hashcode = hashcode  ^ StrokeLineJoin.GetHashCode();
+            int hashcode = Color.GetHashCode();
+            hashcode = hashcode  ^ Size.GetHashCode();
+            hashcode = hashcode  ^ LineJoin.GetHashCode();
             hashcode = hashcode  ^ MiterLimit.GetHashCode();
-            hashcode = hashcode  ^ StrokeLineCap.GetHashCode();
-            hashcode = hashcode  ^ StrokeDashPattern.GetHashCode();
-            hashcode = hashcode  ^ StrokeDashOffset.GetHashCode();
+            hashcode = hashcode  ^ LineCap.GetHashCode();
+            hashcode = hashcode  ^ DashPattern.GetHashCode();
+            hashcode = hashcode  ^ DashOffset.GetHashCode();
             return hashcode;
         }
     }
@@ -38,13 +38,13 @@ public class Stroke
     public override bool Equals(object obj)
     {
         if (obj is Stroke other)
-            return StrokeColor.Equals(other.StrokeColor)
-                && StrokeSize.NearlyEqual(other.StrokeSize) 
-                && StrokeLineJoin == other.StrokeLineJoin
+            return Color.Equals(other.Color)
+                && Size.NearlyEqual(other.Size) 
+                && LineJoin == other.LineJoin
                 && MiterLimit.NearlyEqual(other.MiterLimit)
-                && StrokeLineCap == other.StrokeLineCap
-                && StrokeDashPattern == other.StrokeDashPattern
-                && StrokeDashOffset.NearlyEqual(other.StrokeDashOffset)
+                && LineCap == other.LineCap
+                && DashPattern == other.DashPattern
+                && DashOffset.NearlyEqual(other.DashOffset)
                 ;
 
 
@@ -60,13 +60,13 @@ public static class StrokeEx
         if (stroke == null)
             return;
 
-        canvas.StrokeColor       = stroke.StrokeColor;
-        canvas.StrokeSize        = stroke.StrokeSize;
-        canvas.StrokeLineJoin    = stroke.StrokeLineJoin;
+        canvas.StrokeColor       = stroke.Color;
+        canvas.StrokeSize        = stroke.Size;
+        canvas.StrokeLineJoin    = stroke.LineJoin;
         canvas.MiterLimit        = stroke.MiterLimit;
-        canvas.StrokeLineCap     = stroke.StrokeLineCap;
-        canvas.StrokeDashPattern = stroke.StrokeDashPattern;
-        canvas.StrokeDashOffset  = stroke.StrokeDashOffset;
+        canvas.StrokeLineCap     = stroke.LineCap;
+        canvas.StrokeDashPattern = stroke.DashPattern;
+        canvas.StrokeDashOffset  = stroke.DashOffset;
     }
 }
 

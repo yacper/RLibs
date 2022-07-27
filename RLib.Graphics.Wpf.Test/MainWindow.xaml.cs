@@ -35,8 +35,9 @@ namespace RLib.Graphics.Wpf.Test
             obj.Reset();
 
             obj.Background = Colors.Black;
-            obj.DrawLine(new Point(0,100), new Point(100,0), new Stroke(){StrokeColor = Colors.Yellow}, new Rect(0, 50, 50, 50));
-            obj.DrawLine(new Point(0,0), new Point(100,100), new Stroke(){StrokeColor = Colors.Red});
+            obj.DrawLine(new Point(0,100), new Point(100,0), new Stroke(){Color = Colors.Yellow}, new Rect(0, 50, 50, 50));
+            obj.DrawLine(new Point(0,0), new Point(100,100), new Stroke(){Color = Colors.Red});
         }
+
     }
 }

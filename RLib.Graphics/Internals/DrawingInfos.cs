@@ -318,7 +318,7 @@ internal class StringInfo : DrawingInfo
 //      public override EDrawing Type { get{ return EDrawing.Geometry; } }
 
 //      public ELineStyle   StrokeStyle { get; set; }
-//      public Color        StrokeColor { get; set; }                             // 线颜色（线颜色相同的线可以合并）
+//      public Color        Color { get; set; }                             // 线颜色（线颜色相同的线可以合并）
 //      public float        StrokWidth { get; set; }
 //      public Rect?        Clip { get; set; }
 

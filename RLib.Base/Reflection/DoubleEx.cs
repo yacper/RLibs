@@ -19,6 +19,13 @@ namespace RLib.Base
         public const string NullText = "null";
         public const string NanText = "nan";
 
+        public static bool NearlyEqual(this float f1, float f2, float epsilon = 0.001f)
+        => Math.Abs(f1 - f2) < epsilon;
+
+        public static bool NearlyEqual(this double f1, double f2, double epsilon = 0.00001f)
+        => Math.Abs(f1 - f2) < epsilon;
+
+
         public static string ToPercentString(this double val)
         {
             return (Math.Round((double) val * 100d, 2)).ToString() + "%";

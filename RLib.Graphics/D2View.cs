@@ -130,7 +130,7 @@ public class D2View : ObservableObject, ID2View
                 //{
                 //    //todo: style 后面做
                 //    GeometryInfo                      info        = d as GeometryInfo;
-                //    SharpDX.Direct2D1.SolidColorBrush strokeColor = ResolveSolidColorBrush(info.StrokeColor);
+                //    SharpDX.Direct2D1.SolidColorBrush strokeColor = ResolveSolidColorBrush(info.Color);
                 //    SharpDX.Direct2D1.SolidColorBrush fillColor   = null;
                 //    if (info.FillColor != null)
                 //        fillColor = ResolveSolidColorBrush(info.FillColor.Value);
@@ -447,7 +447,7 @@ public class D2View : ObservableObject, ID2View
     //{
     //    GeometryInfo info = GeoPool.Get();
     //    info.Nodes       = points;
-    //    info.StrokeColor = strokeColor;
+    //    info.Color = strokeColor;
     //    info.StrokWidth  = strokeWidth;
     //    info.StrokeStyle = strokeStyle;
     //    info.FillColor   = fillColor;

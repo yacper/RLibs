@@ -17,6 +17,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Graphics.Text;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace RLib.Graphics;
@@ -280,6 +281,107 @@ public class D2View : ObservableObject, ID2View
         AddDrawingInfo_(info);
     }
 
+    public void DrawRoundedRectangle(Rect rect, float cornerRadius, Stroke stroke, Fill fill = null, Rect? clip = null, int zindex = 0)
+    {
+        RectangleInfo info = RectPool.Get();
+        info.Stroke = stroke;
+        info.Fill   = fill;
+        info.ZIndex = zindex;
+        info.Clip   = clip;
+
+        info.Rect         = rect;
+        info.CornerRadius = cornerRadius;
+
+        AddDrawingInfo_(info);
+
+    }
+
+
+    public void DrawEllipse(Rect rect, Stroke stroke, Fill fill = null, Rect? clip = null, int zindex = 0)
+    {
+        EllipseInfo info = EllipsePool.Get();
+        info.Stroke = stroke;
+        info.Fill   = fill;
+        info.ZIndex = zindex;
+        info.Clip   = clip;
+
+        info.Rect         = rect;
+
+        AddDrawingInfo_(info);
+    }
+
+    public void DrawPath(PathF path, Stroke stroke, Fill fill =null, WindingMode windingMode =WindingMode.NonZero, Rect? clip = null, int zindex = 0)
+    {
+        PathInfo info = PathPool.Get();
+        info.Stroke = stroke;
+        info.Fill   = fill;
+        info.ZIndex = zindex;
+        info.Clip   = clip;
+
+        info.Path         = path;
+
+        AddDrawingInfo_(info);
+    }
+
+    public void DrawImage(IImage image, Rect rect, Stroke stroke, Fill fill = null, Rect? clip = null, int zindex = 0)
+    {
+        ImageInfo info = ImagePool.Get();
+        info.Stroke = stroke;
+        info.Fill   = fill;
+        info.ZIndex = zindex;
+        info.Clip   = clip;
+
+        info.Image         = image;
+        info.Rect         = rect;
+
+        AddDrawingInfo_(info);
+    }
+
+    public void DrawString(string value, Point pt, FontSpec font, HorizontalAlignment horizontalAlignment, Rect? clip = null, int zindex = 0)
+    {
+        DrawString(value, new Rect(pt.X, pt.Y, double.NaN, double.NaN), font, horizontalAlignment, VerticalAlignment.Top, TextFlow.ClipBounds, 0, clip, zindex);
+    }
+
+    public void DrawString(string value, Rect rect, FontSpec font, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment = VerticalAlignment.Center, TextFlow textFlow = TextFlow.ClipBounds,
+        float                     lineSpacingAdjustment = 0, Rect? clip = null, int zindex = 0)
+    {
+        StringInfo info = StringPool.Get();
+        info.Font   = font;
+        info.ZIndex = zindex;
+        info.Clip   = clip;
+
+        info.Value               = value;
+        info.Rect                = rect;
+        info.HorizontalAlignment = horizontalAlignment;
+        info.VerticalAlignment = verticalAlignment;
+        info.TextFlow = textFlow;
+        info.LineSpacingAdjustment = lineSpacingAdjustment;
+
+        AddDrawingInfo_(info);
+    }
+
+    public SizeF GetStringSize(string value, IFont font, float fontSize) => Canvas.GetStringSize(value, font, fontSize);
+
+    public SizeF GetStringSize(string value, IFont font, float fontSize, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment) =>
+        Canvas.GetStringSize(value, font, fontSize, horizontalAlignment, verticalAlignment);
+
+
+    public void DrawText(IAttributedText value, Rect rect, FontSpec font, Rect? clip = null, int zindex = 0)
+    {
+        StringInfo info = StringPool.Get();
+        info.Font   = font;
+        info.ZIndex = zindex;
+        info.Clip   = clip;
+
+        info.Text               = value;
+        info.Rect                = rect;
+
+        AddDrawingInfo_(info);
+    }
+
+
+
+
     //void                DrawTriangle(Point a, Point b, Point c, Color clr, int zindex = 0);
 
     //void                DrawQuad(Point a, Point b, Point c, Point d, Color clr, int zindex = 0);
@@ -467,9 +569,13 @@ public class D2View : ObservableObject, ID2View
     protected Color                         Background_   = Colors.Black;
 //    protected List<TextFormat>                          _TextFormats  = new List<TextFormat>();
 
-    internal static ObjectPool<LineInfo> LineInfoPool = new ObjectPool<LineInfo>(200000);
+    internal ObjectPool<LineInfo> LineInfoPool = new ObjectPool<LineInfo>(200000);
 
-    internal static ObjectPool<RectangleInfo> RectPool = new ObjectPool<RectangleInfo>(200000);
+    internal ObjectPool<RectangleInfo> RectPool = new ObjectPool<RectangleInfo>(200000);
+    internal ObjectPool<EllipseInfo> EllipsePool = new (2000);
+    internal ObjectPool<PathInfo> PathPool = new (2000);
+    internal ObjectPool<ImageInfo> ImagePool = new (200);
+    internal ObjectPool<StringInfo> StringPool = new (200);
     //public static ObjectPool<TextInfo>      TextPool     = new ObjectPool<TextInfo>(5000);
     //public static ObjectPool<ImageInfo>     ImagePool    = new ObjectPool<ImageInfo>(5000);
     //public static ObjectPool<GeometryInfo>  GeoPool      = new ObjectPool<GeometryInfo>(5000);

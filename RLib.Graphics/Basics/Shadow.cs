@@ -6,6 +6,7 @@
 // modifiers:
 
 using Microsoft.Maui.Graphics;
+using RLib.Graphics.Helpers;
 
 namespace RLib.Graphics;
 
@@ -29,15 +30,13 @@ public class Shadow
         if (obj is Shadow other)
             return Color.Equals(other.Color)
                 && Offset.Equals(other.Offset)
-                && NearlyEqual(Blur, other.Blur)
+                && Blur.NearlyEqual(other.Blur)
                 ;
 
         return base.Equals(obj);
     }
 
-    static bool NearlyEqual(float f1, float f2, float epsilon = 0.01f)
-        => Math.Abs(f1 - f2) < epsilon;
-
+  
 }
 
 public static class ShadowEx

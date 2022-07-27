@@ -5,7 +5,9 @@
 // purpose:
 // modifiers:
 
+using System.Net.Mime;
 using Microsoft.Maui.Graphics;
+using Microsoft.Maui.Graphics.Text;
 
 namespace RLib.Graphics;
 
@@ -16,8 +18,10 @@ public enum EDrawing // 基础绘图元素
     Quad      = 4,
     Text      = 8,  // 文字
     Rectangle = 16, // 长方形
+    Ellipse = 16, // 椭圆
+    Path = 16, // Path
     Image     = 32, // 图片
-    Geometry  = 64, // 
+    String  = 64, // 
 }
 
 internal class DrawingInfo // 
@@ -30,6 +34,8 @@ internal class DrawingInfo //
     public          Fill     Fill   { get; set; }
     public          Shadow   Shadow  { get; set; }
 
+    public          FontSpec   Font  { get; set; }
+
     public override int GetHashCode()       // state hash code
     {
         int ret = 0;
@@ -39,6 +45,9 @@ internal class DrawingInfo //
             ret ^= Fill.GetHashCode();
        if (Shadow != null)
             ret ^= Shadow.GetHashCode();
+       if (Font != null)
+            ret ^= Font.GetHashCode();
+
 
        if (Clip != null)
             ret ^= Clip.GetHashCode();
@@ -69,21 +78,120 @@ internal class RectangleInfo : DrawingInfo
 {
     public override EDrawing Type   { get { return EDrawing.Rectangle; } }
 
-    public Rect Rect { get; set; }
+    public Rect   Rect         { get; set; }
+
+    public float? CornerRadius { get; set; }        // 圆角矩形
+
+    public override void OnDraw(ICanvas c)
+    {
+        if (CornerRadius == null)
+        {
+            if (Fill != null)
+            {
+                if (Fill.Color != null)
+                    c.FillRectangle(Rect);
+
+                if (Fill.Paint != null)
+                    c.SetFillPaint(Fill.Paint, Rect);
+            }
+
+            c.DrawRectangle(Rect);
+        }
+        else// 圆角矩形
+        {
+            if (Fill != null)
+            {
+                if (Fill.Color != null)
+                    c.FillRoundedRectangle(Rect, (double)CornerRadius.Value);
+
+                if (Fill.Paint != null)
+                    c.SetFillPaint(Fill.Paint, Rect);
+            }
+
+            c.DrawRoundedRectangle(Rect, (double)CornerRadius.Value);
+        }
+     }
+}
+
+internal class EllipseInfo : DrawingInfo
+{
+    public override EDrawing Type   { get { return EDrawing.Ellipse; } }
+
+    public Rect   Rect         { get; set; }
 
     public override void OnDraw(ICanvas c)
     {
         if (Fill != null)
         {
-            if(Fill.Color != null)
-                c.FillRectangle(Rect);
-
-            if(Fill.Paint != null)
-                c.SetFillPaint(Fill.Paint, Rect);
+            if (Fill.Color != null)
+                c.FillEllipse(Rect);
         }
-        c.DrawRectangle(Rect);
+
+        c.DrawEllipse(Rect);
     }
 }
+
+internal class PathInfo : DrawingInfo
+{
+    public override EDrawing Type   { get { return EDrawing.Path; } }
+
+    public PathF   Path         { get; set; }
+
+    public override void OnDraw(ICanvas c)
+    {
+        if (Fill != null)
+        {
+            if (Fill.Color != null)
+                c.FillPath(Path);
+        }
+
+        c.FillPath(Path);
+    }
+}
+
+internal class ImageInfo : DrawingInfo
+{
+    public override EDrawing Type   { get { return EDrawing.Image; } }
+
+    public IImage Image { get; set; }
+    public Rect      Rect { get; set; }
+
+    public override void OnDraw(ICanvas c)
+    {
+        c.DrawImage(Image, (float)Rect.X, (float)Rect.Y, (float)Rect.Width, (float)Rect.Height);
+    }
+}
+
+internal class StringInfo : DrawingInfo
+{
+    public override EDrawing Type   { get { return EDrawing.String; } }
+
+    public string              Value                 { get; set; }
+    public RectF               Rect                  { get; set; }
+    public HorizontalAlignment HorizontalAlignment   { get; set; } = HorizontalAlignment.Left;
+    public VerticalAlignment   VerticalAlignment     { get; set; } = VerticalAlignment.Top;
+    public TextFlow            TextFlow              { get; set; } = TextFlow.ClipBounds;
+    public float               LineSpacingAdjustment { get; set; } = 0;
+
+    public IAttributedText  Text { get; set; }
+
+    public override void OnDraw(ICanvas c)
+    {
+        if (Value != null)
+        {
+            if (double.IsNaN(Rect.Width))
+                c.DrawString(Value, Rect.X, Rect.Y, HorizontalAlignment);
+            else
+                c.DrawString(Value, Rect, HorizontalAlignment, VerticalAlignment, TextFlow, LineSpacingAdjustment);
+        }
+
+        if (Text != null)
+        {
+            c.DrawText(Text, Rect.X, Rect.Y, Rect.Width, Rect.Height);
+        }
+     }
+}
+
 
 //public class TriangleInfo:LineInfo
 //{

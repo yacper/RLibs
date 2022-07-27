@@ -7,6 +7,7 @@
 
 using Microsoft.Maui.Graphics;
 
+using RLib.Graphics.Helpers;
 namespace RLib.Graphics;
 
 public class Stroke
@@ -38,21 +39,17 @@ public class Stroke
     {
         if (obj is Stroke other)
             return StrokeColor.Equals(other.StrokeColor)
-                && NearlyEqual(StrokeSize, other.StrokeSize)
+                && StrokeSize.NearlyEqual(other.StrokeSize) 
                 && StrokeLineJoin == other.StrokeLineJoin
-                && NearlyEqual(MiterLimit, other.MiterLimit)
+                && MiterLimit.NearlyEqual(other.MiterLimit)
                 && StrokeLineCap == other.StrokeLineCap
                 && StrokeDashPattern == other.StrokeDashPattern
-                && NearlyEqual(StrokeDashOffset, other.StrokeDashOffset)
+                && StrokeDashOffset.NearlyEqual(other.StrokeDashOffset)
                 ;
 
 
         return base.Equals(obj);
     }
-
-
-	static bool NearlyEqual(float f1, float f2, float epsilon = 0.01f)
-			=> Math.Abs(f1 - f2) < epsilon;
 
 }
 

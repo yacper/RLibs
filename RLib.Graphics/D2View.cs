@@ -67,6 +67,9 @@ public class D2View : ObservableObject, ID2View
                 Canvas.Apply(info.Stroke);
                 Canvas.Apply(info.Fill);
 
+                if(info.Clip != null)
+                    Canvas.ClipRectangle(info.Clip.Value);
+
                 foreach (DrawingInfo d in l) { d.OnDraw(Canvas); }
 
                 Canvas.RestoreState();
@@ -460,7 +463,6 @@ public class D2View : ObservableObject, ID2View
     protected double Height_;
 
 
-    //protected OrderedDictionary  DrawingInfos_ = new OrderedDictionary<int, List<DrawingInfo>>();
     internal Dictionary<int, Dictionary<int, List<DrawingInfo>>> DrawingInfos_ = new();
     protected Color                         Background_   = Colors.Black;
 //    protected List<TextFormat>                          _TextFormats  = new List<TextFormat>();

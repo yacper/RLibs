@@ -5,7 +5,6 @@
 // purpose:
 // modifiers:
 
-using KellermanSoftware.CompareNetObjects;
 using Microsoft.Maui.Graphics;
 
 namespace RLib.Graphics;

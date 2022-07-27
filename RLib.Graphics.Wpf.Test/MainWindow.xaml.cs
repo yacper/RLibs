@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using Microsoft.Maui.Graphics;
 using Colors = Microsoft.Maui.Graphics.Colors;
 using Point = Microsoft.Maui.Graphics.Point;
+using Rect = Microsoft.Maui.Graphics.Rect;
 
 namespace RLib.Graphics.Wpf.Test
 {
@@ -34,6 +35,7 @@ namespace RLib.Graphics.Wpf.Test
             obj.Reset();
 
             obj.Background = Colors.Black;
+            obj.DrawLine(new Point(0,100), new Point(100,0), new Stroke(){StrokeColor = Colors.Yellow}, new Rect(0, 50, 50, 50));
             obj.DrawLine(new Point(0,0), new Point(100,100), new Stroke(){StrokeColor = Colors.Red});
         }
     }

@@ -30,7 +30,7 @@ internal class DrawingInfo //
     public          Fill     Fill   { get; set; }
     public          Shadow   Shadow  { get; set; }
 
-    public override int GetHashCode()
+    public override int GetHashCode()       // state hash code
     {
         int ret = 0;
         if (Stroke != null)
@@ -39,6 +39,9 @@ internal class DrawingInfo //
             ret ^= Fill.GetHashCode();
        if (Shadow != null)
             ret ^= Shadow.GetHashCode();
+
+       if (Clip != null)
+            ret ^= Clip.GetHashCode();
        return ret;
     }
 
@@ -90,13 +93,6 @@ internal class RectangleInfo : DrawingInfo
 //    public override int Count { get { return Nodes.Count / 3; } }
 //}
 
-//public class QuadInfo:LineInfo
-//{
-//    public override EDrawing  Type { get{ return EDrawing.Quad; } }
-
-//    public Color       FillColor { get; set; }                         // 填充颜色(填充颜色相同的quad可以合并, 否则不能)
-//    public override int Count { get { return Nodes.Count / 4; } }
-//}
 
 //  public enum TextAlignment
 //  {

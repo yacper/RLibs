@@ -26,7 +26,6 @@ public class Fill
 
             return ret;
         }
-
     }
 
     public override bool Equals(object obj)

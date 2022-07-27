@@ -7,7 +7,7 @@ Console.WriteLine($"MainThread:{Thread.CurrentThread.ManagedThreadId}");
 Thread t = new Thread(() =>
 {
     Console.WriteLine($"Work Thread:{Thread.CurrentThread.ManagedThreadId}");
-    MainThreadEx.ExecuteInMainThread(() =>
+    MainThreadEx.ExecuteInUIThread(() =>
     {
         Console.WriteLine($"Thread:{Thread.CurrentThread.ManagedThreadId}");
     });

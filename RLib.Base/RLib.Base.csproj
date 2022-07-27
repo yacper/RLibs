@@ -23,6 +23,10 @@
 		<PackageReference Include="System.Management" Version="5.0.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Attributes\" />
+	</ItemGroup>
+
 	<!--<ItemGroup>
 		<Protobuf Include="Protos\*.proto" OutputDir="ProtoMessages" CompileOutputs="false" />
 		<Protobuf Include="Protos\LibModels\*.proto" OutputDir="ProtoMessages" CompileOutputs="false" />

@@ -16,6 +16,35 @@ public class FontSpec
     public float Size { get; set; } = 12;
     public IFont Font { get; set; } = Microsoft.Maui.Graphics.Font.Default;
 
+    public FontSpec WithColor(Color c)
+    {
+        return new FontSpec()
+        {
+            Color = c,
+            Size  = Size,
+            Font  = Font
+        };
+    }
+    public FontSpec WithSize(float size)
+    {
+        return new FontSpec()
+        {
+            Color = Color,
+            Size  = size,
+            Font  = Font
+        };
+    }
+    public FontSpec WithFont(IFont font)
+    {
+        return new FontSpec()
+        {
+            Color = Color,
+            Size  = Size,
+            Font  =font 
+        };
+    }
+
+
     public override int GetHashCode()
     {
         unchecked

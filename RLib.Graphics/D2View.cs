@@ -48,7 +48,9 @@ public class D2View : ObservableObject, ID2View
 
     public virtual void Render() // 重新绘制
     {
-        //Reset();
+        //if (!IsDirty)
+        //    return;
+        ////Reset();
 
         OnRendering?.Invoke(this);
 

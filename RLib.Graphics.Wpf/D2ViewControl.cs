@@ -6,6 +6,7 @@
 // modifiers:
 
 using System.Windows.Controls;
+using System.Windows.Threading;
 using Microsoft.Maui.Graphics;
 using Microsoft.Maui.Graphics.Skia;
 using SkiaSharp;
@@ -17,10 +18,11 @@ public class D2ViewControl:UserControl
 {
     public ID2View D2View { get; protected set; }
 
+    public bool Dirty { get; set; } // 是否dirty，如果dirty，需要重新绘制
+
     public virtual void OnRendering(ID2View view)
     {
         view.Reset();
-
     }
 
 
@@ -33,6 +35,17 @@ public class D2ViewControl:UserControl
         SKElement_.SizeChanged  += SKElement__SizeChanged;
 
         Content = SKElement_;
+
+
+        m_pTimer.Interval  =  TimeSpan.FromMilliseconds(1000 / 120);
+        m_pTimer.Tick += (sender, args) =>
+        {
+            if(Dirty)
+                SKElement_.InvalidateVisual();
+            Dirty = false;
+        };
+        m_pTimer.IsEnabled =  true;
+        m_pTimer.Start();
     }
 
     private void SKElement__SizeChanged(object sender, System.Windows.SizeChangedEventArgs e)
@@ -51,7 +64,7 @@ public class D2ViewControl:UserControl
     }
 
   
-    private SKElement SKElement_;
+    protected SKElement SKElement_;
 
-    
+    DispatcherTimer m_pTimer = new DispatcherTimer(DispatcherPriority.Send);
 }

@@ -17,8 +17,10 @@ public class D2ViewControl:UserControl
 {
     public ID2View D2View { get; protected set; }
 
-    public virtual void OnRendering(ID2View obj)
+    public virtual void OnRendering(ID2View view)
     {
+        view.Reset();
+
     }
 
 

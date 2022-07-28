@@ -551,9 +551,12 @@ public class D2View : ObservableObject, ID2View
 
         LineInfoPool.Reset();
         RectPool.Reset();
-        //TextPool.Reset();
-        //ImagePool.Reset();
-        //GeoPool.Reset();
+        EllipsePool.Reset();
+        PathPool.Reset();
+
+        ImagePool.Reset();
+        StringPool.Reset();
+
     }
 
     public virtual void OnRender() { }

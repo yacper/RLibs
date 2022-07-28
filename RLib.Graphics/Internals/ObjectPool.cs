@@ -28,7 +28,6 @@ internal class ObjectPool<T> where T : class
     {
         for (int i = 0; i != count; ++i)
             _List.Add(Activator.CreateInstance<T>());
-        Index = count;
     }
 
     protected int     Index = 0;

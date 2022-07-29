@@ -18,7 +18,7 @@ public class D2ViewControl:UserControl
 {
     public ID2View D2View { get; protected set; }
 
-    public bool Dirty { get; set; } // 是否dirty，如果dirty，需要重新绘制
+    public virtual bool Dirty { get; set; } // 是否dirty，如果dirty，需要重新绘制
 
     public virtual void OnRendering(ID2View view)
     {

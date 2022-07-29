@@ -52,6 +52,8 @@ public class D2View : ObservableObject, ID2View
         //    return;
         ////Reset();
 
+        Canvas.Antialias = false;
+
         OnRendering?.Invoke(this);
 
         OnRender();

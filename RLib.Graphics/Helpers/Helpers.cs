@@ -21,7 +21,9 @@ public static class Helpers
 
     public static Point TopLeft(this Rect r) { return r.Location; }
     public static Point TopRight(this Rect r) { return new Point(r.Right, r.Top); }
+    public static Point TopCenter(this Rect r) { return new Point(r.Left+ r.Width/2, r.Top); }
     public static Point BottomLeft(this Rect r) { return new Point(r.Left, r.Bottom); }
     public static Point BottomRight(this Rect r) { return new Point(r.Right, r.Bottom); }
+    public static Point BottomCenter(this Rect r) { return new Point(r.Left+r.Width/2, r.Bottom); }
 
 }

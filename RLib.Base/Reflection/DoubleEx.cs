@@ -95,19 +95,18 @@ namespace RLib.Base
 
             int index = ret.IndexOf('.');
 
-            int digits = ret.Length-1 - index;
+            int digits = index > 0 ? ret.Length - 1 - index : ret.Length;
             if (digits == ret.Length)
             {
-                ret += ".";
+                ret    += ".";
+                digits =  0;
             }
             else if (digits >= cover)
             {
                 return ret;
             }
-            else
-            {
-                digits = cover - digits;
-            }
+
+            digits = cover - digits;
 
             for (int i = 0; i != digits; ++i)
                 ret += "0";

@@ -71,6 +71,7 @@ public class D2View : ObservableObject, ID2View
                 Canvas.Apply(info.Shadow);
                 Canvas.Apply(info.Stroke);
                 Canvas.Apply(info.Fill);
+                Canvas.Apply(info.Font);
 
                 if(info.Clip != null)
                     Canvas.ClipRectangle(info.Clip.Value);
@@ -346,7 +347,7 @@ public class D2View : ObservableObject, ID2View
         DrawString(value, new Rect(pt.X, pt.Y, double.NaN, double.NaN), font, horizontalAlignment, VerticalAlignment.Top, TextFlow.ClipBounds, 0, clip, zindex);
     }
 
-    public void DrawString(string value, Rect rect, FontSpec font, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment = VerticalAlignment.Center, TextFlow textFlow = TextFlow.ClipBounds,
+    public void DrawString(string value, Rect rect, FontSpec font, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment = VerticalAlignment.Center, TextFlow textFlow = TextFlow.OverflowBounds,
         float                     lineSpacingAdjustment = 0, Rect? clip = null, int zindex = 0)
     {
         StringInfo info = StringPool.Get();
@@ -364,9 +365,9 @@ public class D2View : ObservableObject, ID2View
         AddDrawingInfo_(info);
     }
 
-    public SizeF GetStringSize(string value, IFont font, float fontSize) => Canvas.GetStringSize(value, font, fontSize);
+    public Size GetStringSize(string value, IFont font, float fontSize) => Canvas.GetStringSize(value, font, fontSize);
 
-    public SizeF GetStringSize(string value, IFont font, float fontSize, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment) =>
+    public Size GetStringSize(string value, IFont font, float fontSize, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment) =>
         Canvas.GetStringSize(value, font, fontSize, horizontalAlignment, verticalAlignment);
 
 

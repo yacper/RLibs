@@ -17,4 +17,7 @@ public static class Helpers
 
     public static Point CenterPoint(this Rect r) { return new Point(r.Left + r.Width / 2, r.Top + r.Height / 2); }
 
+    public static Size Ceiling(this Size value) { return new Size(Math.Ceiling(value.Width), Math.Ceiling(value.Height)); }
+    public static Size Floor(this Size value) { return new Size(Math.Floor(value.Width), Math.Floor(value.Height)); }
+  
 }

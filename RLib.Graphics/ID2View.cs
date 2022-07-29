@@ -48,11 +48,11 @@ public interface ID2View : INotifyPropertyChanged
 
     void DrawImage(IImage image, Rect rect, Stroke stroke, Fill fill=null, Rect? clip = null, int zindex = 0);
 
-    public void DrawString(string value, Point pt, FontSpec font, HorizontalAlignment horizontalAlignment, Rect? clip = null, int zindex = 0);
-    public void DrawString(string value, Rect rect, FontSpec font,  HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment, TextFlow textFlow = TextFlow.ClipBounds,
+    public void DrawString(string value, Point pt, FontSpec font, HorizontalAlignment horizontalAlignment, Rect? clip = null, int zindex = 0); // Text Rect BottomLeft
+    public void DrawString(string value, Rect rect, FontSpec font,  HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment, TextFlow textFlow = TextFlow.OverflowBounds,
         float                     lineSpacingAdjustment = 0, Rect? clip = null, int zindex = 0);
-	public SizeF GetStringSize(string value, IFont font, float fontSize);
-    public SizeF GetStringSize(string value, IFont font, float fontSize, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment);
+	public Size GetStringSize(string value, IFont font, float fontSize);
+    public Size GetStringSize(string value, IFont font, float fontSize, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment);
 
     public void DrawText(IAttributedText value, Rect rect, FontSpec font, Rect? clip = null, int zindex = 0);
 

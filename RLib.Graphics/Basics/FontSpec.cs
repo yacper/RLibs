@@ -79,6 +79,8 @@ public static class FontSpecEx
 
         canvas.Font      = font.Font;
         canvas.FontColor = font.Color;
-        canvas.FontSize = font.Size;
+        canvas.FontSize  = font.Size;
+
+        canvas.Antialias = true;        // default open
     }
 }

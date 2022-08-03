@@ -19,10 +19,10 @@ namespace RLib.Base
         public const string NullText = "null";
         public const string NanText = "nan";
 
-        public static bool NearlyEqual(this float f1, float f2, float epsilon = 0.001f)
+        public static bool NearlyEqual(this float f1, float f2, float epsilon = 0.00001f)
         => Math.Abs(f1 - f2) < epsilon;
 
-        public static bool NearlyEqual(this double f1, double f2, double epsilon = 0.00001f)
+        public static bool NearlyEqual(this double f1, double f2, double epsilon = 0.000001d)
         => Math.Abs(f1 - f2) < epsilon;
 
 

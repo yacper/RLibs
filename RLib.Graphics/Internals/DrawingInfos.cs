@@ -95,7 +95,8 @@ internal class RectangleInfo : DrawingInfo
                     c.SetFillPaint(Fill.Paint, Rect);
             }
 
-            c.DrawRectangle(Rect);
+            if(Stroke != null)
+                c.DrawRectangle(Rect);
         }
         else// 圆角矩形
         {
@@ -108,7 +109,8 @@ internal class RectangleInfo : DrawingInfo
                     c.SetFillPaint(Fill.Paint, Rect);
             }
 
-            c.DrawRoundedRectangle(Rect, (double)CornerRadius.Value);
+            if(Stroke != null)
+                c.DrawRoundedRectangle(Rect, (double)CornerRadius.Value);
         }
      }
 }

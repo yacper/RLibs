@@ -20,6 +20,15 @@ public class Stroke
     public float[]  DashPattern { get; set; } = { };
     public float    DashOffset  { get; set; } = float.NaN;
 
+    public Stroke WithColor(Color c)
+    {
+        var s = MemberwiseClone() as Stroke;
+        s.Color = c;
+        return s;
+    }
+
+
+
     public override int GetHashCode()
     {
         unchecked

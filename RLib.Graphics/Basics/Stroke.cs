@@ -62,6 +62,25 @@ public class Stroke
 
 }
 
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+public class StrokeAttribute : Attribute // 输出
+{
+    public Color    Color       { get; set; } = Colors.Black;
+    public float    Size        { get; set; } = 1;
+    public LineJoin LineJoin    { get; set; } = LineJoin.Miter;
+    public float    MiterLimit        { get; set; } = float.NaN;
+    public LineCap  LineCap     { get; set; } = LineCap.Butt;
+    public float[]  DashPattern { get; set; } = { };
+    public float    DashOffset  { get; set; } = float.NaN;
+
+    public StrokeAttribute(string color)
+    {
+        Color = Color.FromArgb(color);
+    }
+}
+
+
+
 public static class StrokeEx
 {
     public static void Apply(this ICanvas canvas, Stroke stroke)

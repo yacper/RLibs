@@ -32,4 +32,7 @@ public static class AttributeEx
         return ret;
     }
 
+    public static List<T> GetAllAttribute<T>(this object o) where T : Attribute // 系统的不会搜寻interface
+        => o.GetType().GetAllAttribute<T>();
+
 }

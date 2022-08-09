@@ -96,5 +96,19 @@ public static class StrokeEx
         canvas.StrokeDashPattern = stroke.DashPattern;
         canvas.StrokeDashOffset  = stroke.DashOffset;
     }
+
+    public static void Apply(this Stroke stroke, StrokeAttribute attr)
+    {
+        if (stroke == null || attr == null)
+            return;
+
+        stroke.Color       = attr.Color;
+        stroke.Size        = attr.Size;
+        stroke.LineJoin    = attr.LineJoin;
+        stroke.MiterLimit        = attr.MiterLimit;
+        stroke.LineCap     = attr.LineCap;
+        stroke.DashPattern = attr.DashPattern;
+        stroke.DashOffset  = attr.DashOffset;
+    }
 }
 

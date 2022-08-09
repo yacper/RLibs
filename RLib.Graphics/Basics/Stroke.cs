@@ -26,6 +26,13 @@ public class Stroke
         s.Color = c;
         return s;
     }
+    public Stroke WithSize(float sz)
+    {
+        var s = MemberwiseClone() as Stroke;
+        s.Size = sz;
+        return s;
+    }
+
 
 
 

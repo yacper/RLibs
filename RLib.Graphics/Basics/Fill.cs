@@ -39,6 +39,19 @@ public class Fill
     }
 }
 
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
+public class FillAttribute : Attribute // 输出
+{
+    public Color    Color       { get; set; } = Colors.Black;
+    public Paint Paint { get; set; } = null;
+   
+    public FillAttribute(string color)
+    {
+        Color = Color.FromArgb(color);
+    }
+}
+
+
 public static class FillEx
 {
     public static void Apply(this ICanvas canvas, Fill fill, Rect? rect = null)
@@ -50,6 +63,17 @@ public static class FillEx
         if(fill.Paint != null && rect != null)
             canvas.SetFillPaint(fill.Paint, rect.Value);
     }
+
+    public static void Apply(this Fill fill, FillAttribute attr)
+    {
+        if (fill == null || attr == null)
+            return;
+
+        fill.Color = attr.Color;
+        fill.Paint = attr.Paint;
+    }
+
+
 }
 
 

@@ -36,16 +36,23 @@ public class D2ViewControl:UserControl
 
         Content = SKElement_;
 
+        Timer_ = RLib.Base.Timer.Add((objects =>
+                                         {
+                                             if (Dirty)
+                                                 SKElement_.InvalidateVisual();
+                                             Dirty = false;
 
-        m_pTimer.Interval  =  TimeSpan.FromMilliseconds(1000 / 120);
-        m_pTimer.Tick += (sender, args) =>
-        {
-            if(Dirty)
-                SKElement_.InvalidateVisual();
-            Dirty = false;
-        };
-        m_pTimer.IsEnabled =  true;
-        m_pTimer.Start();
+                                         }), null, new TimeSpan(0, 0, 0, 0, 10), 0);
+
+        //m_pTimer.Interval  =  TimeSpan.FromMilliseconds(1000 / 120);
+        //m_pTimer.Tick += (sender, args) =>
+        //{
+        //    if(Dirty)
+        //        SKElement_.InvalidateVisual();
+        //    Dirty = false;
+        //};
+        //m_pTimer.IsEnabled =  true;
+        //m_pTimer.Start();
     }
 
     private void SKElement__SizeChanged(object sender, System.Windows.SizeChangedEventArgs e)
@@ -66,5 +73,6 @@ public class D2ViewControl:UserControl
   
     protected SKElement SKElement_;
 
-    DispatcherTimer m_pTimer = new DispatcherTimer(DispatcherPriority.Send);
+    //DispatcherTimer m_pTimer = new DispatcherTimer(DispatcherPriority.Send);
+    private object Timer_ = null;
 }

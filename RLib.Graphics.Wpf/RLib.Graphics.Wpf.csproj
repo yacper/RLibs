@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RLib.Base\RLib.Base.csproj" />
     <ProjectReference Include="..\RLib.Graphics\RLib.Graphics.csproj" />
   </ItemGroup>
 

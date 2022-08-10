@@ -76,6 +76,10 @@ public class D2View : ObservableObject, ID2View
                 if(info.Clip != null)
                     Canvas.ClipRectangle(info.Clip.Value);
 
+                //// 默认line anti
+                //if (info is LineInfo)
+                //    Canvas.Antialias = true;
+
                 foreach (DrawingInfo d in l) { d.OnDraw(Canvas); }
 
                 Canvas.RestoreState();

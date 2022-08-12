@@ -16,7 +16,9 @@ namespace RLib.Base
 {
     public static class DecimalEx
     {
-        public static double ToDouble(this decimal? val, double def = 0)
+        public static double ToDouble(this decimal val) => Convert.ToDouble(val);
+
+        public static double ToDoubleOrDefault(this decimal? val, double def = 0)
         {
             if (val == null)
                 return def;

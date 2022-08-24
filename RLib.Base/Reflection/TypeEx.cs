@@ -6,6 +6,7 @@
     purpose:	
 *********************************************************************/
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -124,6 +125,8 @@ namespace RLib.Base
             return typeof(T).IsAssignableFrom(t);
         }
 
+
+        public static bool IsCollection(this Type type) => type != typeof(string) && typeof(IEnumerable).IsAssignableFrom(type);
 
 
 

@@ -13,34 +13,50 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using Force.DeepCloner;
 using Google.Protobuf;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace RLib.Base
 {
     public static class JsonEx
     {
-        public static JsonSerializerSettings _settings = new JsonSerializerSettings()
+        public static JsonSerializerSettings DefaultSettings = new JsonSerializerSettings()
         {
             Converters = new List<JsonConverter>()
             {
                 new Newtonsoft.Json.Converters.StringEnumConverter(),
                 new DoubleExConverter(),
                 new ProtoMessageConverter()
-            }
+            },
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore    // 忽略循环引用
         };
-        public static string ToJson(this object o)
+
+        public static string ToJson(this object o) => o.ToJson(Formatting.None, null);
+        public static string ToJson(this object o, Formatting formatting) => o.ToJson(formatting, null);
+        public static string ToJson(this object o, JsonConverter exConverter) => o.ToJson(Formatting.None, exConverter);
+        public static string ToJson(this object o, Formatting formatting, JsonConverter exConverter)
         {
-            return JsonConvert.SerializeObject(o, _settings);
+            if (formatting != Formatting.None || exConverter != null)
+            {
+                var setting = DefaultSettings.DeepClone();
+                setting.Formatting = formatting;
+                if(exConverter != null)
+                    setting.Converters.Add(exConverter);
+                return JsonConvert.SerializeObject(o, setting);
+            }
+            else
+                return JsonConvert.SerializeObject(o, DefaultSettings);
         }
-        public static bool ToJsonFile(this object o, string path)
+        public static bool ToJsonFile(this object o, string path , Formatting formatting= Formatting.None, JsonConverter exConverter = null)
         {
             try
             {
-                string str = o.ToJson();
+                string str = o.ToJson(formatting, exConverter);
                 File.WriteAllText(path, str);
                 return true;
             }
@@ -51,41 +67,41 @@ namespace RLib.Base
             return false;
         }
 
-        public static string ToJsonNoLoop(this object o)
-        {
-            JsonSerializerSettings settings = new JsonSerializerSettings();
-            settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            settings.Converters = new List<JsonConverter>()
-                                  {
-                                      new Newtonsoft.Json.Converters.
-                                          StringEnumConverter(),
-                new DoubleExConverter(),
-                new ProtoMessageConverter()
-                                  };
-            return JsonConvert.SerializeObject(o, settings);
-        }
+        //public static string ToJsonNoLoop(this object o)
+        //{
+        //    JsonSerializerSettings settings = new JsonSerializerSettings();
+        //    settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        //    settings.Converters = new List<JsonConverter>()
+        //                          {
+        //                              new Newtonsoft.Json.Converters.
+        //                                  StringEnumConverter(),
+        //        new DoubleExConverter(),
+        //        new ProtoMessageConverter()
+        //                          };
+        //    return JsonConvert.SerializeObject(o, settings);
+        //}
 
-        public static bool ToJsonNoLoopFile(this object o, string path)
-        {
-            try
-            {
-                string str = o.ToJsonNoLoop();
-                File.WriteAllText(path, str);
-                return true;
-            }
-            catch (Exception e)
-            {
-            }
+        //public static bool ToJsonNoLoopFile(this object o, string path)
+        //{
+        //    try
+        //    {
+        //        string str = o.ToJsonNoLoop();
+        //        File.WriteAllText(path, str);
+        //        return true;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
         public static object ToJsonObj(this string o, Type t)
         {
             if (string.IsNullOrWhiteSpace(o))
                 return null;
 
-            return JsonConvert.DeserializeObject(o, t, _settings);
+            return JsonConvert.DeserializeObject(o, t, DefaultSettings);
         }
 
         public static T ToJsonObj<T>(this string o)
@@ -93,7 +109,7 @@ namespace RLib.Base
             if (string.IsNullOrWhiteSpace(o))
                 return default(T);
 
-            return JsonConvert.DeserializeObject<T>(o, _settings);
+            return JsonConvert.DeserializeObject<T>(o, DefaultSettings);
         }
 
         public static T FileToJsonObj<T>(this string o)
@@ -330,6 +346,49 @@ namespace RLib.Base
             // Let Protobuf's JsonFormatter do all the work.
             writer.WriteRawValue(Google.Protobuf.JsonFormatter.Default
                 .Format((IMessage)value));
+        }
+    }
+
+public class JsonTypeConverter<I, T> : JsonConverter // 提供一个简单的Type转换
+{
+    public override bool CanWrite                    => false;
+    public override bool CanRead                     => true;
+    public override bool CanConvert(Type objectType) { return objectType == typeof(I); }
+
+    public override void WriteJson(JsonWriter writer,
+        object                                value, JsonSerializer serializer)
+    {
+        throw new InvalidOperationException("Use default serialization.");
+    }
+
+    public override object ReadJson(JsonReader reader,
+        Type                                   objectType, object existingValue,
+        JsonSerializer                         serializer)
+        {
+            if (objectType.IsCollection())
+            {
+                //瑕疵，目前直接用List
+                List<T> result = new List<T>();
+                var array = JArray.Load(reader);
+                foreach (JObject jsonObject in array)
+                {
+                    var deserialized = (T)Activator.CreateInstance(typeof(T));
+                    serializer.Populate(jsonObject.CreateReader(), deserialized);
+
+                    result.Add(deserialized);
+                }
+
+                return result;
+            }
+            else
+            {
+                var jarray = JArray.Load(reader);
+                var jsonObject = JObject.Load(reader);
+                var deserialized = (T)Activator.CreateInstance(typeof(T));
+                serializer.Populate(jsonObject.CreateReader(), deserialized);
+                return deserialized;
+            }
+
         }
     }
 }

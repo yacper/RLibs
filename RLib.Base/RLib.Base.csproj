@@ -14,6 +14,7 @@
 	<ItemGroup>
 		<PackageReference Include="CompareNETObjects" Version="4.66.0" />
 		<PackageReference Include="CsvHelper" Version="27.1.1" />
+		<PackageReference Include="DeepCloner" Version="0.10.4" />
 		<PackageReference Include="FluentFTP" Version="28.0.0" />
 		<PackageReference Include="Google.Protobuf" Version="3.21.1" />
 		<PackageReference Include="log4net" Version="2.0.12" />

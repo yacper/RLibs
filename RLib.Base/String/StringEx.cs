@@ -26,6 +26,11 @@ namespace RLib.Base
         {
             return Convert.ToUInt64(str);
         }
+        public static int ToInt(this string str)
+        {
+            return Convert.ToInt32(str);
+        }
+
 
         public static string TrimEnds(this string str, string ends)
         {

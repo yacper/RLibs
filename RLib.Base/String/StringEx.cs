@@ -24,11 +24,11 @@ namespace RLib.Base
 
         public static ulong ToUlong(this string str)
         {
-            return Convert.ToUInt64(str);
+            return str.IsNullOrWhiteSpace()?0:Convert.ToUInt64(str);
         }
         public static int ToInt(this string str)
         {
-            return Convert.ToInt32(str);
+            return str.IsNullOrWhiteSpace()?0:Convert.ToInt32(str);
         }
 
 

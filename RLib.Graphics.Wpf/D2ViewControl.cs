@@ -30,7 +30,7 @@ public class D2ViewControl:UserControl
     {
         D2View                  =  new D2View();
         D2View.OnRendering += OnRendering;
-        SKElement_              =  new SKElement();
+        SKElement_              =  new SKElement(){IgnorePixelScaling = true}; // 忽略高dpi scale情况
         SKElement_.PaintSurface += SKElement__PaintSurface;
         SKElement_.SizeChanged  += SKElement__SizeChanged;
 

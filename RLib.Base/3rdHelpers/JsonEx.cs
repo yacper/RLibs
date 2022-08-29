@@ -20,6 +20,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using Formatting = Newtonsoft.Json.Formatting;
+using Newtonsoft.Json.Utilities;
 
 namespace RLib.Base
 {
@@ -349,7 +350,42 @@ namespace RLib.Base
         }
     }
 
-public class JsonTypeConverter<I, T> : JsonConverter // 提供一个简单的Type转换
+
+    // 指定自定义datetime序列化格式
+	public class DateTimeFormatConverter:IsoDateTimeConverter
+	{
+		public DateTimeFormatConverter(string format)
+		{
+			DateTimeFormat = format;
+		}
+
+        // 修改IsoDateTimeConverter， 使其支持非string value
+		public override object? ReadJson(
+			 JsonReader reader,
+			 Type objectType,
+			 object? existingValue,
+			 JsonSerializer serializer)
+		{
+			bool flag = objectType.IsNullableType();
+			if(reader.TokenType == JsonToken.Null)
+			{
+				if (!flag)
+					throw new Exception($"Cannot convert null value to {(object) objectType}.");
+				return (object)null;
+			}
+			Type type = flag ? Nullable.GetUnderlyingType(objectType) : objectType;
+			if(reader.TokenType == JsonToken.Date)
+				return type == typeof(DateTimeOffset) ? (!(reader.Value is DateTimeOffset) ? (object)new DateTimeOffset((DateTime)reader.Value) : reader.Value) : (reader.Value is DateTimeOffset dateTimeOffset ? (object)dateTimeOffset.DateTime : reader.Value);
+			string str = reader.Value?.ToString();
+			if(str.IsNullOrEmpty() & flag)
+				return (object)null;
+			return type == typeof(DateTimeOffset) ? (!(this.DateTimeFormat.IsNullOrEmpty()) ? (object)DateTimeOffset.ParseExact(str, this.DateTimeFormat, (IFormatProvider)this.Culture, this.DateTimeStyles) : (object)DateTimeOffset.Parse(str, (IFormatProvider)this.Culture, this.DateTimeStyles)) : (!(this.DateTimeFormat.IsNullOrEmpty()) ? (object)DateTime.ParseExact(str, this.DateTimeFormat, (IFormatProvider)this.Culture, this.DateTimeStyles) : (object)DateTime.Parse(str, (IFormatProvider)this.Culture, this.DateTimeStyles));
+		}
+	}
+
+
+
+	public class JsonTypeConverter<I, T> : JsonConverter // 提供一个简单的Type转换
 {
     public override bool CanWrite                    => false;
     public override bool CanRead                     => true;

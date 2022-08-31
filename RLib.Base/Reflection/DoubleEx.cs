@@ -25,6 +25,13 @@ namespace RLib.Base
         public static bool NearlyEqual(this double f1, double f2, double epsilon = 0.000001d)
         => Math.Abs(f1 - f2) < epsilon;
 
+        public static int ToIntOrDefault(this double val, int? defaultValue = 0)
+        {
+            if (val.IsNullOrNan())
+                return defaultValue.GetValueOrDefault();
+            else
+                return Convert.ToInt32(val);
+        }
 
         public static string ToPercentString(this double val)
         {

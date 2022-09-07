@@ -39,21 +39,30 @@ namespace RLib.Base
 
         public static string ToJson(this object o) => o.ToJson(Formatting.None, null);
         public static string ToJson(this object o, Formatting formatting) => o.ToJson(formatting, null);
-        public static string ToJson(this object o, JsonConverter exConverter) => o.ToJson(Formatting.None, exConverter);
-        public static string ToJson(this object o, Formatting formatting, JsonConverter exConverter)
+        public static string ToJson(this object o, JsonConverter exConverter) => o.ToJson(Formatting.None, exConverter.ToEnumerable());
+        public static string ToJson(this object o, IEnumerable<JsonConverter> exConverter) => o.ToJson(Formatting.None, exConverter);
+        public static string ToJson(this object o, Formatting formatting, IEnumerable<JsonConverter> exConverter)
         {
             if (formatting != Formatting.None || exConverter != null)
             {
                 var setting = DefaultSettings.DeepClone();
                 setting.Formatting = formatting;
-                if(exConverter != null)
-                    setting.Converters.Add(exConverter);
+                if (exConverter != null)
+                {
+                    foreach (var c in exConverter)
+                    {
+                        setting.Converters.Add(c);
+                    }
+                }
                 return JsonConvert.SerializeObject(o, setting);
             }
             else
                 return JsonConvert.SerializeObject(o, DefaultSettings);
         }
-        public static bool ToJsonFile(this object o, string path , Formatting formatting= Formatting.None, JsonConverter exConverter = null)
+
+        public static bool ToJsonFile(this object o, string path, Formatting formatting = Formatting.None, JsonConverter exConverter = null) =>
+            o.ToJsonFile(path, formatting, exConverter.ToEnumerable());
+        public static bool ToJsonFile(this object o, string path , Formatting formatting= Formatting.None, IEnumerable<JsonConverter> exConverter = null)
         {
             try
             {
@@ -68,52 +77,34 @@ namespace RLib.Base
             return false;
         }
 
-        //public static string ToJsonNoLoop(this object o)
-        //{
-        //    JsonSerializerSettings settings = new JsonSerializerSettings();
-        //    settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-        //    settings.Converters = new List<JsonConverter>()
-        //                          {
-        //                              new Newtonsoft.Json.Converters.
-        //                                  StringEnumConverter(),
-        //        new DoubleExConverter(),
-        //        new ProtoMessageConverter()
-        //                          };
-        //    return JsonConvert.SerializeObject(o, settings);
-        //}
 
-        //public static bool ToJsonNoLoopFile(this object o, string path)
-        //{
-        //    try
-        //    {
-        //        string str = o.ToJsonNoLoop();
-        //        File.WriteAllText(path, str);
-        //        return true;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //    }
-
-        //    return false;
-        //}
-
-        public static object ToJsonObj(this string o, Type t)
+        //public static object ToJsonObj(this string o, Type t, JsonConverter exConverter=null) => o.ToJsonObj(t, exConverter.ToEnumerable());
+        public static object ToJsonObj(this string o, Type t, IEnumerable<JsonConverter> exConverter = null)
         {
             if (string.IsNullOrWhiteSpace(o))
                 return null;
 
-            return JsonConvert.DeserializeObject(o, t, DefaultSettings);
+            if (exConverter != null)
+            {
+                var setting = DefaultSettings.DeepClone();
+                if (exConverter != null)
+                {
+                    foreach (var c in exConverter) { setting.Converters.Add(c); }
+                }
+
+                return JsonConvert.DeserializeObject(o, t, setting);
+            }
+            else
+                return JsonConvert.DeserializeObject(o, t, DefaultSettings);
         }
 
-        public static T ToJsonObj<T>(this string o)
+        //public static T ToJsonObj<T>(this string o, JsonConverter exConverter = null) => o.ToJsonObj<T>(exConverter.ToEnumerable());
+        public static T ToJsonObj<T>(this string o, IEnumerable<JsonConverter> exConverter=null)
         {
-            if (string.IsNullOrWhiteSpace(o))
-                return default(T);
-
-            return JsonConvert.DeserializeObject<T>(o, DefaultSettings);
+            return (T)o.ToJsonObj(typeof(T), exConverter);
         }
 
-        public static T FileToJsonObj<T>(this string o)
+        public static T FileToJsonObj<T>(this string o, IEnumerable<JsonConverter> exConverter)
         {
             if (string.IsNullOrWhiteSpace(o))
                 return default(T);
@@ -123,7 +114,7 @@ namespace RLib.Base
                 if (File.Exists(o))
                 {
                     string str = File.ReadAllText(o);
-                    return ToJsonObj<T>(str);
+                    return ToJsonObj<T>(str, exConverter);
                 }
             }
             catch (Exception e)

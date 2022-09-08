@@ -20,6 +20,17 @@ namespace RLib.Base
         public static Type ListType => typeof(System.Collections.IList);
         public static Type ArrayType => typeof(System.Array);
 
+        public static bool AddIfNotHave<T>(this ICollection<T> l,  T o)
+        {
+            if (!l.Contains(o))
+            {
+                l.Add(o);
+                return true;
+            }
+
+            return false;
+        }
+
         public static bool  IsList(this Type t)
         {
             if (ListType.IsAssignableFrom(t) &&

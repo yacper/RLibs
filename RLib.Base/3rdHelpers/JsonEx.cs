@@ -79,7 +79,9 @@ namespace RLib.Base
 
 
         //public static object ToJsonObj(this string o, Type t, JsonConverter exConverter=null) => o.ToJsonObj(t, exConverter.ToEnumerable());
-        public static object ToJsonObj(this string o, Type t, IEnumerable<JsonConverter> exConverter = null)
+
+        public static object ToJsonObj(this string o, Type t) => ToJsonObj(o, t, null);
+        public static object ToJsonObj(this string o, Type t, IEnumerable<JsonConverter> exConverter )
         {
             if (string.IsNullOrWhiteSpace(o))
                 return null;
@@ -98,8 +100,8 @@ namespace RLib.Base
                 return JsonConvert.DeserializeObject(o, t, DefaultSettings);
         }
 
-        //public static T ToJsonObj<T>(this string o, JsonConverter exConverter = null) => o.ToJsonObj<T>(exConverter.ToEnumerable());
-        public static T ToJsonObj<T>(this string o, IEnumerable<JsonConverter> exConverter=null)
+        public static T ToJsonObj<T>(this string o) => o.ToJsonObj<T>(null);
+        public static T ToJsonObj<T>(this string o, IEnumerable<JsonConverter> exConverter)
         {
             return (T)o.ToJsonObj(typeof(T), exConverter);
         }

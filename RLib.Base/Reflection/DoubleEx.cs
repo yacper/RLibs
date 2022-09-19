@@ -101,6 +101,8 @@ namespace RLib.Base
             string ret = val.ToString();
 
             int index = ret.IndexOf('.');
+            if (index < 0)      // 没有小数点，直接返回
+                return ret;
 
             int digits = index > 0 ? ret.Length - 1 - index : ret.Length;
             if (digits == ret.Length)

@@ -14,7 +14,7 @@ internal class ObjectPool<T> where T : class
 
     public T Get()
     {
-        if (Index > _List.Count)
+        if (Index >= _List.Count)
         {
             int expand = _List.Count / 2;
             for (int i = 0; i != expand; ++i)

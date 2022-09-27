@@ -47,7 +47,7 @@ public static class PropertyEx
         {
             var pi = pis.LastOrDefault(p => p.Name == s);
             if(pi != null)
-                kvs.Add(pi.Name, pi.GetValue(o));
+                kvs[pi.Name]= pi.GetValue(o);
         }
 
         return kvs.ToJson(exConverters);
@@ -61,7 +61,7 @@ public static class PropertyEx
         Dictionary<string, object> kvs = new Dictionary<string, object>();
         foreach (PropertyInfo pi in pis)
         {
-            kvs.Add(pi.Name, pi.GetValue(o));
+            kvs[pi.Name]= pi.GetValue(o);
         }
 
         return kvs.ToJson(exConverters);
@@ -73,7 +73,7 @@ public static class PropertyEx
         Dictionary<string, object> kvs = new Dictionary<string, object>();
         foreach (PropertyInfo pi in pis)
         {
-            kvs.Add(pi.Name, pi.GetValue(o));
+            kvs[pi.Name]= pi.GetValue(o);
         }
 
         return kvs.ToJson(exConverters);

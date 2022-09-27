@@ -6,22 +6,27 @@
 // modifiers:
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 
 namespace RLib.Base.Attributes;
 
 public static class DefaultValueAttributeEx
 {
-    public static void ApplyDefaultValues(this object o, Type t = null)      // 如果有设置defaultvalue，apply
+    public static void ApplyDefaultValues(this object o, Type t = null, IEnumerable<Type> excludes = null) // 如果有设置defaultvalue，apply
     {
         if(t == null)
             t = o.GetType();
+        if (excludes == null)
+            excludes = new List<Type>();
+
         // 遍历t的继承链上的interface等
-        foreach (Type it in t.GetInterfaces()) { o.ApplyDefaultValues(it); }
+        foreach (Type it in t.GetInterfaces()) { o.ApplyDefaultValues(it, excludes); }
 
         // 遍历t的所有property，找到带有attr的属性
-        foreach (PropertyInfo pi in t.GetProperties())
+        foreach (PropertyInfo pi in t.GetProperties().Where(p=>!excludes.Contains(p.PropertyType)))
         { 
             var d = pi.GetCustomAttribute<DefaultValueAttribute>();
             if (d != null)

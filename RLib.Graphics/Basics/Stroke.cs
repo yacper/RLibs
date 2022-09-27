@@ -5,17 +5,17 @@
 // purpose:
 // modifiers:
 
+using System.ComponentModel;
 using Microsoft.Maui.Graphics;
 
-using RLib.Graphics.Helpers;
 namespace RLib.Graphics;
 
 public class Stroke
-	{
+{
     public Color    Color       { get; set; } = Colors.Black;
     public float    Size        { get; set; } = 1;
     public LineJoin LineJoin    { get; set; } = LineJoin.Miter;
-    public float    MiterLimit        { get; set; } = float.NaN;
+    public float    MiterLimit  { get; set; } = float.NaN;
     public LineCap  LineCap     { get; set; } = LineCap.Butt;
     public float[]  DashPattern { get; set; } = { };
     public float    DashOffset  { get; set; } = float.NaN;
@@ -26,6 +26,7 @@ public class Stroke
         s.Color = c;
         return s;
     }
+
     public Stroke WithSize(float sz)
     {
         var s = MemberwiseClone() as Stroke;
@@ -34,19 +35,17 @@ public class Stroke
     }
 
 
-
-
     public override int GetHashCode()
     {
         unchecked
         {
             int hashcode = Color.GetHashCode();
-            hashcode = hashcode  ^ Size.GetHashCode();
-            hashcode = hashcode  ^ LineJoin.GetHashCode();
-            hashcode = hashcode  ^ MiterLimit.GetHashCode();
-            hashcode = hashcode  ^ LineCap.GetHashCode();
-            hashcode = hashcode  ^ DashPattern.GetHashCode();
-            hashcode = hashcode  ^ DashOffset.GetHashCode();
+            hashcode = hashcode ^ Size.GetHashCode();
+            hashcode = hashcode ^ LineJoin.GetHashCode();
+            hashcode = hashcode ^ MiterLimit.GetHashCode();
+            hashcode = hashcode ^ LineCap.GetHashCode();
+            hashcode = hashcode ^ DashPattern.GetHashCode();
+            hashcode = hashcode ^ DashOffset.GetHashCode();
             return hashcode;
         }
     }
@@ -55,37 +54,71 @@ public class Stroke
     {
         if (obj is Stroke other)
             return Color.Equals(other.Color)
-                && Size.NearlyEqual(other.Size) 
+                && Helpers.Helpers.NearlyEqual(Size, other.Size)
                 && LineJoin == other.LineJoin
-                && MiterLimit.NearlyEqual(other.MiterLimit)
+                && Helpers.Helpers.NearlyEqual(MiterLimit, other.MiterLimit)
                 && LineCap == other.LineCap
                 && DashPattern == other.DashPattern
-                && DashOffset.NearlyEqual(other.DashOffset)
+                && Helpers.Helpers.NearlyEqual(DashOffset, other.DashOffset)
                 ;
 
 
         return base.Equals(obj);
     }
-
 }
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-public class StrokeAttribute : Attribute // 输出
+public class StrokeAttribute : DefaultValueAttribute // 输出
 {
     public Color    Color       { get; set; } = Colors.Black;
     public float    Size        { get; set; } = 1;
     public LineJoin LineJoin    { get; set; } = LineJoin.Miter;
-    public float    MiterLimit        { get; set; } = float.NaN;
+    public float    MiterLimit  { get; set; } = float.NaN;
     public LineCap  LineCap     { get; set; } = LineCap.Butt;
     public float[]  DashPattern { get; set; } = { };
     public float    DashOffset  { get; set; } = float.NaN;
 
-    public StrokeAttribute(string color)
+    public Stroke Stroke => new Stroke()
     {
-        Color = Color.FromArgb(color);
-    }
-}
+        Color   = Color, Size          = Size, LineJoin          = LineJoin, MiterLimit = MiterLimit,
+        LineCap = LineCap, DashPattern = DashPattern, DashOffset = DashOffset
+    };
 
+    public StrokeAttribute(string? color)
+        :base(null)
+    {
+        if(color != null)
+            Color=Color.Parse(color);
+
+        SetValue(Stroke);
+    }
+
+    //public StrokeAttribute()
+    //{
+
+    //}
+
+//    public StrokeAttribute(string color) { Color = Color.FromArgb(color); }
+ //   public StrokeAttribute() {}
+}
+//public class StrokeConverter : TypeConverter
+//{
+//    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) { return sourceType == typeof(string); }
+
+//    public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+//    {
+//        var name = value as string;
+//        if (name != null)
+//        {
+//            var v = NeoAppCommon.Instance.Container.Resolve<IDatas>() as Datas;
+//            v.Id = name;
+
+//            return v;
+//        }
+//        else
+//            return base.ConvertFrom(context, culture, value);
+//    }
+//}
 
 
 public static class StrokeEx
@@ -112,10 +145,9 @@ public static class StrokeEx
         stroke.Color       = attr.Color;
         stroke.Size        = attr.Size;
         stroke.LineJoin    = attr.LineJoin;
-        stroke.MiterLimit        = attr.MiterLimit;
+        stroke.MiterLimit  = attr.MiterLimit;
         stroke.LineCap     = attr.LineCap;
         stroke.DashPattern = attr.DashPattern;
         stroke.DashOffset  = attr.DashOffset;
     }
 }
-

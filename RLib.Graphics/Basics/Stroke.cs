@@ -12,6 +12,8 @@ namespace RLib.Graphics;
 
 public class Stroke
 {
+    public override string ToString() => $"{Color.ToArgbHex()} {Size} LineJoin:{LineJoin} MiterLimit:{MiterLimit} LineCap:{LineCap} DashPattern:{DashPattern} DashOffset:{DashOffset}";
+
     public Color    Color       { get; set; } = Colors.Black;
     public float    Size        { get; set; } = 1;
     public LineJoin LineJoin    { get; set; } = LineJoin.Miter;

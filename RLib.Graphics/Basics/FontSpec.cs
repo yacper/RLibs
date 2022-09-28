@@ -12,6 +12,17 @@ namespace RLib.Graphics;
 
 public class FontSpec
 {
+    public override string ToString()
+    {
+        var ret = $"Size:{Size} ";
+        if(Color!= null)
+            ret += $"Color:{Color?.ToArgbHex()} ";
+        if(Font!=null)
+            ret += $"Font:{Font.ToString()} ";
+        return ret;
+    }
+
+
     public Color Color { get; set; } = Colors.Black;
     public float Size { get; set; } = 12;
     public IFont Font { get; set; } = Microsoft.Maui.Graphics.Font.Default;

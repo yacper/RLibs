@@ -11,6 +11,16 @@ namespace RLib.Graphics;
 
 public class Fill
 {
+    public override string ToString()
+    {
+        var ret = "";
+        if(Color!= null)
+            ret = $"Color:{Color?.ToArgbHex()} ";
+        if(Paint!=null)
+            ret += $"Paint:Foreground.{Paint?.ForegroundColor} Background.{Paint?.BackgroundColor} IsTransparent.{Paint?.IsTransparent} ";
+        return ret;
+    }
+
     public Color? Color { get; set; } = null;
     public Paint Paint { get; set; } = null;
 

@@ -5,6 +5,7 @@
 // purpose:
 // modifiers:
 
+using System.ComponentModel;
 using Microsoft.Maui.Graphics;
 
 namespace RLib.Graphics;
@@ -21,7 +22,7 @@ public class Fill
         return ret;
     }
 
-    public Color? Color { get; set; } = null;
+    public Color Color { get; set; } = null;
     public Paint Paint { get; set; } = null;
 
     public override int GetHashCode()
@@ -41,23 +42,49 @@ public class Fill
     public override bool Equals(object obj)
     {
         if (obj is Fill other)
-            return Color.Equals(other.Color)
-                && Paint.Equals(other.Paint)
-                ;
+            return  GetHashCode() == obj.GetHashCode();
 
         return base.Equals(obj);
     }
 }
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-public class FillAttribute : Attribute // 输出
+public class FillAttribute : DefaultValueAttribute // 输出
 {
-    public Color    Color       { get; set; } = Colors.Black;
-    public Paint Paint { get; set; } = null;
-   
-    public FillAttribute(string color)
+    public Color    Color       { get; set; } = null;
+
+#region Paint
+    public Color PaintBackgroundColor { get; set; } = null;
+    public Color PaintForegroundColor { get; set; } = null;
+
+    public Color SolidPaintColor { get; set; } = null;
+    
+    //public Point LinearGradientPaintStartPoint { get; set; }
+    //public Point LinearGradientPaintEndPoint { get; set; }
+
+#endregion
+    public Paint Paint
     {
-        Color = Color.FromArgb(color);
+        get
+        {
+            if (SolidPaintColor != null)
+                return new SolidPaint(SolidPaintColor){ForegroundColor = PaintForegroundColor, BackgroundColor = PaintBackgroundColor};
+
+            return null;
+        }
+    }
+
+    public Fill Fill => new Fill() { Color = Color, Paint = Paint };
+   
+
+    public override object? Value => Fill;
+
+    public FillAttribute(string color)
+        :base(null)
+    {
+        if (color != null)
+            Color = Color.Parse(color);
+
     }
 }
 

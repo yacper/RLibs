@@ -19,7 +19,7 @@ public class Stroke
     public LineJoin LineJoin    { get; set; } = LineJoin.Miter;
     public float    MiterLimit  { get; set; } = float.NaN;
     public LineCap  LineCap     { get; set; } = LineCap.Butt;
-    public float[]  DashPattern { get; set; } = { };
+    public float[]  DashPattern { get; set; } = {};
     public float    DashOffset  { get; set; } = float.NaN;
 
     public Stroke WithColor(Color c)
@@ -77,22 +77,23 @@ public class StrokeAttribute : DefaultValueAttribute // 输出
     public LineJoin LineJoin    { get; set; } = LineJoin.Miter;
     public float    MiterLimit  { get; set; } = float.NaN;
     public LineCap  LineCap     { get; set; } = LineCap.Butt;
-    public float[]  DashPattern { get; set; } = { };
+    public string  DashPattern { get; set; }            //  1, 2 
     public float    DashOffset  { get; set; } = float.NaN;
 
     public Stroke Stroke => new Stroke()
     {
         Color   = Color, Size          = Size, LineJoin          = LineJoin, MiterLimit = MiterLimit,
-        LineCap = LineCap, DashPattern = DashPattern, DashOffset = DashOffset
+        LineCap = LineCap,  DashOffset = DashOffset,
+        DashPattern = DashPattern?.Split(',').Select(p=>Convert.ToSingle(p)).ToArray()??new float[]{}
     };
+
+    public override object? Value => Stroke;
 
     public StrokeAttribute(string? color)
         :base(null)
     {
         if(color != null)
             Color=Color.Parse(color);
-
-        SetValue(Stroke);
     }
 
     //public StrokeAttribute()
@@ -149,7 +150,7 @@ public static class StrokeEx
         stroke.LineJoin    = attr.LineJoin;
         stroke.MiterLimit  = attr.MiterLimit;
         stroke.LineCap     = attr.LineCap;
-        stroke.DashPattern = attr.DashPattern;
+        stroke.DashPattern = attr.DashPattern?.Split(',').Select(p => Convert.ToSingle(p)).ToArray()??new float[]{};
         stroke.DashOffset  = attr.DashOffset;
     }
 }

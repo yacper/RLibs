@@ -5,7 +5,7 @@
 		<Platforms>AnyCPU;x64</Platforms>
 
 		<PackageId>RLib.Base</PackageId>
-		<Version>0.0.2</Version>
+		<Version>0.0.4</Version>
 		<Authors>Rush Wang(yacper@gmail.com)</Authors>
 		<Company>Neosoft</Company>
 		<Description>Basic Library</Description>

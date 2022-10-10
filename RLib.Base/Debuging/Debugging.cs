@@ -50,6 +50,25 @@ namespace RLib.Base
                 throw new ArgumentException(string.Format("Collecion is Empty!"));
         }
 
+        public static string NameOfCallingClass()
+        {
+            string fullName;
+            Type   declaringType;
+            int    skipFrames = 2;
+            do
+            {
+                MethodBase method = new StackFrame(skipFrames, false).GetMethod();
+                declaringType = method.DeclaringType;
+                if (declaringType == null) { return method.Name; }
+
+                skipFrames++;
+                fullName = declaringType.FullName;
+            } while (declaringType.Module.Name.Equals("mscorlib.dll", StringComparison.OrdinalIgnoreCase));
+
+            return fullName;
+        }
+
+
         public static string GetStack(int? n)                                // 打印最近多少个堆栈
         {
             StackTrace st = new StackTrace(1, true);

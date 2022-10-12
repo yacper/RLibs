@@ -14,10 +14,24 @@ using System.Threading.Tasks;
 
 namespace RLib.Base
 {
-	public class PathEx
+	public static class PathEx
 	{
+        public static string CombinePath(this string path1, string path2) // path.combine
+        {
+            return Path.Combine(path1, path2);
+        }
 
-		public static string CombineRelative(string path1, string path2)	// 可以combine2个relative path (Path.Combine 如果第二个参数是相对路径， 只会返回第二个参数)
+        public static string CombinePath(this string path1, params string[] paths) // path.combine
+        {
+            return Path.Combine(path1, Path.Combine(paths));
+        }
+        public static string CombinePath(this IEnumerable<string> paths) // path.combine
+        {
+            return Path.Combine(paths.ToArray());
+        }
+
+
+		public static string CombineRelative(string path1, string path2)	// 
 		{// todo: 增加各类判断
 
 			string left = path1.TrimEnd('/').TrimEnd('\\');

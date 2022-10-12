@@ -159,7 +159,8 @@ namespace RLib.Base
         // var sourceDir = new DirectoryInfo(sourcePath);
         //sourceDir.DeepCopy(destinationPath, true);
         public static void CopyTo(this DirectoryInfo directory, string destinationDir)
-        {
+        {            
+            Directory.CreateDirectory(destinationDir);
             foreach (string dir in Directory.GetDirectories(directory.FullName, "*", SearchOption.AllDirectories))
             {
                 string dirToCreate = dir.Replace(directory.FullName, destinationDir);

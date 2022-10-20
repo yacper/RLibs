@@ -30,7 +30,17 @@ namespace RLib.Base
         {
             return str.IsNullOrWhiteSpace()?0:Convert.ToInt32(str);
         }
-
+        public static double ToDoubleOrDefault(this string str, double def=0)
+        {
+            try
+            {
+                return Convert.ToDouble(str);
+            }
+            catch (Exception e)
+            {
+                return def;
+            }
+        }
 
         public static string TrimEnds(this string str, string ends)
         {

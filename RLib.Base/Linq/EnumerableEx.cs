@@ -6,6 +6,7 @@
     purpose:	对Linq的扩充
 *********************************************************************/
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,21 @@ namespace RLib.Base
 {
     public static class EnumerableEx
     {
+        public static object ElementIndex(this IEnumerable source, int index)
+        {
+            source.EnsureNotNull();
+
+            var er    = source.GetEnumerator();
+            int i = 0;
+            while (er.MoveNext())
+            {
+                if (i == index)
+                    return er.Current;
+                i++;
+            }
+
+            return null;
+        }
 
         public static TSource Last<TSource>(this IEnumerable<TSource> source, int offset = 0)
         {

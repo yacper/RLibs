@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,19 @@ namespace RLib.Base
 {
     public static class ObjectEx
     {
+        public static TObject WithProperty<TObject, TValue>(this TObject obj, Expression<Func<TObject, TValue>> memberLambda, TValue value)
+        {
+            var memberSelectorExpression = memberLambda.Body as MemberExpression;
+            if (memberSelectorExpression != null)
+            {
+                var property = memberSelectorExpression.Member as PropertyInfo;
+                if (property != null) { property.SetValue(obj, value, null); }
+            }
+
+            return obj;
+        }
+
+
         public const string NullText = "null";
 
         public static string NullableToString(this object obj)

@@ -17,17 +17,18 @@ namespace RLib.Base;
 
 public static class PropertyEx
 {
-    public static List<PropertyInfo> GetPropertiesWithAttribute<T>(this Type t) where T : Attribute // 系统的不会搜寻interface
+
+    public static List<PropertyInfo> GetPropertiesWithAttribute(this Type t, Type attributeType) // 系统的不会搜寻interface
     {
         List<PropertyInfo> ret = new List<PropertyInfo>();
 
         // 遍历t的继承链上的interface等
-        foreach (Type it in t.GetInterfaces()) { ret.AddRange(it.GetPropertiesWithAttribute<T>()); }
+        foreach (Type it in t.GetInterfaces()) { ret.AddRange(it.GetPropertiesWithAttribute(attributeType)); }
 
         // 遍历t的所有property，找到带有attr的属性
         foreach (PropertyInfo pi in t.GetProperties())
         {
-            var d = pi.GetCustomAttribute<T>();
+            var d = pi.GetCustomAttribute(attributeType);
             if (d != null)
                 ret.Add(pi);
         }
@@ -35,8 +36,22 @@ public static class PropertyEx
         return ret;
     }
 
+    public static List<PropertyInfo> GetPropertiesWithAttribute<T>(this Type t) where T : Attribute // 系统的不会搜寻interface
+    {
+        return t.GetPropertiesWithAttribute(typeof(T));
+    }
+
+    public static List<PropertyInfo> GetPropertiesWithAttribute(this Type t, IEnumerable<Type> attributeTypes) // 系统的不会搜寻interface
+    {
+        return attributeTypes.SelectMany(p => t.GetPropertiesWithAttribute(p)).ToList();
+    }
+
     public static List<PropertyInfo> GetPropertiesWithAttribute<T>(this object o) where T : Attribute // 系统的不会搜寻interface
         => o.GetType().GetPropertiesWithAttribute<T>();
+
+     public static List<PropertyInfo> GetPropertiesWithAttribute(this object o, IEnumerable<Type> attributeTypes) // 系统的不会搜寻interface
+        => o.GetType().GetPropertiesWithAttribute(attributeTypes);
+  
 
     public static string ToKvPropertiesJson(this object o, IEnumerable<string> properties, IEnumerable<JsonConverter>? exConverters=null )
     {

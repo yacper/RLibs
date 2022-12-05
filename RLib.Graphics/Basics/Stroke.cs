@@ -6,6 +6,7 @@
 // modifiers:
 
 using System.ComponentModel;
+using System.Globalization;
 using Microsoft.Maui.Graphics;
 
 namespace RLib.Graphics;
@@ -14,6 +15,7 @@ public class Stroke
 {
     public override string ToString() => $"{Color.ToArgbHex()} {Size} LineJoin:{LineJoin} MiterLimit:{MiterLimit} LineCap:{LineCap} DashPattern:{DashPattern} DashOffset:{DashOffset}";
 
+    [TypeConverter(typeof(MediaColorToGraphicsColorTypeConverter))]
     public Color    Color       { get; set; } = Colors.Black;
     public float    Size        { get; set; } = 1;
     public LineJoin LineJoin    { get; set; } = LineJoin.Miter;
@@ -152,5 +154,21 @@ public static class StrokeEx
         stroke.LineCap     = attr.LineCap;
         stroke.DashPattern = attr.DashPattern?.Split(',').Select(p => Convert.ToSingle(p)).ToArray()??new float[]{};
         stroke.DashOffset  = attr.DashOffset;
+    }
+}
+
+public class MediaColorToGraphicsColorTypeConverter : TypeConverter
+{
+    public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType) 
+    { 
+        return sourceType == typeof(System.Windows.Media.Color); 
+    }
+    public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+    {
+        if(value == null || !(value is System.Windows.Media.Color))
+            return base.ConvertFrom(context, culture, value);
+
+        System.Windows.Media.Color color = (System.Windows.Media.Color)value;
+        return new Color(color.R, color.G, color.B, color.A);
     }
 }

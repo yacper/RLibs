@@ -22,7 +22,6 @@ public class Fill
         return ret;
     }
 
-    [TypeConverter(typeof(MediaColorToGraphicsColorTypeConverter))]
     public Color Color { get; set; } = null;
     public Paint Paint { get; set; } = null;
 

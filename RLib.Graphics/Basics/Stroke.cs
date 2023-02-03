@@ -6,6 +6,7 @@
 // modifiers:
 
 using System.ComponentModel;
+using System.Globalization;
 using Microsoft.Maui.Graphics;
 
 namespace RLib.Graphics;

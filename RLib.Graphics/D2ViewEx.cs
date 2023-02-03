@@ -22,10 +22,10 @@ public static class D2ViewEx
                 {
                     path.MoveTo(new Point(center.X, rect.Top));
                     path.LineTo(new Point(rect.Right, rect.Top + rect.Height / 2));
-                    path.LineTo(new Point(rect.Right - rect.Width / 4, rect.Top + rect.Height / 2));
-                    path.LineTo(new Point(rect.Right - rect.Width / 4, rect.Bottom));
-                    path.LineTo(new Point(rect.Left + rect.Width / 4, rect.Bottom));
-                    path.LineTo(new Point(rect.Left + rect.Width / 4, rect.Top + rect.Height / 2));
+                    path.LineTo(new Point(rect.Right - rect.Width / 3, rect.Top + rect.Height / 2));
+                    path.LineTo(new Point(rect.Right - rect.Width / 3, rect.Bottom));
+                    path.LineTo(new Point(rect.Left + rect.Width / 3, rect.Bottom));
+                    path.LineTo(new Point(rect.Left + rect.Width / 3, rect.Top + rect.Height / 2));
                     path.LineTo(new Point(rect.Left, rect.Top + rect.Height / 2));
                     path.LineTo(new Point(rect.Center.X, rect.Top));
                 }
@@ -38,10 +38,10 @@ public static class D2ViewEx
                 {
                     path.MoveTo(new Point(center.X, rect.Bottom));
                     path.LineTo(new Point(rect.Right, rect.Top + rect.Height / 2));
-                    path.LineTo(new Point(rect.Right - rect.Width / 4, rect.Top + rect.Height / 2));
-                    path.LineTo(new Point(rect.Right - rect.Width / 4, rect.Top));
-                    path.LineTo(new Point(rect.Left + rect.Width / 4, rect.Top));
-                    path.LineTo(new Point(rect.Left + rect.Width / 4, rect.Top + rect.Height / 2));
+                    path.LineTo(new Point(rect.Right - rect.Width / 3, rect.Top + rect.Height / 2));
+                    path.LineTo(new Point(rect.Right - rect.Width / 3, rect.Top));
+                    path.LineTo(new Point(rect.Left + rect.Width / 3, rect.Top));
+                    path.LineTo(new Point(rect.Left + rect.Width / 3, rect.Top + rect.Height / 2));
                     path.LineTo(new Point(rect.Left, rect.Top + rect.Height / 2));
                 }
                 break;

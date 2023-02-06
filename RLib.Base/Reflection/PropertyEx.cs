@@ -104,7 +104,14 @@ public static class PropertyEx
             Dictionary<string, object> kvs = json.ToJsonObj<Dictionary<string, object>>();
             foreach (var kv in kvs)
             {
-                o.SetProperty(kv.Key, obj.GetPropertyValue(kv.Key));
+                try
+                {//单个内部出错正常
+                    o.SetProperty(kv.Key, obj.GetPropertyValue(kv.Key));
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                }
             }
 
             return true;

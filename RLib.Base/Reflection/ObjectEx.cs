@@ -115,14 +115,14 @@ namespace RLib.Base
             if (o == null)
                 return null;
 
-            return o.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public| BindingFlags.NonPublic).GetValue(o);
+            return o.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public| BindingFlags.NonPublic)?.GetValue(o);
         }
         public static T     GetFieldValue<T>(this object o, string fieldName)
         {
             if (o == null)
                 return default(T);
 
-            return (T)o.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public| BindingFlags.NonPublic).GetValue(o);
+            return (T)o.GetType().GetField(fieldName, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public| BindingFlags.NonPublic)?.GetValue(o);
         }
 
 
@@ -131,14 +131,14 @@ namespace RLib.Base
             if (o == null)
                 return null;
 
-            return o.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public| BindingFlags.NonPublic ).GetValue(o);
+            return o.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public| BindingFlags.NonPublic )?.GetValue(o);
         }
         public static T     GetPropertyValue<T>(this object o, string propertyName)
         {
             if (o == null)
                 return default(T);
 
-            return (T)o.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public| BindingFlags.NonPublic).GetValue(o);
+            return (T)o.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public| BindingFlags.NonPublic)?.GetValue(o);
         }
 
         public static void ShallowCopyTo(this object origin, object target)  // 对target进行浅copy  注意：该函数存在问题，目前没有测试所有可能性

@@ -11,12 +11,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace RLib.Base.Tests
 {
     public enum EE
     {
+        no=0,       // pot 不能使用0做比较
         a = 1,
         b = 2,
         c = 4,
@@ -33,6 +35,10 @@ namespace RLib.Base.Tests
 		[Test]
 	    public void Test()
         {
+            var a = EE.a;
+            a.IsSet(EE.a | EE.b).Should().Be(true);
+
+
             Assert.AreEqual(EE.b, EE.a.Next());
             Assert.AreEqual(EE.b, EE.a.NextPot());
 

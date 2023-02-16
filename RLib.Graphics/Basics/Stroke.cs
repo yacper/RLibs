@@ -73,7 +73,7 @@ public class Stroke
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
 public class StrokeAttribute : DefaultValueAttribute // 输出
 {
-    public Color    Color       { get; set; } = Colors.Black;
+    public Color    Color       { get; set; } = Colors.White;
     public float    Size        { get; set; } = 1;
     public LineJoin LineJoin    { get; set; } = LineJoin.Miter;
     public float    MiterLimit  { get; set; } = float.NaN;
@@ -89,6 +89,12 @@ public class StrokeAttribute : DefaultValueAttribute // 输出
     };
 
     public override object? Value => Stroke;
+
+
+    public StrokeAttribute():base(null)
+    {
+
+    }
 
     public StrokeAttribute(string? color)
         :base(null)

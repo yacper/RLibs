@@ -91,13 +91,13 @@ public class StrokeAttribute : DefaultValueAttribute // 输出
     public override object? Value => Stroke;
 
 
-    public StrokeAttribute():base(null)
+    public StrokeAttribute() : base(null)
     {
 
     }
 
     public StrokeAttribute(string? color)
-        :base(null)
+        : base(null)
     {
         if(color != null)
             Color=Color.Parse(color);

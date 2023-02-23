@@ -60,8 +60,8 @@ namespace RLib.Base
                 return JsonConvert.SerializeObject(o, DefaultSettings);
         }
 
-        public static bool ToJsonFile(this object o, string path, Formatting formatting = Formatting.None, JsonConverter exConverter = null) =>
-            o.ToJsonFile(path, formatting, exConverter.ToEnumerable());
+        //public static bool ToJsonFile(this object o, string path, Formatting formatting = Formatting.None, JsonConverter exConverter = null) =>
+        //    o.ToJsonFile(path, formatting, exConverter.ToEnumerable());
         public static bool ToJsonFile(this object o, string path , Formatting formatting= Formatting.None, IEnumerable<JsonConverter> exConverter = null)
         {
             try
@@ -106,7 +106,7 @@ namespace RLib.Base
             return (T)o.ToJsonObj(typeof(T), exConverter);
         }
 
-        public static T FileToJsonObj<T>(this string o, IEnumerable<JsonConverter> exConverter)
+        public static T FileToJsonObj<T>(this string o, IEnumerable<JsonConverter> exConverter = null)
         {
             if (string.IsNullOrWhiteSpace(o))
                 return default(T);

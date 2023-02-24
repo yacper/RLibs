@@ -36,4 +36,25 @@ public static class AttributeEx
         => o.GetType().GetAllAttribute<T>();
 
 
-   }
+    public static T GetPropertyCustomAttr<T>(this Type type, string pName) where T : Attribute
+    {
+        var property = type.GetProperty(pName);
+        if (property == null)
+            return null;
+
+        var result = property.GetCustomAttribute<T>();
+        if (result != null)
+            return result;
+
+        // 通過繼承連來查找
+        foreach (var itemType in type.GetInterfaces())
+        {
+            var r = GetPropertyCustomAttr<T>(itemType, pName);
+            if (r != null)
+                return r;
+        }
+
+        return null;
+    }
+
+}

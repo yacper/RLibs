@@ -98,7 +98,8 @@ namespace RLib.Base
 
         public static string Cover(this double val, int cover = 2)      // 补位， 16.2 -> 16.20
         {
-            string ret = val.ToString();
+            var mask = "{" + $"0:F{cover}" + "}";
+            string ret = string.Format($"{mask}", val);
 
             int index = ret.IndexOf('.');
             if (index < 0)      // 没有小数点，直接补全返回

@@ -12,7 +12,8 @@ namespace RLib.Graphics.Wpf;
 public static class Helpers
 {
     public static Color ToColor(this System.Windows.Media.Color c) => Color.FromRgba(c.R, c.G, c.B, c.A);
-    public static System.Windows.Media.Color ToColor(this Color c) => System.Windows.Media.Color.FromScRgb(c.Alpha, c.Red, c.Green, c.Blue);
+    public static System.Windows.Media.Color ToColor(this Color c) => System.Windows.Media.Color.FromScRgb(c.Alpha*255, c.Red*255, c.Green*255, c.Blue*255);
+
     public static Point ToPoint(this System.Windows.Point p) => new Point(p.X, p.Y);
 
     public static Point CenterPoint(this Rect r) { return new Point(r.Left + r.Width / 2, r.Top + r.Height / 2); }

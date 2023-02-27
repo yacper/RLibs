@@ -19,6 +19,12 @@ namespace RLib.Base
         public const string NullText = "null";
         public const string NanText = "nan";
 
+        public static double Round(this double val, int scale = 2)
+        {
+            return Math.Round(val, scale);
+        }
+
+
         public static bool NearlyEqual(this float f1, float f2, float epsilon = 0.00001f)
         => Math.Abs(f1 - f2) < epsilon;
 

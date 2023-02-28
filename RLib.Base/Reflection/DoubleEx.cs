@@ -76,7 +76,7 @@ namespace RLib.Base
             if (precision != null)
                 v = Math.Round(val, precision.Value);
 
-            if (cover != null)
+            if (cover != null && cover.Value > 0)
                 ret = v.Cover(cover.Value);
             else
                 ret = v.ToString();

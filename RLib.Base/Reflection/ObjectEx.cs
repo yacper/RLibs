@@ -29,6 +29,19 @@ namespace RLib.Base
             return obj;
         }
 
+        public static T With<T>(this T obj, Action<T> func)
+        {/*
+            Mail
+                .With(mt => mt.To = "michaelameyaw7@gmail.com")
+                .With(mt => mt.From = "persol.system@gmail.com")
+                .With(mt => mt.Subject = "Fluent Try Test")
+                .With(mt => mt.Body = "Hello, this is mail body")
+                .With(mt => mt.Attachement = "file.pdf")
+          * */
+            func(obj);
+            return obj;
+        }
+
 
         public const string NullText = "null";
 

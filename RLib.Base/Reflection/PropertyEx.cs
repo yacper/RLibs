@@ -101,14 +101,28 @@ public static class PropertyEx
             return false;
         try
         {
-            //var obj = json.ToJsonObj(o.GetType(), exConverters);
+            Dictionary<string, object> kvs = json.ToJsonObj<Dictionary<string, object>>(exConverters);
 
-            Dictionary<string, object> kvs = json.ToJsonObj<Dictionary<string, object>>();
+            object obj = null;
+            if (exConverters != null)
+                obj = json.ToJsonObj(o.GetType(), exConverters);
+
             foreach (var kv in kvs)
             {
                 try
                 {//单个内部出错正常
-                    o.SetProperty(kv.Key, kv.Value);
+
+                    if (exConverters == null)// 常规的方式
+                    {
+                        var pi = o.GetType().GetProperty(kv.Key);
+
+                        if (pi.GetValue(o) is IConvertible)
+                            pi.SetValue(o, Convert.ChangeType(kv.Value, pi.PropertyType));
+                        else
+                            pi.SetValue(o, kv.Value);
+                    }
+                    else// 需要额外转换的情况
+                        o.SetProperty(kv.Key, obj.GetPropertyValue(kv.Key));
                 }
                 catch (Exception e)
                 {

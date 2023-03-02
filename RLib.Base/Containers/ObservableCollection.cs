@@ -85,23 +85,7 @@ namespace RLib.Base
     public static class ExtendObservableCollection
     {
 
-        public static void  AddRange<T>(this ObservableCollection<T> p, IEnumerable<T> co)
-        {
-            foreach (T v in co)
-            {
-                p.Add(v);
-            }
-        }
-
-        public static void  RemoveRange<T>(this ObservableCollection<T> p, IEnumerable<T> co)
-        {
-            foreach (T v in co)
-            {
-                p.Remove(v);
-            }
-        }
-
-        public static T     Front<T>(this ObservableCollection<T> p) 
+         public static T     Front<T>(this ObservableCollection<T> p) 
         {
             Debugging.EnsureNonempty(p);
 

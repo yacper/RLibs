@@ -97,16 +97,18 @@ public static class PropertyEx
 
     public static bool ApplyKvPropertiesJson(this object o, string json, IEnumerable<JsonConverter>? exConverters=null )
     {
+        if (json.IsNullOrWhiteSpace())
+            return false;
         try
         {
-            var obj = json.ToJsonObj(o.GetType(), exConverters);
+            //var obj = json.ToJsonObj(o.GetType(), exConverters);
 
             Dictionary<string, object> kvs = json.ToJsonObj<Dictionary<string, object>>();
             foreach (var kv in kvs)
             {
                 try
                 {//单个内部出错正常
-                    o.SetProperty(kv.Key, obj.GetPropertyValue(kv.Key));
+                    o.SetProperty(kv.Key, kv.Value);
                 }
                 catch (Exception e)
                 {

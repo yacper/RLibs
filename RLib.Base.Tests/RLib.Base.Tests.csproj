@@ -6,7 +6,7 @@
 
 		<Platforms>AnyCPU;x64</Platforms>
 		<EnablePreviewFeatures>true</EnablePreviewFeatures>
-		<NoWarn>1701;1702;8618</NoWarn>
+		<NoWarn>1701;1702;8618;0168</NoWarn>
 
 	</PropertyGroup>
 

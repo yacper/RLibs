@@ -9,6 +9,7 @@
 		<Authors>Rush Wang(yacper@gmail.com)</Authors>
 		<Company>Neosoft</Company>
 		<Description>Basic Library</Description>
+		<NoWarn>1701;1702;8618;0168</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

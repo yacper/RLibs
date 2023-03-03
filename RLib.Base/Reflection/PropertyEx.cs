@@ -115,8 +115,9 @@ public static class PropertyEx
                     if (exConverters == null)// 常规的方式
                     {
                         var pi = o.GetType().GetProperty(kv.Key);
-
-                        if (pi.GetValue(o) is IConvertible)
+                        if(pi.PropertyType.BaseType == typeof(Enum))
+                            pi.SetValue(o, Enum.Parse(pi.PropertyType, (string)kv.Value));
+                        else if (pi.GetValue(o) is IConvertible)
                             pi.SetValue(o, Convert.ChangeType(kv.Value, pi.PropertyType));
                         else
                             pi.SetValue(o, kv.Value);

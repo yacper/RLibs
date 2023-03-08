@@ -87,6 +87,16 @@ namespace RLib.Base
                 type.Name == "TimeSpan");  // 认为TimeSpan也是内置类型（虽然不在c#的内置类型里）
         }
 
+        public static bool IsInt(this Type t)
+        {
+            Type rt = t.IsNullableType()
+                ? Nullable.GetUnderlyingType(t)
+                : t;
+
+            return rt == typeof(int);
+        }
+
+
 
         public static bool IsDouble(this Type t)
         {

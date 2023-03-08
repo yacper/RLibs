@@ -32,6 +32,7 @@ namespace RLib.Base
             {
                 new Newtonsoft.Json.Converters.StringEnumConverter(),
                 new DoubleExConverter(),
+                new IntExConverter(),
                 new ProtoMessageConverter()
             },
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore    // 忽略循环引用
@@ -291,6 +292,77 @@ namespace RLib.Base
         public override bool CanWrite => false;
 
     }
+
+    public class IntExConverter : JsonConverter
+    {
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            //if (value == null)
+            //{
+            //    writer.WriteNull();
+            //    return;
+            //}
+
+            //Enum e = (Enum)value;
+
+            //if (!EnumUtils.TryToString(e.GetType(), value, NamingStrategy, out string? enumName))
+            //{
+            //    if (!AllowIntegerValues)
+            //    {
+            //        throw JsonSerializationException.Create(null, writer.ContainerPath, "Integer value {0} is not allowed.".FormatWith(CultureInfo.InvariantCulture, e.ToString("D")), null);
+            //    }
+
+            //    // enum value has no name so write number
+            //    writer.WriteValue(value);
+            //}
+            //else
+            //{
+            //    writer.WriteValue(enumName);
+            //}
+        }
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            int ret = 0;
+            try
+            {
+                switch (reader.TokenType)
+                {
+                    case JsonToken.Null:
+                        return 0;
+                    case JsonToken.String:
+                        {
+                            string text = reader.Value?.ToString();
+                            if (int.TryParse(text, out ret))
+                                return ret;
+
+                            //if (text == "N/A" ||
+                            //    text == "NA")
+                            //    return double.NaN;
+                        }
+                        break;
+                    case JsonToken.Float:
+                    case JsonToken.Integer:
+                        return Convert.ToInt32(reader.Value);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ret;
+            }
+
+            return ret;
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType.IsInt();            
+        }
+
+        public override bool CanWrite => false;
+
+    }
+
 
 
     class ProtoMessageConverter : JsonConverter

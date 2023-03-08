@@ -970,6 +970,7 @@ namespace RLib.Base
                                           from accseq in accumulator
                                           from item in sequence
                                           select accseq.Concat(new[] { item }));
+                                          //select accseq.Concat( item ));
        }
     }
 }

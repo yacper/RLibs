@@ -94,6 +94,38 @@ public static class PropertyEx
         return kvs.ToJson(exConverters);
     }
 
+    public static bool ApplyKvProperties(this object o, IEnumerable<KeyValuePair<string, object>> kvs)
+    {
+        try
+        {
+            foreach (var kv in kvs)
+            {
+                try
+                {//单个内部出错正常
+
+                        var pi = o.GetType().GetProperty(kv.Key);
+                        if(pi.PropertyType.BaseType == typeof(Enum))
+                            pi.SetValue(o, Enum.Parse(pi.PropertyType, (string)kv.Value));
+                        else if (pi.GetValue(o) is IConvertible)
+                            pi.SetValue(o, Convert.ChangeType(kv.Value, pi.PropertyType));
+                        else
+                            pi.SetValue(o, kv.Value);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
+        return true;
+
+    }
 
     public static bool ApplyKvPropertiesJson(this object o, string json, IEnumerable<JsonConverter>? exConverters=null )
     {

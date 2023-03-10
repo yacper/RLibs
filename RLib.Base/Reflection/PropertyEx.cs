@@ -94,7 +94,7 @@ public static class PropertyEx
         return kvs.ToJson(exConverters);
     }
 
-    public static bool ApplyKvProperties(this object o, IEnumerable<KeyValuePair<string, object>> kvs)
+    public static void ApplyKvProperties(this object o, IEnumerable<KeyValuePair<string, object>> kvs)
     {
         try
         {
@@ -122,9 +122,6 @@ public static class PropertyEx
             Console.WriteLine(e);
             throw;
         }
-
-        return true;
-
     }
 
     public static bool ApplyKvPropertiesJson(this object o, string json, IEnumerable<JsonConverter>? exConverters=null )

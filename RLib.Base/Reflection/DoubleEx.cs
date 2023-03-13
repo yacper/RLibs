@@ -62,7 +62,7 @@ namespace RLib.Base
         }
 
 
-        public static string ToString(this double val, int? precision = 2, int? cover = null, bool asRatio = false)
+        public static string ToString(this double val, int? precision = 2, int? cover = null, bool asRatio = false, bool symbol = false)
         {
             if (double.IsNaN(val))
                 return NanText;
@@ -83,6 +83,18 @@ namespace RLib.Base
 
             if (asRatio)
                 ret += "%";
+
+            if (symbol)
+            {
+                if (ret.IndexOf("+") == -1 && ret.IndexOf("-") == -1)
+                {
+                    if (val >= 0)
+                        ret = $"+{ret}";
+                }
+                else
+                    ret = $" -{ret.Substring(1, ret.Length - 1)}";  
+            }
+                
 
             return ret;
         }

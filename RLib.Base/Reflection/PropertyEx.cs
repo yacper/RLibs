@@ -96,6 +96,8 @@ public static class PropertyEx
 
     public static void ApplyKvProperties(this object o, IEnumerable<KeyValuePair<string, object>> kvs)
     {
+        if (kvs == null)
+            return;
         try
         {
             foreach (var kv in kvs)

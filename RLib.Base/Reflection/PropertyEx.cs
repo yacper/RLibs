@@ -133,15 +133,21 @@ public static class PropertyEx
             Dictionary<string, object> kvs = json.ToJsonObj<Dictionary<string, object>>(exConverters);
 
             object obj = null;
-            if (exConverters != null)
-                obj = json.ToJsonObj(o.GetType(), exConverters);
-
+            try
+            {
+                //if (exConverters != null)
+                    obj = json.ToJsonObj(o.GetType(), exConverters);
+            }
+            catch (Exception e)
+            {
+            }
             foreach (var kv in kvs)
             {
                 try
                 {//单个内部出错正常
 
-                    if (exConverters == null)// 常规的方式
+                    //if (exConverters == null)// 常规的方式
+                    if (obj == null)// 常规的方式
                     {
                         var pi = o.GetType().GetProperty(kv.Key);
                         if(pi.PropertyType.BaseType == typeof(Enum))

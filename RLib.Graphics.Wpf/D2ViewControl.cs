@@ -14,7 +14,7 @@ using SkiaSharp.Views.WPF;
 
 namespace RLib.Graphics.Wpf;
 
-public class D2ViewControl:UserControl
+public class D2ViewControl:UserControl, IDisposable
 {
     public ID2View D2View { get; protected set; }
 
@@ -53,6 +53,18 @@ public class D2ViewControl:UserControl
         //};
         //m_pTimer.IsEnabled =  true;
         //m_pTimer.Start();
+    }
+
+    public virtual void Dispose()
+    {
+        RLib.Base.Timer.Remove(Timer_);
+        Timer_ = null;
+        (D2View as D2View).Dispose();
+        D2View = null;
+        Content = null;
+        SKElement_.PaintSurface -= SKElement__PaintSurface;
+        SKElement_.SizeChanged  -= SKElement__SizeChanged;
+        SKElement_              =  null;
     }
 
     private void SKElement__SizeChanged(object sender, System.Windows.SizeChangedEventArgs e)

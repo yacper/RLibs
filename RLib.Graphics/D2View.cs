@@ -22,7 +22,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace RLib.Graphics;
 
-public class D2View : ObservableObject, ID2View
+public class D2View : ObservableObject, ID2View, IDisposable
 {
     public double Width  { get => Width_;  set => SetProperty(ref Width_, value); }
     public double Height { get => Height_; set => SetProperty(ref Height_, value); }
@@ -573,6 +573,32 @@ public class D2View : ObservableObject, ID2View
     public event Action<ID2View> OnRendering;
     public event Action<ID2View> OnRendered;
 
+    ~D2View()
+    {
+
+    }
+
+    public void Dispose()
+    {
+        DrawingInfos_.Clear();
+        DrawingInfos_ = null;
+
+        LineInfoPool.Dispose();
+        LineInfoPool = null;
+        RectPool.Dispose();
+        RectPool = null;
+        EllipsePool.Dispose();
+        EllipsePool = null;
+        PathPool.Dispose();
+        PathPool = null;
+
+        ImagePool.Dispose();
+        ImagePool = null;
+        StringPool.Dispose();
+        StringPool = null;
+    }
+
+
     protected double Width_;
     protected double Height_;
 
@@ -581,13 +607,13 @@ public class D2View : ObservableObject, ID2View
     protected Color                         Background_   = Colors.Black;
 //    protected List<TextFormat>                          _TextFormats  = new List<TextFormat>();
 
-    internal ObjectPool<LineInfo> LineInfoPool = new ObjectPool<LineInfo>(200000);
+    internal ObjectPool<LineInfo> LineInfoPool = new ObjectPool<LineInfo>(3000);
 
-    internal ObjectPool<RectangleInfo> RectPool = new ObjectPool<RectangleInfo>(200000);
-    internal ObjectPool<EllipseInfo> EllipsePool = new (2000);
-    internal ObjectPool<PathInfo> PathPool = new (2000);
-    internal ObjectPool<ImageInfo> ImagePool = new (200);
-    internal ObjectPool<StringInfo> StringPool = new (200);
+    internal ObjectPool<RectangleInfo> RectPool = new ObjectPool<RectangleInfo>(1000);
+    internal ObjectPool<EllipseInfo> EllipsePool = new (10);
+    internal ObjectPool<PathInfo> PathPool = new (10);
+    internal ObjectPool<ImageInfo> ImagePool = new (10);
+    internal ObjectPool<StringInfo> StringPool = new (10);
     //public static ObjectPool<TextInfo>      TextPool     = new ObjectPool<TextInfo>(5000);
     //public static ObjectPool<ImageInfo>     ImagePool    = new ObjectPool<ImageInfo>(5000);
     //public static ObjectPool<GeometryInfo>  GeoPool      = new ObjectPool<GeometryInfo>(5000);

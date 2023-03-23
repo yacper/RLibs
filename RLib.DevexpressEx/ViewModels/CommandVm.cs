@@ -143,20 +143,20 @@ public class CommandVm : VmBase
 
         return this;
     }
-    public CommandVm WithProperty<T>(Expression<Func<CommandVm, object>> memberLambda, T value)
-    {
-        var memberSelectorExpression = memberLambda.Body as MemberExpression;
-        if (memberSelectorExpression != null)
-        {
-            var property = memberSelectorExpression.Member as PropertyInfo;
-            if (property != null)
-            {
-                property.SetValue(this, value, null);
-            }
-        }
+    //public CommandVm WithProperty<T>(Expression<Func<CommandVm, object>> memberLambda, T value)
+    //{
+    //    var memberSelectorExpression = memberLambda.Body as MemberExpression;
+    //    if (memberSelectorExpression != null)
+    //    {
+    //        var property = memberSelectorExpression.Member as PropertyInfo;
+    //        if (property != null)
+    //        {
+    //            property.SetValue(this, value, null);
+    //        }
+    //    }
 
-        return this;
-    }
+    //    return this;
+    //}
 
 
 #region State状态，不应被用户设置

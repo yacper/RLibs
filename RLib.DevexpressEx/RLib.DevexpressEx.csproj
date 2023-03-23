@@ -14,4 +14,7 @@
 		<PackageReference Include="DevExpress.Wpf" Version="22.*" />
 		<PackageReference Include="DevExpress.Wpf.Themes.All" Version="22.*" />
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\RLib.Base\RLib.Base.csproj" />
+	</ItemGroup>
 </Project>

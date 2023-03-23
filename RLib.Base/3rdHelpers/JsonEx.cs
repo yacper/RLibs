@@ -42,12 +42,13 @@ namespace RLib.Base
         public static string ToJson(this object o, Formatting formatting) => o.ToJson(formatting, null);
         public static string ToJson(this object o, JsonConverter exConverter) => o.ToJson(Formatting.None, exConverter.ToEnumerable());
         public static string ToJson(this object o, IEnumerable<JsonConverter> exConverter) => o.ToJson(Formatting.None, exConverter);
-        public static string ToJson(this object o, Formatting formatting, IEnumerable<JsonConverter> exConverter)
+        public static string ToJson(this object o, Formatting formatting, IEnumerable<JsonConverter> exConverter, TypeNameHandling typeNameHandling = TypeNameHandling.None)
         {
-            if (formatting != Formatting.None || exConverter != null)
+            if (formatting != Formatting.None || exConverter != null || typeNameHandling != TypeNameHandling.None)
             {
                 var setting = DefaultSettings.DeepClone();
-                setting.Formatting = formatting;
+                setting.Formatting       = formatting;
+                setting.TypeNameHandling = typeNameHandling;
                 if (exConverter != null)
                 {
                     foreach (var c in exConverter)
@@ -82,18 +83,20 @@ namespace RLib.Base
         //public static object ToJsonObj(this string o, Type t, JsonConverter exConverter=null) => o.ToJsonObj(t, exConverter.ToEnumerable());
 
         public static object ToJsonObj(this string o, Type t) => ToJsonObj(o, t, null);
-        public static object ToJsonObj(this string o, Type t, IEnumerable<JsonConverter> exConverter )
+        public static object ToJsonObj(this string o, Type t, IEnumerable<JsonConverter> exConverter, TypeNameHandling typeNameHandling = TypeNameHandling.None)
         {
             if (string.IsNullOrWhiteSpace(o))
                 return null;
 
-            if (exConverter != null)
+            if (exConverter != null || typeNameHandling != TypeNameHandling.None)
             {
                 var setting = DefaultSettings.DeepClone();
                 if (exConverter != null)
                 {
                     foreach (var c in exConverter) { setting.Converters.Add(c); }
                 }
+
+                setting.TypeNameHandling = typeNameHandling;
 
                 return JsonConvert.DeserializeObject(o, t, setting);
             }
@@ -102,9 +105,9 @@ namespace RLib.Base
         }
 
         public static T ToJsonObj<T>(this string o) => o.ToJsonObj<T>(null);
-        public static T ToJsonObj<T>(this string o, IEnumerable<JsonConverter> exConverter)
+        public static T ToJsonObj<T>(this string o, IEnumerable<JsonConverter> exConverter, TypeNameHandling typeNameHandling = TypeNameHandling.None)
         {
-            return (T)o.ToJsonObj(typeof(T), exConverter);
+            return (T)o.ToJsonObj(typeof(T), exConverter, typeNameHandling);
         }
 
         public static T FileToJsonObj<T>(this string o, IEnumerable<JsonConverter> exConverter = null)

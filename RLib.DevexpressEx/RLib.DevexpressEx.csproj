@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <EnablePreviewFeatures>true</EnablePreviewFeatures>
+    <NoWarn>0067;01691701;1702;8618;8600;8602;8603;8604;8629</NoWarn>
+    <Platforms>x64</Platforms>
+    <Nullable>disable</Nullable>
+
+  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="BindingEngine" Version="1.0.0" />
+		<PackageReference Include="DevExpress.Wpf" Version="22.*" />
+		<PackageReference Include="DevExpress.Wpf.Themes.All" Version="22.*" />
+	</ItemGroup>
+</Project>

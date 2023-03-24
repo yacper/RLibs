@@ -92,6 +92,7 @@ public class CommandVm : VmBase
     public KeyGesture         KeyGesture     { get; set; }                                       // 对应快捷键
     public bool               ShowKeyGesture { get; set; } = true;
     public object             Tag            { get; set; }                                      // 存储相关的数据 
+    public Dock               DisplayNameDock { get; set; }                                     // DisplayName 和 StatImg Dock 方式
     public object             Tooltip            { get=>GetProperty(()=>Tooltip); set=>SetProperty(()=>Tooltip, value); }                                      // tooltip
 
     public double            MinWidth        { get; set; }                                      // 最小宽度，用于对齐
@@ -171,6 +172,7 @@ public class CommandVm : VmBase
         IsEnabled  = true;
         Visibility = Visibility.Visible;
         DisplayMode = BarItemDisplayMode.Default;
+        DisplayNameDock = Dock.Left;
     }
 
     protected override void OnDispose()

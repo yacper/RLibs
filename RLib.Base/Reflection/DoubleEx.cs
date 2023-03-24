@@ -214,6 +214,20 @@ namespace RLib.Base
         {
             return  double.IsNaN(value);
         }
+        public static bool IsNullOrNanOrZero(this double? value)
+        {
+            if (value == null)
+                return true;
+            if (double.IsNaN(value.Value))
+                return true;
+            return value.Value.NearlyEqual(0);
+        }
+        public static bool IsNullOrNanOrZero(this double value)
+        {
+            if (double.IsNaN(value))
+                return true;
+            return value.NearlyEqual(0);
+        }
 
         public static double GetValueOrNan(this double? value)
         {

@@ -178,34 +178,13 @@ public static class MathEx
 
 
 #region 对一系列数据
-
-    //public static double Min(this IReadOnlyList<double> source, int from, int to)
-    //{
-    //    Debug.Assert(from <= to &&
-    //        from >= 0 && from < source.Count &&
-    //        to >= 0 && to < source.Count);
-
-    //    double min = source[from];
-    //    for (int i = from; i <= to; ++i)
-    //    {
-    //        if (source[i].CompareTo(min) < 0)
-    //            min = source[i];
-    //    }
-
-    //    return min;
-    //}
-
     public static T Min<T>(this IReadOnlyList<T> source, int from, int to) where T : IComparable // 获取最小
     {
-        Debug.Assert(from <= to &&
-                     from >= 0 && from < source.Count &&
-                     to >= 0);
+          Debug.Assert(from <= to &&
+                     from >= 0 && 
+                     to < source.Count);
 
-        //Debug.Assert(from <= to &&
-        //    from >= 0 && from < source.Count &&
-        //    to >= 0 && to < source.Count);
-
-        if (to >= source.Count)
+          if (to >= source.Count)
             to = source.Count - 1;
 
         T min = source[from];
@@ -217,83 +196,10 @@ public static class MathEx
 
         return min;
     }
-
     public static T Min<T>(this IReadOnlyList<T> source, int count) where T : IComparable // 获取最小
     {
         return source.Min(source.Count - count, source.Count - 1);
     }
-
-    public static double Min(this IReadOnlyList<double> source, int from, int to)
-    {
-        Debug.Assert(from <= to &&
-                     from >= 0 && from < source.Count &&
-                     to >= 0);
-
-        //Debug.Assert(from <= to &&
-        //    from >= 0 && from < source.Count &&
-        //    to >= 0 && to < source.Count);
-
-        double min = double.PositiveInfinity;
-
-        if (to >= source.Count)
-            to = source.Count - 1;
-
-        for (int i = from; i <= to; ++i)
-        {
-            if (double.IsNaN(source[i]))
-                continue;
-
-            if (source[i].CompareTo(min) < 0)
-                min = source[i];
-        }
-
-        return min;
-    }
-
-    public static double Min(this IReadOnlyList<double> source, int count) { return source.Min(source.Count - count, source.Count - 1); }
-
-    public static double MinWithIndex(this IReadOnlyList<double> source, int from, int to, out int index)
-    {
-        Debug.Assert(from <= to &&
-                     from >= 0 && from < source.Count &&
-                     to >= 0);
-
-        double min = double.PositiveInfinity;
-        index = -1;
-
-        if (to >= source.Count)
-            to = source.Count - 1;
-
-        for (int i = from; i <= to; ++i)
-        {
-            if (double.IsNaN(source[i]))
-                continue;
-
-            if (source[i].CompareTo(min) < 0)
-            {
-                min   = source[i];
-                index = i;
-            }
-        }
-
-        return min;
-    }
-
-    //public static T     Min<T>(this IList<T> source, int from, int to) where T : IComparable // 获取最小
-    //{
-    //    Debug.Assert(from <= to &&
-    //        from >= 0 && from < source.Count &&
-    //        to >= 0 && to < source.Count);
-
-    //    T min = source[from];
-    //    for (int i = from; i <= to; ++i)
-    //    {
-    //        if (source[i].CompareTo(min) < 0)
-    //            min = source[i];
-    //    }
-
-    //    return min;
-    //}
     public static T Min<T>(this ICollection<T> source) where T : IComparable // 获取最小
     {
         T min = default(T);
@@ -309,7 +215,7 @@ public static class MathEx
         return min;
     }
 
-    public static double Min(this ICollection<double> source) // 获取最小
+    public static double Min(this IEnumerable<double> source) // 获取最小
     {
         double min = double.PositiveInfinity;
         foreach (double v in source)
@@ -321,7 +227,51 @@ public static class MathEx
                 min = v;
         }
 
+        if (double.IsPositiveInfinity(min))
+            return double.NaN;
+
         return min;
+    }
+    public static double Min(this IReadOnlyList<double> source, int from, int to, out int index)
+    {
+        Debug.Assert(from <= to &&
+                     from >= 0); 
+                     //to < source.Count);
+
+            // 为了兼容
+                     if (to > source.Count)
+                         to = source.Count - 1;
+
+        index = -1;
+        int    outIndex = 0;
+        double min      = double.PositiveInfinity;
+
+        for (int i = from; i <= to; ++i)
+        {
+            if (double.IsNaN(source[i]))
+                continue;
+
+            if (source[i].CompareTo(min) < 0)
+            {
+                min      = source[i];
+                outIndex = i;
+            }
+        }
+
+        if (double.IsPositiveInfinity(min))
+            return double.NaN;
+
+        index = outIndex;
+        return min;
+    }
+    public static double Min(this IReadOnlyList<double> source, int from, int to)
+    {
+        int index = 0;
+        return Min(source, from, to, out index);
+    }
+    public static double Min(this IReadOnlyList<double> source, int count)
+    {
+        return source.Min(source.Count - count, source.Count - 1);
     }
 
 
@@ -330,10 +280,6 @@ public static class MathEx
         Debug.Assert(from <= to &&
                      from >= 0 && from < source.Count &&
                      to >= 0);
-
-        //Debug.Assert(from <= to &&
-        //    from >= 0 && from < source.Count &&
-        //    to >= 0 && to < source.Count);
 
         if (to >= source.Count)
             to = source.Count - 1;
@@ -348,79 +294,12 @@ public static class MathEx
 
         return max;
     }
-
     public static T Max<T>(this IReadOnlyList<T> source, int n) where T : IComparable // 获取最近的n的最大值
     {
         return source.Max(source.Count - n, source.Count - 1);
     }
 
-    public static double Max(this IReadOnlyList<double> source, int from, int to) // 获取最大 特化double，因为存在nan
-    {
-        Debug.Assert(from <= to &&
-                     from >= 0 && from < source.Count &&
-                     to >= 0);
-
-        //Debug.Assert(from <= to &&
-        //    from >= 0 && from < source.Count &&
-        //    to >= 0 && to < source.Count);
-
-        if (to >= source.Count)
-            to = source.Count - 1;
-
-
-        double max = double.NegativeInfinity;
-        for (int i = from; i <= to; ++i)
-        {
-            if (double.IsNaN(source[i]))
-                continue;
-
-            if (max.CompareTo(source[i]) < 0)
-                max = source[i];
-        }
-
-        return max;
-    }
-
-
-    public static double Max(this IReadOnlyList<double> source, int n) // 获取最近的n的最大值
-    {
-        return source.Max(source.Count - n, source.Count - 1);
-    }
-
-
-    //public static T     Max<T>(this IList<T> source, int from, int to) where T : IComparable // 获取最大
-    //{
-    //    Debug.Assert(from <= to &&
-    //        from >= 0 && from < source.Count &&
-    //        to >= 0 && to < source.Count);
-
-    //    T max = source[from];
-    //    for (int i = from; i <= to; ++i)
-    //    {
-    //        if (max.CompareTo(source[i]) < 0)
-    //            max = source[i];
-    //    }
-
-    //    return max;
-    //}
-    public static T Max<T>(ICollection<T> source) where T : IComparable // 获取最大
-    {
-        T max = default(T);
-        foreach (T v in source)
-        {
-            if (max.CompareTo(default(T)) == 0)
-                max = v;
-
-            if (max.CompareTo(v) < 1)
-                max = v;
-        }
-
-        List<int> a = new List<int>();
-
-        return max;
-    }
-
-    public static double Max(ICollection<double> source)
+    public static double Max(IEnumerable<double> source)
     {
         double max = Double.NegativeInfinity;
         foreach (double v in source)
@@ -428,202 +307,203 @@ public static class MathEx
             if (double.IsNaN(v))
                 continue;
 
-            if (max.CompareTo(v) < 1)
+            if (max.CompareTo(v) < 0)
                 max = v;
         }
 
-        List<int> a = new List<int>();
+        if (double.IsNegativeInfinity(max))
+            return double.NaN;
 
         return max;
     }
-
-    public static double Sum(IReadOnlyList<double> source, int from, int to)
+    public static double Max(this IReadOnlyList<double> source, int from, int to, out int index)
     {
         Debug.Assert(from <= to &&
-                     from >= 0 && from < source.Count &&
-                     to >= 0 && to < source.Count);
+                     from >= 0); 
+                     //to < source.Count);
+            // 为了兼容
+                     if (to > source.Count)
+                         to = source.Count - 1;
 
-        double sum = 0f;
-        for (int i = from; i <= to; ++i) { sum += source[i]; }
 
-        return sum;
+        index = -1;
+        int    outIndex = 0;
+        double max      = double.NegativeInfinity;
+        for (int i = from; i <= to; ++i)
+        {
+            if (double.IsNaN(source[i]))
+                continue;
+
+            if (max.CompareTo(source[i]) < 0)
+            {
+                max      = source[i];
+                outIndex = i;
+            }
+        }
+
+        if (double.IsNegativeInfinity(max))
+            return double.NaN;
+
+        index = outIndex;
+        return max;
+    }
+    public static double Max(this IReadOnlyList<double> source, int from, int to)
+    {
+        int index;
+        return Max(source, from, to, out index);
+    }
+    public static double Max(this IReadOnlyList<double> source, int n, out int index) // 获取最近的n的最大值
+    {
+        return source.Max(source.Count - n, source.Count - 1, out index);
+    }
+    public static double Max(this IReadOnlyList<double> source, int n) // 获取最近的n的最大值
+    {
+        return source.Max(source.Count - n, source.Count - 1);
     }
 
-    public static float Sum(IReadOnlyList<float> source, int from, int to)
+
+    public static double Sum(IEnumerable<double> source)
     {
-        Debug.Assert(from <= to &&
-                     from >= 0 && from < source.Count &&
-                     to >= 0 && to < source.Count);
-
-        float sum = 0f;
-        for (int i = from; i <= to; ++i) { sum += source[i]; }
-
-        return sum;
+        int notNans;
+        return Sum(source, out notNans);
     }
-
-    public static float Sum(ICollection<float> source)
+    public static double Sum(IEnumerable<double> source, out int notNans)
     {
-        float sum = 0f;
-        foreach (float v in source) { sum += v; }
-
-        return sum;
-    }
-
-    //public static double Sum(IList<double> source, int from, int to)
-    //{
-    //    Debug.Assert(from <= to &&
-    //        from >= 0 && from < source.Count &&
-    //        to >= 0 && to < source.Count);
-
-    //    double sum = 0f;
-    //    for (int i = from; i <= to; ++i)
-    //    {
-    //        if(double.IsNaN(source[i]))
-    //            continue;
-
-    //        sum += source[i];
-    //    }
-
-    //    return sum;
-    //}
-
-    public static double Sum(ICollection<double> source)
-    {
-        double sum = 0f;
+        int    notNanNumber = 0;
+        double sum          = 0f;
         foreach (double v in source)
         {
             if (double.IsNaN(v))
                 continue;
             sum += v;
+            notNanNumber++;
+        }
+
+        notNans = notNanNumber;
+        return sum;
+    }
+    public static double Sum(IReadOnlyList<double> source, int from, int to)
+    {
+        int notNans;
+        return Sum(source, from, to, out notNans);
+    }
+    public static double Sum(IReadOnlyList<double> source, int from, int to, out int notNans)
+    {
+        Debug.Assert(from <= to &&
+                     from >= 0);
+                     //to >= 0 && to < source.Count);
+
+            // 为了兼容
+                     if (to > source.Count)
+                         to = source.Count - 1;
+
+
+
+
+        int    notNanNumber = 0;
+        double sum = 0f;
+        for (int i = from; i <= to; ++i)
+        {
+            if (double.IsNaN(source[i]))
+                continue;
+            notNanNumber++;
+            sum += source[i];
+        }
+
+        notNans = notNanNumber;
+        return sum;
+    }
+    public static double Sum(IReadOnlyList<double> source, int count, out int notNans)
+    {
+        return Sum(source, source.Count - count, source.Count-1, out notNans);
+    }
+    public static double Sum(IReadOnlyList<double> source, int count)
+    {
+        return Sum(source, source.Count - count, source.Count-1);
+    }
+
+
+    public static int NotNans(IEnumerable<double> source)
+    {
+        int sum = 0;
+        foreach (double v in source)
+        {
+            if (double.IsNaN(v))
+                continue;
+            sum++;
         }
 
         return sum;
     }
-
-    public static int Sum(IReadOnlyList<int> source, int from, int to)
+    public static int NotNans(IReadOnlyList<double> source, int from, int to)
     {
         Debug.Assert(from <= to &&
                      from >= 0 && from < source.Count &&
                      to >= 0 && to < source.Count);
 
         int sum = 0;
-        for (int i = from; i <= to; ++i) { sum += source[i]; }
+        for (int i = from; i <= to; ++i)
+        {
+            if (double.IsNaN(source[i]))
+                continue;
+
+            sum++;
+        }
 
         return sum;
     }
-
-    public static int Sum(IList<int> source, int from, int to)
+    public static int NotNans(IReadOnlyList<double> source, int count)
     {
-        Debug.Assert(from <= to &&
-                     from >= 0 && from < source.Count &&
-                     to >= 0 && to < source.Count);
-
-        int sum = 0;
-        for (int i = from; i <= to; ++i) { sum += source[i]; }
-
-        return sum;
+        return NotNans(source, source.Count - count, source.Count-1);
     }
 
-    public static int Sum(ICollection<int> source)
-    {
-        int sum = 0;
-        foreach (int v in source) { sum += v; }
-
-        return sum;
-    }
-
-
-    public static float Avg(IReadOnlyList<float> source, int from, int to)
-    {
-        Debug.Assert(from <= to &&
-                     from >= 0 && from < source.Count &&
-                     to >= 0 && to < source.Count);
-
-        float sum = Sum(source, from, to);
-
-        return sum / (to - from + 1);
-    }
-
-    public static float Avg(ICollection<float> source)
-    {
-        float sum = Sum(source);
-
-        return sum / source.Count;
-    }
-
-    //public static double Avg(this IList<double> source, int from, int to)
-    //{
-    //    Debug.Assert(from <= to &&
-    //        from >= 0 && from < source.Count &&
-    //        to >= 0 && to < source.Count);
-
-    //    double sum = Sum(source, from, to);
-
-    //    return sum/(to-from+1);
-    //}
-    public static double Avg(this IReadOnlyList<double> source, int from, int to)
-    {
-        Debug.Assert(from <= to &&
-                     from >= 0 && from < source.Count &&
-                     to >= 0 && to < source.Count);
-
-        //if(from <= to &&
-        //    from >= 0 && from < source.Count &&
-        //    to >= 0 && to < source.Count)
-        //{
-        //    RLibBase.Logger.Error("Bad args!");
-
-        //    return double.NaN;
-        //}
-
-        double sum = Sum(source, from, to);
-
-        return sum / (to - from + 1);
-    }
 
     public static double Avg(ICollection<double> source)
     {
-        double sum = Sum(source);
+        int    nn;
+        double sum = Sum(source, out nn);
 
-        return sum / source.Count;
+        return nn == 0 ? double.NaN : sum / nn;
     }
-
-    public static int Avg(this IReadOnlyList<int> source, int from, int to)
+    public static double Avg(this IReadOnlyList<double> source, int from, int to)
     {
         Debug.Assert(from <= to &&
-                     from >= 0 && from < source.Count &&
-                     to >= 0 && to < source.Count);
+                     from >= 0);
+                     //to < source.Count);
 
-        int sum = Sum(source, from, to);
+                     // 为了兼容
+                     if (to > source.Count)
+                         to = source.Count - 1;
 
-        return sum / (to - from + 1);
+        int    nn;
+        double sum = Sum(source, from, to, out nn);
+
+        return nn == 0 ? double.NaN : sum / nn;
     }
-
-    public static int Avg(this IList<int> source, int from, int to)
+    public static double Avg(this IReadOnlyList<double> source, int count)
     {
-        Debug.Assert(from <= to &&
-                     from >= 0 && from < source.Count &&
-                     to >= 0 && to < source.Count);
-
-        int sum = Sum(source, from, to);
-
-        return sum / (to - from + 1);
+        return Avg(source, source.Count - count, count - 1);
     }
 
-    public static int Avg(ICollection<int> source)
+
+        //todo: 需要处理nan
+    public static double Stdev(this IEnumerable<double> source)
     {
-        int sum = Sum(source);
+        double avg = source.Average();
 
-        return sum / source.Count;
+        double variance = 0;
+        foreach (float v in source)
+        {
+            variance += Math.Pow(v - avg, 2); // 求方差
+        }
+
+        variance /= source.Count();
+
+        double sd = Math.Pow(variance, 0.5); //求标准差
+
+        return sd;
     }
-
-    public static int Avg(this IEnumerable<int> source)
-    {
-        int sum = source.Sum();
-
-        return sum / source.Count();
-    }
-
+        // todo: 需要处理nan
     public static double Stdev(this IReadOnlyList<double> source, int from, int to) // 标准差
     {
         Debug.Assert(from <= to &&
@@ -639,44 +519,6 @@ public static class MathEx
         }
 
         variance /= to - from + 1;
-
-        double sd = Math.Pow(variance, 0.5); //求标准差
-
-        return sd;
-    }
-
-    public static double Stdev(this IReadOnlyList<float> source, int from, int to) // 标准差
-    {
-        Debug.Assert(from <= to &&
-                     from >= 0 && from < source.Count &&
-                     to >= 0 && to < source.Count);
-
-        double avg = Avg(source, from, to);
-
-        double variance = 0;
-        for (int i = from; i <= to; ++i)
-        {
-            variance += Math.Pow(source[i] - avg, 2); // 求方差
-        }
-
-        variance /= to - from + 1;
-
-        double sd = Math.Pow(variance, 0.5); //求标准差
-
-        return sd;
-    }
-
-    public static double Stdev(this IEnumerable<double> source)
-    {
-        double avg = source.Average();
-
-        double variance = 0;
-        foreach (float v in source)
-        {
-            variance += Math.Pow(v - avg, 2); // 求方差
-        }
-
-        variance /= source.Count();
 
         double sd = Math.Pow(variance, 0.5); //求标准差
 
@@ -759,12 +601,6 @@ public static class MathEx
     //}
 
 #endregion
-
-    //T                   Min(int from, int to);                          // 获取最大
-    //T                   Max(int from, int to);                          // 获取最小
-    //T                   Avg(int from, int to);                          // 平均值
-    //T                   Sum(int from, int to);                          // 总共
-
 
 #region 基本几何
 

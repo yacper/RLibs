@@ -239,7 +239,7 @@ public static class MathEx
                      //to < source.Count);
 
             // 为了兼容
-                     if (to > source.Count)
+                     if (to >= source.Count)
                          to = source.Count - 1;
 
         index = -1;
@@ -322,7 +322,7 @@ public static class MathEx
                      from >= 0); 
                      //to < source.Count);
             // 为了兼容
-                     if (to > source.Count)
+                     if (to >= source.Count)
                          to = source.Count - 1;
 
 
@@ -394,7 +394,7 @@ public static class MathEx
                      //to >= 0 && to < source.Count);
 
             // 为了兼容
-                     if (to > source.Count)
+                     if (to >= source.Count)
                          to = source.Count - 1;
 
 
@@ -472,7 +472,7 @@ public static class MathEx
                      //to < source.Count);
 
                      // 为了兼容
-                     if (to > source.Count)
+                     if (to >= source.Count)
                          to = source.Count - 1;
 
         int    nn;

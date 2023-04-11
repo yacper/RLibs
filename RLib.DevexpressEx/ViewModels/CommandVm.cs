@@ -70,7 +70,7 @@ public class CommandVm : VmBase
             ShowKeyGesture = ShowKeyGesture,
             Tag = Tag,
             Visibility = Visibility,
-            
+            Tooltip = Tooltip,  
         };
 
         o.Bindings = this.Bindings.Select(p => p.Clone(o)).ToList();
@@ -173,6 +173,7 @@ public class CommandVm : VmBase
         Visibility = Visibility.Visible;
         DisplayMode = BarItemDisplayMode.Default;
         DisplayNameDock = Dock.Left;
+        Tooltip = null;
     }
 
     protected override void OnDispose()
@@ -200,7 +201,7 @@ public class CommandVm : VmBase
         DisplayName = displayName;
 
         Command  = command;
-        Commands = subCommands;
+        Commands = subCommands;        
     }
 
     protected List<CommandVmPropertyBinding> Bindings = new();

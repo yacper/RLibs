@@ -18,6 +18,17 @@ namespace RLib.Base;
 public static class PropertyEx
 {
 
+    public static PropertyInfo GetPropertyWithName(this Type t, string pName)
+    {
+        var pi = t.GetProperty(pName);
+        if(pi != null)
+            return pi;
+
+        foreach (Type it in t.GetInterfaces()) { return it.GetPropertyWithName(pName); }
+        
+        return null;
+    }
+
     public static List<PropertyInfo> GetPropertiesWithAttribute(this Type t, Type attributeType) // 系统的不会搜寻interface
     {
         List<PropertyInfo> ret = new List<PropertyInfo>();

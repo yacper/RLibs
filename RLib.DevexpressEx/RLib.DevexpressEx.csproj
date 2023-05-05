@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
 	<TargetFramework>net6.0-windows</TargetFramework>
@@ -11,8 +11,20 @@
   </PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="BindingEngine" Version="1.0.0" />
-		<PackageReference Include="DevExpress.Wpf" Version="22.*" />
-		<PackageReference Include="DevExpress.Wpf.Themes.All" Version="22.*" />
+		<!--<PackageReference Include="DevExpress.Wpf" Version="22.*" />-->
+		<!--<PackageReference Include="DevExpress.Wpf.Themes.All" Version="22.*" />-->
+
+
+		<!--<PackageReference Include="DevExpress.Wpf.Accordion" Version="22.*" />-->
+		<PackageReference Include="DevExpress.Wpf.Charts" Version="22.*" />
+		<!--<PackageReference Include="DevExpress.Wpf.Core.Extensions" Version="22.*" />-->
+		<!--<PackageReference Include="DevExpress.Wpf.Dialogs" Version="22.*" />-->
+		<PackageReference Include="DevExpress.Wpf.Docking" Version="22.*" />
+		<PackageReference Include="DevExpress.Wpf.Grid" Version="22.*" />
+		<PackageReference Include="DevExpress.Wpf.LayoutControl" Version="22.*" />
+		<PackageReference Include="DevExpress.Wpf.PropertyGrid" Version="22.*" />
+		
+		<PackageReference Include="DevExpress.Wpf.Themes.VS2019Dark" Version="22.*" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\RLib.Base\RLib.Base.csproj" />

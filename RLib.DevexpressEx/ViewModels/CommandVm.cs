@@ -23,7 +23,6 @@ using System.Globalization;
 using System.Windows.Controls;
 using Illusion.Utility;
 using System.Linq.Expressions;
-using DevExpress.Diagram.Core.Native.Generation;
 using DevExpress.Mvvm.Native;
 using System.Reflection;
 using PropertyInfo = System.Reflection.PropertyInfo;

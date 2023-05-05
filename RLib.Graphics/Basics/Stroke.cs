@@ -23,6 +23,8 @@ public class Stroke
     public LineCap  LineCap     { get; set; } = LineCap.Butt;
     public float[]  DashPattern { get; set; } = {};
     public float    DashOffset  { get; set; } = float.NaN;
+    public Stroke(){}
+    public Stroke(Color c) { Color = c;}
 
     public Stroke WithColor(Color c)
     {

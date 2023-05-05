@@ -46,6 +46,9 @@ public class Fill
 
         return base.Equals(obj);
     }
+
+    public Fill(){}
+    public Fill(Color c) { Color = c;}
 }
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]

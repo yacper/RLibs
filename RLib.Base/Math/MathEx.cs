@@ -954,21 +954,23 @@ public static class MathEx
 
     public static DrawDown MaxDrawdownAmount(this List<DrawDown> peakTroughs)
     {
-        return peakTroughs.MaxBy(p => p.DrawdownAmount);
+        return peakTroughs.OrderByDescending(p => p.DrawdownAmount).FirstOrDefault();
+        //return peakTroughs.MaxBy(p => p.DrawdownAmount);
     }
     public static DrawDown MaxDrawdownRate(this List<DrawDown> peakTroughs)
     {
-        return peakTroughs.MaxBy(p => p.DrawdownRate);
+        return peakTroughs.OrderByDescending(p => p.DrawdownRate).FirstOrDefault();
+        //return peakTroughs.MaxBy(p => p.DrawdownRate);
     }
     public static DrawDown MaxDrawdownAmount(IReadOnlyList<double> values, int start = 0)
     {
-        List<DrawDown> dds = new();
+        List<DrawDown> dds = new List<DrawDown>();
         GetDrawdowns(ref dds, values, start);
         return dds.MaxDrawdownAmount();
     }
     public static DrawDown MaxDrawdownRate(IReadOnlyList<double> values, int start = 0)
     {
-        List<DrawDown> dds = new();
+        List<DrawDown> dds = new List<DrawDown>();
         GetDrawdowns(ref dds, values, start);
         return dds.MaxDrawdownRate();
     }

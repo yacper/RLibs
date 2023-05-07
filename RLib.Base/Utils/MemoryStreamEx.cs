@@ -13,7 +13,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RLib.Base.Utils;
+namespace RLib.Base.Utils
+{
+
 
 public static class MemoryStreamEx
 {
@@ -53,4 +55,5 @@ public static class MemoryStreamEx
     }
 
 
+}
 }

@@ -7,7 +7,9 @@
 
 using System;
 
-namespace RLib.Base;
+namespace RLib.Base
+{
+
 
 public class FinalizeDisposeBase : IDisposable
 {
@@ -49,4 +51,5 @@ public class FinalizeDisposeBase : IDisposable
     // 标记对象是否已被释放
     private bool _disposed = false;
 #endregion
+}
 }

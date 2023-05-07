@@ -10,7 +10,9 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 
-namespace RLib.Base;
+namespace RLib.Base
+{
+
 
 public static class ObservableCollectionEx
 {
@@ -32,4 +34,5 @@ public static class ObservableCollectionEx
     }
 
 
+}
 }

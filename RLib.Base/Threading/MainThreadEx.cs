@@ -9,9 +9,12 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace RLib.Base;
+namespace RLib.Base
+{
+
 
 public static class MainThreadEx
 {
    
+}
 }

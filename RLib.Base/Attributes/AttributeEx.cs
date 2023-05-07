@@ -10,7 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace RLib.Base.Attributes;
+namespace RLib.Base.Attributes
+{
+
 
 public static class AttributeEx
 {
@@ -57,4 +59,5 @@ public static class AttributeEx
         return null;
     }
 
+}
 }

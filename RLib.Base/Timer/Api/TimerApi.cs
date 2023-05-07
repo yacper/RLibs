@@ -12,7 +12,9 @@ using DateTime = System.DateTime;
 using DayOfWeek = System.DayOfWeek;
 using TimeSpan = System.TimeSpan;
 
-namespace RLib.Base;
+namespace RLib.Base
+{
+
 
 public partial class Timer
 {
@@ -172,3 +174,4 @@ public partial class Timer
     }
 }
 
+}

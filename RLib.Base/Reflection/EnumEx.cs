@@ -117,7 +117,8 @@ namespace RLib.Base
         public static int? Pot(this Enum e)
         {
             if(MathEx.IsPowerOfTwo(Convert.ToInt32(e)))
-                return (int)Math.Log2(Convert.ToInt32(e));
+                return (int)Math.Log(Convert.ToInt32(e), 2);
+                //return (int)Math.Log2(Convert.ToInt32(e));
 
             return null;
         }

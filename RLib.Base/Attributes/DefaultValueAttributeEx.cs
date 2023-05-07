@@ -11,7 +11,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 
-namespace RLib.Base.Attributes;
+namespace RLib.Base.Attributes
+{
+
 
 public static class DefaultValueAttributeEx
 {
@@ -72,4 +74,5 @@ public static class DefaultValueAttributeEx
 
 
     }
+}
 }

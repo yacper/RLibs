@@ -8,7 +8,9 @@
 using System;
 using FluentAssertions;
 
-namespace RLib.Base.Utils;
+namespace RLib.Base.Utils
+{
+
 
 public static class TimespanEx
 {
@@ -39,4 +41,5 @@ public static class TimespanEx
     }
 
     
+}
 }

@@ -13,7 +13,9 @@ using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 
-namespace RLib.Base;
+namespace RLib.Base
+{
+
 
 public static class PropertyEx
 {
@@ -217,4 +219,5 @@ public static class PropertyEx
     }
 
 
+}
 }

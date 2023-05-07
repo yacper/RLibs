@@ -87,7 +87,7 @@ namespace RLib.Base
             }
             catch (Exception e) //添加附件出错
             {
-                RLibBase.Logger.Error("添加附件出错:" + e);  // 虽然添加附件出错，还是继续发送
+                throw new Exception("添加附件出错:" + e);// 虽然添加附件出错，还是继续发送
             }
 
             SmtpClient smtp = new SmtpClient(SmtpHost);
@@ -104,7 +104,7 @@ namespace RLib.Base
             }
             catch (System.Net.Mail.SmtpException ex)
             {
-                RLibBase.Logger.Error("[Email.Send] SmtpException : " + ex.Message);
+                throw new Exception("[Email.Send] SmtpException : " + ex.Message);
                 return false;
             }
         }

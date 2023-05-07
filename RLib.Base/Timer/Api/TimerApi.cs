@@ -161,8 +161,7 @@ public partial class Timer
                 try { executeItem.Call(); }
                 catch (Exception ex)
                 {
-                    RLibBase.Logger.Error(ex.ToString());
-                    //Debug.Assert(false, ex.ToString());
+                    Logger.Error(ex.ToString());
                 }
 
                 //Timer执行一次之后如果没有完结需在队列中重新排序

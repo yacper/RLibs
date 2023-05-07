@@ -61,7 +61,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger.Error($"Error Serialize {path}:{e}");
+                Logger.Error($"Error Serialize {path}:{e}");
 
                 return false;
             }
@@ -78,7 +78,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger?.Error($"Error Deserialize {path}:{e}");
+                Logger.Error($"Error Deserialize {path}:{e}");
             }
 
             return new List<T>();
@@ -95,7 +95,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger?.Error($"Error Deserialize {path}:{e}");
+                Logger.Error($"Error Deserialize {path}:{e}");
             }
 
             return new List<T>();
@@ -117,7 +117,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger?.Error("Error Desialize:" + e);
+                Logger.Error("Error Desialize:" + e);
             }
 
             return ret;
@@ -136,7 +136,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger?.Error($"Error Deserialize {stream}:{e}");
+                Logger.Error($"Error Deserialize {stream}:{e}");
             }
 
             return new List<T>();
@@ -159,7 +159,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger.Error(e);
+                Logger.Error(e);
             }
             finally
             {
@@ -197,7 +197,7 @@ namespace RLib.Base
 
                 if (workbook.NumberOfSheets == 0)
                 {
-                    RLibBase.Logger.Error(" worksheet 不包含Sheet!");
+                    Logger.Error(" worksheet 不包含Sheet!");
                     return null;
                 }
 
@@ -207,7 +207,7 @@ namespace RLib.Base
                     sheet = workbook.GetSheet(sheetName);
                     if (sheet == null)
                     {
-                        RLibBase.Logger.Error(" 不包含Sheet:" + sheetName);
+                        Logger.Error(" 不包含Sheet:" + sheetName);
                         return null;
                     }
                 }
@@ -218,7 +218,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger?.Error("读Excel失败:" +   " " +e);
+                Logger.Error("读Excel失败:" +   " " +e);
             }
 
             return sheet;
@@ -242,7 +242,7 @@ namespace RLib.Base
 
                 if (workbook.NumberOfSheets == 0)
                 {
-                    RLibBase.Logger.Error(" worksheet 不包含Sheet!");
+                    Logger.Error(" worksheet 不包含Sheet!");
                     return sheets;
                 }
 
@@ -254,7 +254,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger.Error("读Excel失败:" +   " " +e);
+                Logger.Error("读Excel失败:" +   " " +e);
             }
 
             return sheets;
@@ -279,7 +279,7 @@ namespace RLib.Base
 
                 if (workbook.NumberOfSheets == 0)
                 {
-                    RLibBase.Logger.Error(path + " 不包含Sheet!");
+                    Logger.Error(path + " 不包含Sheet!");
                     return null;
                 }
 
@@ -289,7 +289,7 @@ namespace RLib.Base
                     sheet = workbook.GetSheet(sheetName);
                     if (sheet == null)
                     {
-                        RLibBase.Logger.Error(path + " 不包含Sheet:" + sheetName);
+                        Logger.Error(path + " 不包含Sheet:" + sheetName);
                         return null;
                     }
                 }
@@ -300,7 +300,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger.Error("读Excel失败:" +  path + " " +e);
+                Logger.Error("读Excel失败:" +  path + " " +e);
             }
             finally
             {
@@ -468,7 +468,7 @@ namespace RLib.Base
                 var ft = obj.GetType().GetField(filed, BindingFlags.IgnoreCase|BindingFlags.NonPublic|BindingFlags.Instance);
                 if (ft == null)
                 {
-                    RLibBase.Logger?.Error("can't find filed "+filed);
+                    Logger.Error("can't find filed "+filed);
                     return;
                 }
 

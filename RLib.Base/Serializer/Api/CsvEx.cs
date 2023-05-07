@@ -40,7 +40,7 @@ namespace RLib.Base
             }
             catch(Exception e)
             {
-                RLibBase.Logger?.Error(e);
+                Logger.Error(e);
                 return new List<T>();
             }
         }
@@ -64,7 +64,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger.Error($"Error read Csv {path}:{e}");
+                Logger.Error($"Error read Csv {path}:{e}");
                 return new List<T>();
             }
         }
@@ -78,7 +78,7 @@ namespace RLib.Base
             }
             catch(Exception e)
             {
-                RLibBase.Logger?.Error(e);
+                Logger.Error(e);
                 return new List<dynamic>();
             }
         }
@@ -102,7 +102,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger.Error($"Error read Csv {path}:{e}");
+                Logger.Error($"Error read Csv {path}:{e}");
                 return new List<dynamic>();
             }
         }
@@ -116,7 +116,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger?.Error(e);
+                Logger.Error(e);
                 header = default(THeader);
                 return new List<TRow>();
             }
@@ -148,7 +148,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger.Error($"Error read Csv {path}:{e}");
+                Logger.Error($"Error read Csv {path}:{e}");
 
                 header = default(THeader);
                 return new List<TRow>();
@@ -175,7 +175,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger.Error($"Error Write Csv {path}:{e}");
+                Logger.Error($"Error Write Csv {path}:{e}");
                 return false;
             }
 
@@ -203,7 +203,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger.Error($"Error Write Csv {path}:{e}");
+                Logger.Error($"Error Write Csv {path}:{e}");
                 return false;
             }
 
@@ -227,7 +227,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                RLibBase.Logger.Error($"Error Append Csv {path}:{e}");
+                Logger.Error($"Error Append Csv {path}:{e}");
                 return false;
             }
 

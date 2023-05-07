@@ -21,8 +21,8 @@
 		<PackageReference Include="FluentAssertions" Version="6.7.0" />
 		<PackageReference Include="FluentFTP" Version="28.0.0" />
 		<PackageReference Include="Google.Protobuf" Version="3.21.1" />
-		<PackageReference Include="log4net" Version="2.0.12" />
-		<PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+		<!--<PackageReference Include="log4net" Version="2.0.12" />-->
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="NPOI" Version="2.5.4" />
 		<PackageReference Include="SoftUni.Wintellect.PowerCollections" Version="2.0.0" />
 		<PackageReference Include="System.Management" Version="5.0.0" />

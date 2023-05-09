@@ -8,6 +8,7 @@
 *********************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -45,7 +46,19 @@ namespace RLib.Base
         {
             try
             {
-                ISheet s = __CreateSheet(path, sheet);
+                if (FileEX.IsInUsing(path))
+                    return false;
+
+                IWorkbook wb = ReadWorkbook(path);
+                if (wb == null)
+                    wb = ExcelEx.NewWorkbook(path);
+
+                ISheet s = wb.GetSheet(sheet);
+                if (s != null)
+                    s.ClearRows();
+                else
+                    s = wb.CreateSheet(sheet);
+
                 if (writeHeader)
                 {
                     __WriteHeader(s, typeof(T));
@@ -54,7 +67,7 @@ namespace RLib.Base
                 else
                     __WriteBody(s, data, 0);
 
-                using(FileStream fs = new FileStream(path, FileMode.Create))
+                using(FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
                     s.Workbook.Write(fs);
 
                 return true;
@@ -259,6 +272,33 @@ namespace RLib.Base
 
             return sheets;
         }
+
+        IWorkbook ReadWorkbook(string path)
+        {
+            IWorkbook workbook = null; 
+            try
+            {
+                using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                {
+                    if (path.IndexOf(".xlsx") > 0) // 2007版本  
+                    {
+                        workbook = new XSSFWorkbook(fileStream); //xlsx数据读入workbook  
+                    }
+                    else if (path.IndexOf(".xls") > 0) // 2003版本  
+                    {
+                        workbook = new HSSFWorkbook(fileStream); //xls数据读入workbook  
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("读Excel失败:" + path + " " + e);
+            }
+
+            return workbook;
+        }
+
+
 
         ISheet              __ReadSheet(string path, string sheetName = null) // 从一个已有的excel中读出一个sheet
         {
@@ -596,4 +636,5 @@ namespace RLib.Base
 #endregion
 
     }
+
 }

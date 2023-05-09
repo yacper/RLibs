@@ -8,10 +8,14 @@
 *********************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 
 namespace RLib.Base
 {
@@ -45,5 +49,29 @@ namespace RLib.Base
             ExcelSerializer se = new ExcelSerializer();
             return se.Serialize<T>(data, path, sheet, writeHeader);
         }
+
+
+
+
+        public static IWorkbook NewWorkbook(string filePattern)
+        {
+            if (filePattern.EndsWith(".xlsx", true, CultureInfo.CurrentCulture)) // 2007 版本
+                return new XSSFWorkbook();
+            else if (filePattern.EndsWith(".xls", true, CultureInfo.CurrentCulture))
+                return new HSSFWorkbook(); // 2003 版本
+            return null;
+        }
+
+        public static void ClearRows(this ISheet sheet)
+        {
+            int to = sheet.LastRowNum;
+            for (int i = 0; i != to; ++i)
+            {
+                IRow r = sheet.GetRow(i);
+                sheet.RemoveRow(r);
+            }
+        }
+
+
     }
 }

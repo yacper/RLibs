@@ -65,9 +65,10 @@ namespace RLib.Base
                 System.IO.FileStream fileStream = null;
                 try
                 {
-                    fileStream = System.IO.File.Open(fileFullName, System.IO.FileMode.Open, System.IO.FileAccess.ReadWrite, System.IO.FileShare.None);
-
-                   // File.Move(fileFullName, fileFullName);      // 名字不改 这个效率只有上面的1/7
+                    using (fileStream = System.IO.File.Open(fileFullName, System.IO.FileMode.Open, System.IO.FileAccess.ReadWrite, System.IO.FileShare.None))
+                    {
+                    // File.Move(fileFullName, fileFullName);      // 名字不改 这个效率只有上面的1/7
+                    }
 
                     result = false;
                 }

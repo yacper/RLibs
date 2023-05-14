@@ -138,9 +138,18 @@ namespace RLib.Base
 
         public List<T>      Deserialize<T>(Stream stream, string sheet = null, bool useHeader = true, int headerRow = 0, int from = 1, int? to = null)
         {
+            if (stream == null)
+            {
+                Logger.Error($"stream 为Null");
+                return new List<T>();
+            }
+
             try
             {
                 ISheet s = __ReadSheet(stream, sheet);
+                if (s == null)
+                    return new List<T>();
+
                 Dictionary<string, int> headers = null;
                 if (useHeader)
                     headers = __ReadHeaders(s);
@@ -206,11 +215,12 @@ namespace RLib.Base
                 }
                 catch (Exception e)
                 {
+                    Logger.Error($"无法创建workbook:{e}");
                 }
 
                 if (workbook.NumberOfSheets == 0)
                 {
-                    Logger.Error(" worksheet 不包含Sheet!");
+                    Logger.Error("workbook 不包含Sheet!");
                     return null;
                 }
 
@@ -220,7 +230,7 @@ namespace RLib.Base
                     sheet = workbook.GetSheet(sheetName);
                     if (sheet == null)
                     {
-                        Logger.Error(" 不包含Sheet:" + sheetName);
+                        Logger.Error("不包含Sheet:" + sheetName);
                         return null;
                     }
                 }
@@ -490,71 +500,81 @@ namespace RLib.Base
 
         protected void      __ReadCell(ICell cell, object obj, PropertyInfo info)
         {
-            string tt = info.PropertyType.FullName;  // 正常使用这个类型，但如果有特殊指定
+            //string tt = info.PropertyType.FullName;  // 正常使用这个类型，但如果有特殊指定
+            string tt = info.PropertyType.GetNotNullableType().FullName;  // 正常使用这个类型，但如果有特殊指定
 
-            //if (info.Name.Contains("_Dt")||
-            //    info.Name.ToLower().Contains("time"))   // 包含time就作为datetime
-            //    tt = "DateTime";  // 作为dt存储,用string表示，而不是原始的int64
-
-            if (info.PropertyType.BaseType.FullName == "System.Enum")// enum 必须单独出来
+            try
             {
-                info.SetValue(obj, Enum.Parse(info.PropertyType, cell.StringCellValue));
-            }
-            else if (info.PropertyType.IsGeneric(typeof(RepeatedField<>)))
-            {// protobuf repeted
+                //if (info.Name.Contains("_Dt")||
+                //    info.Name.ToLower().Contains("time"))   // 包含time就作为datetime
+                //    tt = "DateTime";  // 作为dt存储,用string表示，而不是原始的int64
 
-                string filed = info.Name + "_";
-                filed = char.ToLower(filed[0]) + filed.Substring(1);
-                var ft = obj.GetType().GetField(filed, BindingFlags.IgnoreCase|BindingFlags.NonPublic|BindingFlags.Instance);
-                if (ft == null)
+                if (info.PropertyType.BaseType.FullName == "System.Enum") // enum 必须单独出来
                 {
-                    Logger.Error("can't find filed "+filed);
-                    return;
+                    info.SetValue(obj, Enum.Parse(info.PropertyType, cell.StringCellValue));
                 }
-
-                ft.SetValue(obj, cell.StringCellValue.ToJsonObj(info.PropertyType));
-            }
-            else
-            {
-                switch (tt)
+                else if (info.PropertyType.IsGeneric(typeof(RepeatedField<>)))
                 {
-                    case "System.Boolean":
-                        info.SetValue(obj, cell.BooleanCellValue);
-                        break;
-                    case "System.Int32":
-                        info.SetValue(obj, Convert.ToInt32(cell.NumericCellValue));
-                        break;
-                    case "System.UInt32":
-                        info.SetValue(obj, Convert.ToUInt32(cell.NumericCellValue));
-                        break;
-                    case "System.Int64":
-                        info.SetValue(obj, Convert.ToInt64(cell.NumericCellValue));
-                        break;
-                    case "System.UInt64":
-                        info.SetValue(obj, Convert.ToUInt64(cell.NumericCellValue));
-                        break;
-                    case "System.String":
-                        if (cell.CellType == CellType.String) 
-                            info.SetValue(obj, cell.StringCellValue.Trim());   // 对string前后trim一下，经常有写错的
-                        else if(cell.CellType == CellType.Numeric)  //处理numeric Cell
-                            info.SetValue(obj, cell.NumericCellValue.ToString());   // 对string前后trim一下，经常有写错的
-                        break;
-                    case "System.Single":
-                        info.SetValue(obj, Convert.ToSingle(cell.NumericCellValue));        // 必须转（double无法隐式转single）
-                        break;
-                    case "System.Double":
-                        info.SetValue(obj, Convert.ToDouble(cell.NumericCellValue));        // 必须转（double无法隐式转single）
-                        break;
+                    // protobuf repeted
 
-                    case "DateTime":
-                        info.SetValue(obj, cell.DateCellValue);   // parse成dateime，在转ticks
-                        break;
-                    default:
+                    string filed = info.Name + "_";
+                    filed = char.ToLower(filed[0]) + filed.Substring(1);
+                    var ft = obj.GetType().GetField(filed, BindingFlags.IgnoreCase | BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (ft == null)
                     {
-                        info.SetValue(obj, cell.StringCellValue.ToJsonObj(info.PropertyType));  
+                        Logger.Error("can't find filed " + filed);
+                        return;
                     }
-                        break;
+
+                    ft.SetValue(obj, cell.StringCellValue.ToJsonObj(info.PropertyType));
                 }
+                else
+                {
+                    switch (tt)
+                    {
+                        case "System.Boolean":
+                            info.SetValue(obj, cell.BooleanCellValue);
+                            break;
+                        case "System.Int32":
+                            info.SetValue(obj, Convert.ToInt32(cell.NumericCellValue));
+                            break;
+                        case "System.UInt32":
+                            info.SetValue(obj, Convert.ToUInt32(cell.NumericCellValue));
+                            break;
+                        case "System.Int64":
+                            info.SetValue(obj, Convert.ToInt64(cell.NumericCellValue));
+                            break;
+                        case "System.UInt64":
+                            info.SetValue(obj, Convert.ToUInt64(cell.NumericCellValue));
+                            break;
+                        case "System.String":
+                            if (cell.CellType == CellType.String)
+                                info.SetValue(obj, cell.StringCellValue.Trim());      // 对string前后trim一下，经常有写错的
+                            else if (cell.CellType == CellType.Numeric)               //处理numeric Cell
+                                info.SetValue(obj, cell.NumericCellValue.ToString()); // 对string前后trim一下，经常有写错的
+                            break;
+                        case "System.Single":
+                            info.SetValue(obj, Convert.ToSingle(cell.NumericCellValue)); // 必须转（double无法隐式转single）
+                            break;
+                        case "System.Double":
+                            info.SetValue(obj, Convert.ToDouble(cell.NumericCellValue)); // 必须转（double无法隐式转single）
+                            break;
+
+                        case "DateTime":
+                            info.SetValue(obj, cell.DateCellValue); // parse成dateime，在转ticks
+                            break;
+                        default:
+                        {
+                            if (!cell.StringCellValue.IsNullOrWhiteSpace())
+                                info.SetValue(obj, cell.StringCellValue.ToJsonObj(info.PropertyType));
+                        }
+                            break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error($"解析{info.Name}出错，type:{info.PropertyType} e:{e.ToString()}");
             }
         }
 

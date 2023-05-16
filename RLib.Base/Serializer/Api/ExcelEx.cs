@@ -72,6 +72,31 @@ namespace RLib.Base
             }
         }
 
+        public static bool IsNullOrEmpty(this ICell cell)
+        {
+            if (cell != null)
+            {
+                // Uncomment the following lines if you consider a cell 
+                // with no value but filled with color to be non-empty.
+                //if (cell.CellStyle != null && cell.CellStyle.FillBackgroundColorColor != null)
+                //    return false;
+
+                switch (cell.CellType)
+                {
+                    case CellType.String:
+                        return string.IsNullOrWhiteSpace(cell.StringCellValue);
+                    case CellType.Boolean:
+                    case CellType.Numeric:
+                    case CellType.Formula:
+                    case CellType.Error:
+                        return false;
+                }
+            }
+
+            // null, blank or unknown
+            return true;
+        }
+
 
     }
 }

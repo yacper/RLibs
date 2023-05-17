@@ -50,9 +50,9 @@ namespace RLib.Base
         void                Error(object msg, string tag = null);    
 
 
-        IReadonlyObservableCollection<string> Tags { get; }          // 额外tag
+        IReadOnlyCollection<string> Tags { get; }          // 额外tag
 
-        IReadonlyObservableCollection<ILogMsg> Msgs { get; }          // msgs
+        ReadOnlyObservableCollection<ILogMsg> Msgs { get; }          // msgs
     }
 
     public interface ILogMsg

@@ -59,6 +59,8 @@ namespace RLib.Base
                 return new XSSFWorkbook();
             else if (filePattern.EndsWith(".xls", true, CultureInfo.CurrentCulture))
                 return new HSSFWorkbook(); // 2003 版本
+
+            Logger.Error($"New workbook error: Can't detect excel version {filePattern}");
             return null;
         }
 

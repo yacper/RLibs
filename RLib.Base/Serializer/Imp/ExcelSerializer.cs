@@ -15,9 +15,11 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Google.Protobuf.Collections;
+using Newtonsoft.Json;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using Org.BouncyCastle.Asn1.X509.Qualified;
 
 namespace RLib.Base
 {
@@ -47,17 +49,24 @@ namespace RLib.Base
             try
             {
                 if (FileEX.IsInUsing(path))
+                {
+                    Logger.Error($"{path} 正被其他程序占用！");
+
                     return false;
+                }
 
                 IWorkbook wb = ReadWorkbook(path);
                 if (wb == null)
                     wb = ExcelEx.NewWorkbook(path);
 
+                if (wb == null)
+                    return false;
+
                 ISheet s = wb.GetSheet(sheet);
                 if (s != null)
                     s.ClearRows();
                 else
-                    s = wb.CreateSheet(sheet);
+                    s = sheet != null ? wb.CreateSheet(sheet) : wb.CreateSheet();
 
                 if (writeHeader)
                 {
@@ -91,7 +100,7 @@ namespace RLib.Base
             }
             catch (Exception e)
             {
-                Logger.Error($"Error Deserialize {path}:{e}");
+                throw new Exception($"Error Deserialize {path}:{e}");
             }
 
             return new List<T>();
@@ -384,13 +393,17 @@ namespace RLib.Base
                 if (info.Name.EndsWith("Specified"))
                     continue;
 
-                // !必须同时有get和set，否则不序列化
-                if (info.GetGetMethod() == null || info.GetSetMethod() == null)
-                {
-                    // protobuf repeadted<>
-                    if (!info.PropertyType.IsGeneric(typeof(RepeatedField<>)))
-                        continue;
-                }
+                // 定义了jsonIgnore，忽略
+                if(info.IsDefined(typeof(JsonIgnoreAttribute)))
+                    continue;
+
+                //// !必须同时有get和set，否则不序列化
+                //if (info.GetGetMethod() == null || info.GetSetMethod() == null)
+                //{
+                //    // protobuf repeadted<>
+                //    if (!info.PropertyType.IsGeneric(typeof(RepeatedField<>)))
+                //        continue;
+                //}
 
                 // name cell
                 ICell cell = (ICell)nameRow.CreateCell(c);
@@ -426,13 +439,17 @@ namespace RLib.Base
                 if (info.Name.EndsWith("Specified"))
                     continue;
 
-                // !必须同时有get和set，否则不序列化
-                if (info.GetGetMethod() == null || info.GetSetMethod() == null)
-                {
-                    // protobuf repeadted<>
-                    if (!info.PropertyType.IsGeneric(typeof(RepeatedField<>)))
-                        continue;
-                }
+                // 定义了jsonIgnore，忽略
+                if(info.IsDefined(typeof(JsonIgnoreAttribute)))
+                    continue;
+
+                //// !必须同时有get和set，否则不序列化
+                //if (info.GetGetMethod() == null || info.GetSetMethod() == null)
+                //{
+                //    // protobuf repeadted<>
+                //    if (!info.PropertyType.IsGeneric(typeof(RepeatedField<>)))
+                //        continue;
+                //}
 
 
                 ICell cell = (ICell)r.CreateCell(i);
@@ -445,52 +462,59 @@ namespace RLib.Base
 
         protected void      __WriteCell(ICell cell, object o, PropertyInfo info)
         {
-            string tt = info.PropertyType.FullName;  // 正常使用这个类型，但如果有特殊指定
+            object? v = info.GetValue(o);
+            if (v == null)
+                return;
 
-            //if (info.Name.Contains("_Dt")||
-            //    info.Name.ToLower().Contains("time"))   // 包含time就作为datetime
-            //    tt = "DateTime";  // 作为dt存储,用string表示，而不是原始的int64
+            string tt = info.PropertyType.GetNotNullableType().FullName; // 正常使用这个类型，但如果有特殊指定
 
-
-            if (info.PropertyType.BaseType.FullName == "System.Enum") // enum 必须单独出来
+            if (info.PropertyType.GetNotNullableType().BaseType.FullName == "System.Enum") // enum 必须单独出来
             {
-                cell.SetCellValue(EnumEx.ToString(info.PropertyType, info.GetValue(o)));   // 写enum的string表示
+                cell.SetCellValue(EnumEx.ToString(info.PropertyType, v));   // 写enum的string表示
             }
             else
             {
                 switch (tt)
                 {
                     case "System.Boolean":
-                        cell.SetCellValue((bool) info.GetValue(o));
+                        cell.SetCellValue((bool) v);
                         break;
                     case "System.Int32":
-                        cell.SetCellValue((int) info.GetValue(o));
+                        cell.SetCellValue((int) v);
                         break;
                     case "System.UInt32":
-                        cell.SetCellValue((uint) info.GetValue(o));
+                        cell.SetCellValue((uint) v);
                         break;
                     case "System.Int64":
-                        cell.SetCellValue((long) info.GetValue(o));
+                        cell.SetCellValue((long) v);
                         break;
                     case "System.UInt64":
-                        cell.SetCellValue((ulong) info.GetValue(o));
+                        cell.SetCellValue((ulong) v);
                         break;
                     case "System.String":
-                        cell.SetCellValue((string) info.GetValue(o));
+                        cell.SetCellValue((string) v);
                         break;
                     case "System.Single":
-                        cell.SetCellValue((float) info.GetValue(o));
+                        cell.SetCellValue((float) v);
                         break;
                     case "System.Double":
-                        cell.SetCellValue((double) info.GetValue(o));
+                        cell.SetCellValue((double) v);
                         break;
 
-                    case "DateTime":
-                        cell.SetCellValue((DateTime)info.GetValue(o));
+                    case "System.DateTime":
+                        cell.SetCellValue((DateTime)v);
                         break;
                     default:
                     {
-                        cell.SetCellValue(info.GetValue(o).ToJson());
+                        try
+                        {
+                            string str = v.ToJson();
+                            cell.SetCellValue(str);
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Error($"Write Cell Error: {info.Name}, {e.ToString()}");
+                        }
                     }
                         break;
                 }

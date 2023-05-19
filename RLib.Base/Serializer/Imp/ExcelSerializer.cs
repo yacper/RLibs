@@ -526,10 +526,12 @@ namespace RLib.Base
         {
             if (cell.IsNullOrEmpty())
             {
-                if(!info.PropertyType.IsNullableType() && info.PropertyType != typeof(double))
-                    Logger.Error($"解析{info.Name}出错，type:{info.PropertyType} cell 为空");
-                else
-                    return; // null类型或者double，直接返回
+                //if(!info.PropertyType.IsNullableType() && info.PropertyType != typeof(double))
+                //    Logger.Error($"解析{info.Name}出错，type:{info.PropertyType} cell 为空");
+                //else
+                //    return; // null类型或者double，直接返回
+                // todo: 空直接返回，要么默认值，要么null
+                return;
             }
 
             string tt = info.PropertyType.GetNotNullableType().FullName;  // 正常使用这个类型，但如果有特殊指定

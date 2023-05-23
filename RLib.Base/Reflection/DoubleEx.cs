@@ -79,7 +79,11 @@ namespace RLib.Base
             if (cover != null && cover.Value > 0)
                 ret = v.Cover(cover.Value);
             else
+            {
                 ret = v.ToString();
+                if (v > (double)decimal.MinValue && v < (double)decimal.MaxValue)
+                    ret = ((decimal)v).ToString();
+            }
 
             if (asRatio)
                 ret += "%";

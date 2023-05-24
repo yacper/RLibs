@@ -26,9 +26,16 @@ public static class PropertyEx
         if(pi != null)
             return pi;
 
-        foreach (Type it in t.GetInterfaces()) { return it.GetPropertyWithName(pName); }
+        foreach (Type it in t.GetInterfaces()) 
+        {
+           pi = it.GetPropertyWithName(pName);
+           if (pi == null) 
+                continue; 
+
+           break;
+        }
         
-        return null;
+        return pi;
     }
 
     public static List<PropertyInfo> GetPropertiesWithAttribute(this Type t, Type attributeType) // 系统的不会搜寻interface

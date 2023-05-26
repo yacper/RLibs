@@ -303,15 +303,18 @@ public class ComboBoxVm: CommandVm
     public IEnumerable<object> ComboBoxItemsSource { get; set; }                        // 数据源
     public string DisplayFieldName { get; set; }                                        // 当数据源是对象集合时，展示对象的字段
     public string ValueFieldName { get;set; }                                           //      
-    public ICommand SelectedItemsChangedCommand { get; set; }                                  // 选择的数据发生变化时，会触发该 Command
+    public ICommand CustomDisplayTextCommand { get; set; }
+    public ICommand SelectedItemsChangedCommand { get; set; }                                  // 选择的数据发生变化时，会触发该 Command    
+    
     public DataTemplate ComboBoxItemTemplate { get; set; }                              // 自定義模板
-    public DataTemplateSelector ComboBoxItemTemplateSelector { get; set; }              // 自定義模板選擇器
+    public DataTemplateSelector ComboBoxItemTemplateSelector { get; set; }              // 自定義模板選擇器    
 
     public ComboBoxVm(): base()
     {
         IsComboBox = true;
         IsTextEditable = false;
         NullText = "Selected Item";
+        MinWidth = 120;
     }
 }
 
@@ -322,5 +325,6 @@ public class EditValueChangedEventArgConverter : EventArgsConverterBase<EditValu
         return args;
     }
 }
+
 
 

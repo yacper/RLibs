@@ -24,14 +24,32 @@ namespace RLib.Base
 
 	public static class DateTimeEx
 	{
-	    public static DateTime ToDateTime(this string dtStr)
+	    public static DateTime? ToDateTime(this string dtStr)
 	    {
-	        return DateTime.Parse(dtStr);
-	    }
-	    public static TimeSpan ToTimeSpan(this string str)
+            try
+            {
+	            return DateTime.Parse(dtStr);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
+
+            return null;
+        }
+	    public static TimeSpan? ToTimeSpan(this string str)
 	    {
-	        return TimeSpan.Parse(str);
-	    }
+            try
+            {
+	            return TimeSpan.Parse(str);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
+
+            return null;
+        }
 
 	    public static string ToFileLongFormat(this DateTime val)            // 提供一个用于存储的长时间格式 2008-9-4(12-19-14-333)
 	    {

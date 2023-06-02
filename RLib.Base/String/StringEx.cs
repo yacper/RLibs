@@ -17,6 +17,14 @@ namespace RLib.Base
             return string.IsNullOrWhiteSpace(str);
         }
 
+        // https://learn.microsoft.com/en-us/dotnet/standard/base-types/best-practices-strings
+        // https://www.cnblogs.com/zh7791/p/14293850.html
+        public static bool EqualsOrdinalIgnoreCase(this string str, string other)
+        {
+            return string.Equals(str, other, StringComparison.OrdinalIgnoreCase);
+        }
+
+
         public static string Join(this IEnumerable<string> strs, char separator)
         {
             return string.Join(separator, strs);

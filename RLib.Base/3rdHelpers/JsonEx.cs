@@ -7,9 +7,11 @@
 *********************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -37,6 +39,14 @@ namespace RLib.Base
             },
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore    // 忽略循环引用
         };
+
+        // dump string
+        public static string DumpJson(this object o, IEnumerable<JsonConverter> exConverter = null, TypeNameHandling typeNameHandling = TypeNameHandling.None)
+        {
+            var ret= o.ToJson(Formatting.Indented, exConverter, typeNameHandling);
+            Debug.WriteLine(ret);
+            return ret;
+        }
 
         public static string ToJson(this object o) => o.ToJson(Formatting.None, null);
         public static string ToJson(this object o, Formatting formatting) => o.ToJson(formatting, null);

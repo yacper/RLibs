@@ -26,6 +26,7 @@
 
 	<ItemGroup>
 		<Folder Include="Reflection\" />
+		<Folder Include="3rdHelpers\" />
 	</ItemGroup>
 
 </Project>

@@ -255,6 +255,25 @@ namespace RLib.Base
             return ret;
         }
 
+        public static IEnumerable<T> Flags<T>(this T val) where T : Enum   // 将一个enum 分解成 原则enum（如果它是Pot enum的话）
+        {
+            List<T> ret = new List<T>();
+
+            Array ar = Enum.GetValues(typeof(T));
+            foreach (var v in ar)
+            {
+                if (MathEx.IsPowerOfTwo((int)v) && // 只检查2的幂次项
+                    ((int)v & Convert.ToInt32(val)) != 0)
+                {
+                    ret.Add((T)v);
+                }
+            }
+
+            return ret;
+        }
+
+
+
         public static IEnumerable<object> Atomics(this Type t)
         {
             List<object> ret = new List<object>();

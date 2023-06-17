@@ -16,7 +16,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="CompareNETObjects" Version="4.66.0" />
-		<PackageReference Include="CsvHelper" Version="27.1.1" />
+		<PackageReference Include="CsvHelper" Version="30.0.1" />
+		<PackageReference Include="CsvHelper.Excel.EPPlus4" Version="30.1.0" />
 		<PackageReference Include="DeepCloner" Version="0.10.4" />
 		<PackageReference Include="FluentAssertions" Version="6.7.0" />
 		<PackageReference Include="FluentFTP" Version="28.0.0" />

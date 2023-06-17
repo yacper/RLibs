@@ -11,7 +11,24 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CsvHelper" Version="27.1.1" />
+	  <None Remove="Data\MSFT.csv" />
+	  <None Remove="Data\MSFT.xls" />
+	  <None Remove="Data\MSFT.xlsx" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Data\MSFT.csv">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Data\MSFT.xls">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Data\MSFT.xlsx">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="FluentAssertions" Version="6.7.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
 		<PackageReference Include="NUnit" Version="3.13.1" />

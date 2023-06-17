@@ -16,6 +16,8 @@ using System.Text;
 using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
+using CsvHelper.Excel.EPPlus;
+using OfficeOpenXml;
 
 namespace RLib.Base
 {
@@ -73,8 +75,14 @@ namespace RLib.Base
         {
             try
             {
+                bool isexcel = false;
+                if (
+                    //path.EndsWith(".xls", StringComparison.OrdinalIgnoreCase) ||  // 不支持xls
+                    path.EndsWith("xlsx", StringComparison.OrdinalIgnoreCase))
+                    isexcel = true;
+
                 using (var stream = File.OpenRead(path))
-                    return stream.FromCsv(withHeader, config);
+                    return stream.FromCsv(withHeader, config, isexcel);
             }
             catch(Exception e)
             {
@@ -82,8 +90,9 @@ namespace RLib.Base
                 return new List<dynamic>();
             }
         }
-        public static IEnumerable<dynamic> FromCsv(this Stream path,bool withHeader = true, CsvConfiguration config = null)
+        public static IEnumerable<dynamic> FromCsv(this Stream path,bool withHeader = true, CsvConfiguration config = null, bool isExcel =false)
         {
+            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             try
             {
                 if (config == null)
@@ -92,10 +101,21 @@ namespace RLib.Base
 
                 List<dynamic> ret = new List<dynamic>();
 
-                using (var reader = new StreamReader(path))
-                using (var csv = new CsvReader(reader, config))
+                if (!isExcel)
                 {
-                    ret.AddRange(csv.GetRecords<dynamic>());
+                    using (var reader = new StreamReader(path))
+                    using (var csv = new CsvReader(reader, config))
+                    {
+                        ret.AddRange(csv.GetRecords<dynamic>());
+                    }
+                }
+                else
+                {
+                    using (var parser = new ExcelParser(path, null, config))
+                    using (var csv = new CsvReader(parser))
+                    {
+                        ret.AddRange(csv.GetRecords<dynamic>());
+                    }
                 }
 
                 return ret;

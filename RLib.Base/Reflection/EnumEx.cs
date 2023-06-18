@@ -255,7 +255,7 @@ namespace RLib.Base
             return ret;
         }
 
-        public static IEnumerable<T> Flags<T>(this T val) where T : Enum   // 将一个enum 分解成 原则enum（如果它是Pot enum的话）
+        public static IEnumerable<T> AtomicFlags<T>(this T val) where T : Enum   // 将一个enum 分解成 原子enum（如果它是Pot enum的话）
         {
             List<T> ret = new List<T>();
 
@@ -272,6 +272,42 @@ namespace RLib.Base
             return ret;
         }
 
+        public static T MergeFlags<T>(this IEnumerable<T> flags) where T : Enum
+        {
+            T ret = default(T);
+            foreach (var o in flags)
+            {
+                ret = (T)(object)(((int)(object)ret | (int)(object)o));
+            }
+
+            return ret;
+        }
+
+        public static T AddFlag<T>(this T o, T value) where T : Enum
+        {
+            try { return (T)(object)(((int)(object)o | (int)(object)value)); }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(
+                                            string.Format(
+                                                          "Could not append value from enumerated type '{0}'.",
+                                                          typeof(T).Name
+                                                         ), ex);
+            }
+        }
+
+        public static T RemoveFlag<T>(this System.Enum type, T value) where T : Enum
+        {
+            try { return (T)(object)(((int)(object)type & ~(int)(object)value)); }
+            catch (Exception ex)
+            {
+                throw new ArgumentException(
+                                            string.Format(
+                                                          "Could not remove value from enumerated type '{0}'.",
+                                                          typeof(T).Name
+                                                         ), ex);
+            }
+        }
 
 
         public static IEnumerable<object> Atomics(this Type t)
@@ -385,5 +421,7 @@ namespace RLib.Base
 
             return obj;
         }
+
+
     }
 }

@@ -49,7 +49,7 @@ public static class PropertyEx
         foreach (PropertyInfo pi in t.GetProperties())
         {
             var d = pi.GetCustomAttribute(attributeType);
-            if (d != null)
+            if (d != null && !ret.Contains(pi))
                 ret.Add(pi);
         }
 
@@ -63,7 +63,17 @@ public static class PropertyEx
 
     public static List<PropertyInfo> GetPropertiesWithAttribute(this Type t, IEnumerable<Type> attributeTypes) // 系统的不会搜寻interface
     {
-        return attributeTypes.SelectMany(p => t.GetPropertiesWithAttribute(p)).ToList();
+        List<PropertyInfo> pInfos = new List<PropertyInfo>();
+        foreach (Type attr in attributeTypes) 
+        {
+            foreach(var pinfo in t.GetPropertiesWithAttribute(attr))
+            {
+                if(pInfos.Contains(pinfo))
+                    continue;
+                pInfos.Add(pinfo);
+            }
+        }
+        return pInfos;
     }
 
     public static List<PropertyInfo> GetPropertiesWithAttribute<T>(this object o) where T : Attribute // 系统的不会搜寻interface
@@ -72,7 +82,6 @@ public static class PropertyEx
      public static List<PropertyInfo> GetPropertiesWithAttribute(this object o, IEnumerable<Type> attributeTypes) // 系统的不会搜寻interface
         => o.GetType().GetPropertiesWithAttribute(attributeTypes);
   
-
     public static string ToKvPropertiesJson(this object o, IEnumerable<string> properties, IEnumerable<JsonConverter>? exConverters=null )
     {
         Type                       t   = o.GetType();

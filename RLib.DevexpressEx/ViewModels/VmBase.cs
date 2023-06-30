@@ -16,6 +16,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using DevExpress.Mvvm;
+using System.Windows;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using Brushes = System.Windows.Media.Brushes;
+using Brush = System.Windows.Media.Brush;
 
 namespace RLib.DevexpressEx.ViewModels
 {
@@ -36,8 +40,14 @@ public abstract class VmBase : DevExpress.Mvvm.ViewModelBase, IDisposable
     public virtual ImageSource Glyph        { get => GetProperty(() => Glyph);        set => SetProperty(() => Glyph, value); }
     public virtual ImageSource StateImg     { get => GetProperty(() => StateImg);     set => SetProperty(() => StateImg, value); }     // 状态图标
     public virtual string      BadgeContent { get => GetProperty(() => BadgeContent); set => SetProperty(() => BadgeContent, value); } // badge
+    public virtual HorizontalAlignment BadgeHorizontalAnchor { get; set; }
+    public virtual VerticalAlignment BadgeVerticalAnchor { get; set; }
+    public virtual HorizontalAlignment BadgeHorizontalAlignment { get; set; }
+    public virtual VerticalAlignment BadgeVerticalAlignment { get; set; }        
+    public virtual Brush BadgeBrush { get; set; } = Brushes.Transparent;
 
     public virtual double MaxWidth { get => GetProperty(() => MaxWidth); set => SetProperty(() => MaxWidth, value); }
+    public virtual double MinWidth { get; set; }
 
 
     string GetBindableName(string name)

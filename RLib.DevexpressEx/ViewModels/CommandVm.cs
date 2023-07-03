@@ -37,6 +37,7 @@ public class CommandVm : VmBase
 
     public virtual object      Owner  { get=>GetProperty(()=>Owner); set=>SetProperty(()=> Owner, value); }
 
+    public virtual ICommand LoadedCommand { get; set; }                 // UI Loaded Success Callback
     public CommandVm SetOwner(object newOwner)
     {
         Bindings.ForEach(b => { b.Reset(); });
@@ -69,7 +70,8 @@ public class CommandVm : VmBase
             ShowKeyGesture = ShowKeyGesture,
             Tag = Tag,
             Visibility = Visibility,
-            Tooltip = Tooltip,  
+            Tooltip = Tooltip,
+            LoadedCommand = LoadedCommand
         };
 
         o.Bindings = this.Bindings.Select(p => p.Clone(o)).ToList();
@@ -78,7 +80,22 @@ public class CommandVm : VmBase
     }
 
     public ICommand                        Command  { get; set; } // 对应command(可以为空，那么只有点开子命令功能)
-    public virtual ObservableCollection<CommandVm> Commands { get=>GetProperty(()=>Commands); set=>SetProperty(()=>Commands,value); } // 子命令项 (用于menu的子命令)
+    public virtual ObservableCollection<CommandVm> Commands 
+    { 
+        get=>GetProperty(()=>Commands); 
+        set 
+        {
+            SetProperty(() => Commands, value);
+            LoadedCommand = new DelegateCommand<LightweightBarItemLinkControl>(e => 
+            {
+                if (e == null)
+                    return;
+                if(e.PART_Arrow != null)
+                    e.PART_Arrow.Visibility = Visibility.Collapsed;
+
+            });
+        } 
+    } // 子命令项 (用于menu的子命令)
 
     public BarItemDisplayMode DisplayMode    { get; set; } = BarItemDisplayMode.ContentAndGlyph; // 显示模式，纯文字还是带icon
     public Dock               GlyphAlignment { get; set; } = Dock.Left; // glyph alignment
@@ -173,6 +190,7 @@ public class CommandVm : VmBase
         DisplayMode = BarItemDisplayMode.Default;
         DisplayNameDock = Dock.Left;
         Tooltip = null;
+
     }
 
     protected override void OnDispose()

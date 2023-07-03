@@ -90,8 +90,16 @@ public class CommandVm : VmBase
             {
                 if (e == null)
                     return;
+                var vm = e.DataContext as CommandVm;
                 if(e.PART_Arrow != null)
                     e.PART_Arrow.Visibility = Visibility.Collapsed;
+
+                if(vm.Glyph != null && vm.DisplayMode != BarItemDisplayMode.Content && string.IsNullOrEmpty(vm.DisplayName))
+                {
+                    if (e.PART_Glyph != null)                    
+                        e.PART_Glyph.Margin = new Thickness(0, 0, 0, 0);                    
+                }
+
 
             });
         } 

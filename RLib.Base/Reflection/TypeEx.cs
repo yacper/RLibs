@@ -107,6 +107,21 @@ namespace RLib.Base
             return rt.FullName == "System.Double";
         }
 
+        public static bool IsNumber(this Type t)                       // 判断是否是数字
+        {
+            t = Nullable.GetUnderlyingType(t) ?? t;
+
+            if (t.IsPrimitive)
+            {
+                return t != typeof(bool) &&
+                    t != typeof(char) &&
+                    t != typeof(IntPtr) &&
+                    t != typeof(UIntPtr);
+            }
+
+            return t == typeof(decimal);
+        }
+
         public static bool IsString(this Type t)
         {
             return t == typeof(string);

@@ -340,7 +340,7 @@ public class ComboBoxVm: CommandVm
         IsComboBox = true;
         IsTextEditable = false;
         NullText = "Selected Item";
-        MinWidth = 120;
+        MinWidth = 121;
     }
 }
 

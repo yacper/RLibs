@@ -85,23 +85,7 @@ public class CommandVm : VmBase
         get=>GetProperty(()=>Commands); 
         set 
         {
-            SetProperty(() => Commands, value);
-            LoadedCommand = new DelegateCommand<LightweightBarItemLinkControl>(e => 
-            {
-                if (e == null)
-                    return;
-                var vm = e.DataContext as CommandVm;
-                if(e.PART_Arrow != null)
-                    e.PART_Arrow.Visibility = Visibility.Collapsed;
-
-                if(vm.Glyph != null && vm.DisplayMode != BarItemDisplayMode.Content && string.IsNullOrEmpty(vm.DisplayName))
-                {
-                    if (e.PART_Glyph != null)                    
-                        e.PART_Glyph.Margin = new Thickness(0, 0, 0, 0);                    
-                }
-
-
-            });
+            SetProperty(() => Commands, value);            
         } 
     } // 子命令项 (用于menu的子命令)
 
@@ -199,6 +183,24 @@ public class CommandVm : VmBase
         DisplayNameDock = Dock.Left;
         Tooltip = null;
 
+        LoadedCommand = new DelegateCommand<LightweightBarItemLinkControl>(e =>
+        {
+            if (e == null)
+                return;
+            var vm = e.DataContext as CommandVm;
+            if (e.PART_Arrow != null)
+                e.PART_Arrow.Visibility = Visibility.Collapsed;
+
+            if (vm.Glyph != null && vm.DisplayMode != BarItemDisplayMode.Content && string.IsNullOrEmpty(vm.DisplayName))
+            {
+                if (e.PART_Glyph != null)
+                {                    
+                    e.PART_Glyph.Margin = new Thickness(0, 0, 0, 0);
+                }
+            }
+
+
+        });
     }
 
     protected override void OnDispose()

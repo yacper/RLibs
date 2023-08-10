@@ -1,529 +1,629 @@
-﻿//// ****************************************************************************
-//// <copyright file="ObservableObject.cs" company="GalaSoft Laurent Bugnion">
-//// Copyright © GalaSoft Laurent Bugnion 2011-2016
-//// </copyright>
-//// ****************************************************************************
-//// <author>Laurent Bugnion</author>
-//// <email>laurent@galasoft.ch</email>
-//// <date>10.4.2011</date>
-//// <project>GalaSoft.MvvmLight.Messaging</project>
-//// <web>http://www.mvvmlight.net</web>
-//// <license>
-//// See license.txt in this project or http://www.galasoft.ch/license_MIT.txt
-//// </license>
-//// ****************************************************************************
+﻿// created: 2022/08/01 11:02
+// author:  rush
+// email:   yacper@gmail.com
+// 
+// purpose:
+// modifiers:
 
-//using System;
-//using System.Collections.Generic;
-//using System.ComponentModel;
-//using System.Data.OleDb;
-//using System.Diagnostics;
-//using System.Diagnostics.CodeAnalysis;
-//using System.Reflection;
-//using System.Linq.Expressions;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
-//// ReSharper disable RedundantUsingDirective
-//using System.Linq;
-//// ReSharper restore RedundantUsingDirective
-
-//#if CMNATTR
-//using System.Runtime.CompilerServices;
-//#endif
-
-//namespace RLib.Base
-//{
-
-//    // 带old mod:2018/6/21
-//    public class PropertyChangedEventArgsEx : PropertyChangedEventArgs
-//    {
-//        public object       OldVal { get; protected set; }
-//        public object       NewVal { get; protected set; }
-
-//        public              PropertyChangedEventArgsEx(string propertyName, object newval, object oldval)
-//            : base(propertyName)
-//        {
-//            NewVal = newval;
-//            OldVal = oldval;
-//        }
-//    }
-
-//    // 带old mod:2018/9/17
-//    public class PropertyChangingEventArgsEx : PropertyChangingEventArgs
-//    {
-//        public object       OldVal { get; protected set; }
-//        public object       NewVal { get; protected set; }
-
-//        public              PropertyChangingEventArgsEx(string propertyName, object newval, object oldval)
-//            : base(propertyName)
-//        {
-//            NewVal = newval;
-//            OldVal = oldval;
-//        }
-//    }
+namespace RLib.Base.Mvvm
+{
 
 
-//    /// <summary>
-//    /// A base class for objects of which the properties must be observable.
-//    /// </summary>
-//    //// [ClassInfo(typeof(ViewModelBase))]
-//    public class ObservableObject : INotifyPropertyChanged /*, INotifyPropertyChanging*/
-//    {
-//        /// <summary>
-//        /// Occurs after a property value changes.
-//        /// </summary>
-//        public event PropertyChangedEventHandler PropertyChanged;
+// 带old mod:2018/6/21
+public class PropertyChangedEventArgsEx : PropertyChangedEventArgs
+{
+    public object OldValue { get; protected set; }
+    public object NewValue { get; protected set; }
 
-//        /// <summary>
-//        /// Provides access to the PropertyChanged event handler to derived classes.
-//        /// </summary>
-//        protected PropertyChangedEventHandler PropertyChangedHandler
-//        {
-//            get
-//            {
-//                return PropertyChanged;
-//            }
-//        }
+    public PropertyChangedEventArgsEx(string propertyName, object newval, object oldval)
+        : base(propertyName)
+    {
+        NewValue = newval;
+        OldValue = oldval;
+    }
+}
 
-//#if !PORTABLE && !SL4
-//        /// <summary>
-//        /// Occurs before a property value changes.
-//        /// </summary>
-//        public event PropertyChangingEventHandler PropertyChanging;
+// 带old mod:2018/9/17
+public class PropertyChangingEventArgsEx : PropertyChangingEventArgs
+{
+    public object OldValue { get; protected set; }
+    public object NewValue { get; protected set; }
 
-//        /// <summary>
-//        /// Provides access to the PropertyChanging event handler to derived classes.
-//        /// </summary>
-//        protected PropertyChangingEventHandler PropertyChangingHandler
-//        {
-//            get
-//            {
-//                return PropertyChanging;
-//            }
-//        }
-//#endif
+    public PropertyChangingEventArgsEx(string propertyName, object newval, object oldval)
+        : base(propertyName)
+    {
+        NewValue = newval;
+        OldValue = oldval;
+    }
+}
 
-//        /// <summary>
-//        /// Verifies that a property name exists in this ViewModel. This method
-//        /// can be called before the property is used, for instance before
-//        /// calling RaisePropertyChanged. It avoids errors when a property name
-//        /// is changed but some places are missed.
-//        /// </summary>
-//        /// <remarks>This method is only active in DEBUG mode.</remarks>
-//        /// <param name="propertyName">The name of the property that will be
-//        /// checked.</param>
-//        [Conditional("DEBUG")]
-//        [DebuggerStepThrough]
-//        public void VerifyPropertyName(string propertyName)
-//        {
-////#if DEBUG
-//            return;                 // verify 比较耗效率，不使用了
-////#endif
+public class ObservableObject : INotifyPropertyChanged, INotifyPropertyChanging
+{
+    protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, Action<T> callback, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, newValue)) { return false; }
 
-//            var myType = GetType();
+        OnPropertyChanging(newValue, propertyName);
 
-//#if NETFX_CORE
-//            var info = myType.GetTypeInfo();
+        var old = field;
 
-//            if (!string.IsNullOrEmpty(propertyName)
-//                && info.GetDeclaredProperty(propertyName) == null)
-//            {
-//                // Check base types
-//                var found = false;
+        field = newValue;
 
-//                while (info.BaseType != typeof(Object))
-//                {
-//                    info = info.BaseType.GetTypeInfo();
+        callback(old);
 
-//                    if (info.GetDeclaredProperty(propertyName) != null)
-//                    {
-//                        found = true;
-//                        break;
-//                    }
-//                }
+        OnPropertyChanged(old, propertyName);
 
-//                if (!found)
-//                {
-//                    throw new ArgumentException("Property not found", propertyName);
-//                }
-//            }
-//#else
-//            if (!string.IsNullOrEmpty(propertyName)
-//                && myType.GetProperty(propertyName) == null)
-//            {
-//#if !SILVERLIGHT
-//                var descriptor = this as ICustomTypeDescriptor;
-
-//                if (descriptor != null)
-//                {
-//                    if (descriptor.GetProperties()
-//                        .Cast<PropertyDescriptor>()
-//                        .Any(property => property.Name == propertyName))
-//                    {
-//                        return;
-//                    }
-//                }
-//#endif
-
-//                throw new ArgumentException("Property not found", propertyName);
-//            }
-//#endif
-//        }
-
-//#if !PORTABLE && !SL4
-//#if CMNATTR
-//        /// <summary>
-//        /// Raises the PropertyChanging event if needed.
-//        /// </summary>
-//        /// <remarks>If the propertyName parameter
-//        /// does not correspond to an existing property on the current class, an
-//        /// exception is thrown in DEBUG configuration only.</remarks>
-//        /// <param name="propertyName">(optional) The name of the property that
-//        /// changed.</param>
-//        [SuppressMessage(
-//            "Microsoft.Design", 
-//            "CA1030:UseEventsWhereAppropriate",
-//            Justification = "This cannot be an event")]
-//        public virtual void RaisePropertyChanging(
-//            [CallerMemberName] string propertyName = null)
-//#else
-//        /// <summary>
-//        /// Raises the PropertyChanging event if needed.
-//        /// </summary>
-//        /// <remarks>If the propertyName parameter
-//        /// does not correspond to an existing property on the current class, an
-//        /// exception is thrown in DEBUG configuration only.</remarks>
-//        /// <param name="propertyName">The name of the property that
-//        /// changed.</param>
-//        [SuppressMessage(
-//            "Microsoft.Design", 
-//            "CA1030:UseEventsWhereAppropriate",
-//            Justification = "This cannot be an event")]
-//        public virtual void RaisePropertyChanging(
-//            string propertyName)
-//#endif
-//        {
-//            VerifyPropertyName(propertyName);
-
-//            var handler = PropertyChanging;
-//            if (handler != null)
-//            {
-//                handler(this, new PropertyChangingEventArgs(propertyName));
-//            }
-//        }
-//#endif
-
-//        // 带old mod:2018/9/17
-//        public virtual void RaisePropertyChanging(string propertyName, object newval, object oldval) 
-//        {
-//            VerifyPropertyName(propertyName);
-
-//            var handler = PropertyChanging;
-//            if (handler != null)
-//            {
-//                handler(this, new PropertyChangingEventArgsEx(propertyName, newval, oldval));
-//            }
-//        }
+        return true;
+    }
 
 
-//#if CMNATTR
-//        /// <summary>
-//        /// Raises the PropertyChanged event if needed.
-//        /// </summary>
-//        /// <remarks>If the propertyName parameter
-//        /// does not correspond to an existing property on the current class, an
-//        /// exception is thrown in DEBUG configuration only.</remarks>
-//        /// <param name="propertyName">(optional) The name of the property that
-//        /// changed.</param>
-//        [SuppressMessage(
-//            "Microsoft.Design", 
-//            "CA1030:UseEventsWhereAppropriate",
-//            Justification = "This cannot be an event")]
-//        public virtual void RaisePropertyChanged(
-//            [CallerMemberName] string propertyName = null)
-//#else
-//        /// <summary>
-//        /// Raises the PropertyChanged event if needed.
-//        /// </summary>
-//        /// <remarks>If the propertyName parameter
-//        /// does not correspond to an existing property on the current class, an
-//        /// exception is thrown in DEBUG configuration only.</remarks>
-//        /// <param name="propertyName">The name of the property that
-//        /// changed.</param>
-//        [SuppressMessage(
-//            "Microsoft.Design", 
-//            "CA1030:UseEventsWhereAppropriate",
-//            Justification = "This cannot be an event")]
-//        public virtual void RaisePropertyChanged(
-//            string propertyName) 
-//#endif
-//        {
-//            VerifyPropertyName(propertyName);
 
-//            var handler = PropertyChanged;
-//            if (handler != null)
-//            {
-//                handler(this, new PropertyChangedEventArgs(propertyName));
-//            }
-//        }
-//#if CMNATTR
-//        /// <summary>
-//        /// Raises the PropertyChanged event if needed.
-//        /// </summary>
-//        /// <remarks>If the propertyName parameter
-//        /// does not correspond to an existing property on the current class, an
-//        /// exception is thrown in DEBUG configuration only.</remarks>
-//        /// <param name="propertyName">(optional) The name of the property that
-//        /// changed.</param>
-//        [SuppressMessage(
-//            "Microsoft.Design", 
-//            "CA1030:UseEventsWhereAppropriate",
-//            Justification = "This cannot be an event")]
-//        public virtual void RaisePropertyChanged(
-//            [CallerMemberName] string propertyName = null)
-//#else
-//        /// <summary>
-//        /// Raises the PropertyChanged event if needed.
-//        /// </summary>
-//        /// <remarks>If the propertyName parameter
-//        /// does not correspond to an existing property on the current class, an
-//        /// exception is thrown in DEBUG configuration only.</remarks>
-//        /// <param name="propertyName">The name of the property that
-//        /// changed.</param>
-//        [SuppressMessage(
-//            "Microsoft.Design", 
-//            "CA1030:UseEventsWhereAppropriate",
-//            Justification = "This cannot be an event")]
-//        public virtual void RaisePropertyChanged(
-//            string propertyName, bool verify = true) 
-//#endif
-//        {
-//            if(verify)
-//                VerifyPropertyName(propertyName);
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-//            var handler = PropertyChanged;
-//            if (handler != null)
-//            {
-//                handler(this, new PropertyChangedEventArgs(propertyName));
-//            }
-//        }
+    /// <inheritdoc cref="INotifyPropertyChanging.PropertyChanging"/>
+    public event PropertyChangingEventHandler? PropertyChanging;
+
+    /// <summary>
+    /// Raises the <see cref="PropertyChanged"/> event.
+    /// </summary>
+    /// <param name="e">The input <see cref="PropertyChangedEventArgs"/> instance.</param>
+    protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) { PropertyChanged?.Invoke(this, e); }
+
+    /// <summary>
+    /// Raises the <see cref="PropertyChanging"/> event.
+    /// </summary>
+    /// <param name="e">The input <see cref="PropertyChangingEventArgs"/> instance.</param>
+    protected virtual void OnPropertyChanging(PropertyChangingEventArgs e) { PropertyChanging?.Invoke(this, e); }
+
+    /// <summary>
+    /// Raises the <see cref="PropertyChanged"/> event.
+    /// </summary>
+    /// <param name="propertyName">(optional) The name of the property that changed.</param>
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+    }
+    protected void OnPropertyChanged(object oldVal, [CallerMemberName] string? propertyName = null)
+    {
+        var newVal = this.GetType().GetProperty(propertyName).GetValue(this);
+        OnPropertyChanged(new PropertyChangedEventArgsEx(propertyName, newVal, oldVal));
+    }
 
 
-//        // 带old mod:2018/6/21
-//        public virtual void RaisePropertyChanged(string propertyName, object newval, object oldval) 
-//        {
-//            VerifyPropertyName(propertyName);
 
-//            var handler = PropertyChanged;
-//            if (handler != null)
-//            {
-//                handler(this, new PropertyChangedEventArgsEx(propertyName, newval, oldval));
-//            }
-//        }
+    /// <summary>
+    /// Raises the <see cref="PropertyChanging"/> event.
+    /// </summary>
+    /// <param name="propertyName">(optional) The name of the property that changed.</param>
+    protected void OnPropertyChanging([CallerMemberName] string? propertyName = null)
+    {
+        OnPropertyChanging(new PropertyChangingEventArgs(propertyName));
+    }
+    protected void OnPropertyChanging(object newVal, [CallerMemberName] string? propertyName = null)
+    {
+        var oldVal = this.GetType().GetProperty(propertyName).GetValue(this);
+        OnPropertyChanging(new PropertyChangingEventArgsEx(propertyName, newVal, oldVal));
+    }
 
-//#if !PORTABLE && !SL4
-//        /// <summary>
-//        /// Raises the PropertyChanging event if needed.
-//        /// </summary>
-//        /// <typeparam name="T">The type of the property that
-//        /// changes.</typeparam>
-//        /// <param name="propertyExpression">An expression identifying the property
-//        /// that changes.</param>
-//        [SuppressMessage(
-//            "Microsoft.Design", 
-//            "CA1030:UseEventsWhereAppropriate",
-//            Justification = "This cannot be an event")]
-//        [SuppressMessage(
-//            "Microsoft.Design",
-//            "CA1006:GenericMethodsShouldProvideTypeParameter",
-//            Justification = "This syntax is more convenient than other alternatives.")]
-//        public virtual void RaisePropertyChanging<T>(Expression<Func<T>> propertyExpression)
-//        {
-//            var handler = PropertyChanging;
-//            if (handler != null)
-//            {
-//                var propertyName = GetPropertyName(propertyExpression);
-//                handler(this, new PropertyChangingEventArgs(propertyName));
-//            }
-//        }
-//#endif
 
-//        /// <summary>
-//        /// Raises the PropertyChanged event if needed.
-//        /// </summary>
-//        /// <typeparam name="T">The type of the property that
-//        /// changed.</typeparam>
-//        /// <param name="propertyExpression">An expression identifying the property
-//        /// that changed.</param>
-//        [SuppressMessage(
-//            "Microsoft.Design", 
-//            "CA1030:UseEventsWhereAppropriate",
-//            Justification = "This cannot be an event")]
-//        [SuppressMessage(
-//            "Microsoft.Design",
-//            "CA1006:GenericMethodsShouldProvideTypeParameter",
-//            Justification = "This syntax is more convenient than other alternatives.")]
-//        public virtual void RaisePropertyChanged<T>(Expression<Func<T>> propertyExpression)
-//        {
-//            var handler = PropertyChanged;
+    /// <summary>
+    /// Compares the current and new values for a given property. If the value has changed,
+    /// raises the <see cref="PropertyChanging"/> event, updates the property with the new
+    /// value, then raises the <see cref="PropertyChanged"/> event.
+    /// </summary>
+    /// <typeparam name="T">The type of the property that changed.</typeparam>
+    /// <param name="field">The field storing the property's value.</param>
+    /// <param name="newValue">The property's value after the change occurred.</param>
+    /// <param name="propertyName">(optional) The name of the property that changed.</param>
+    /// <returns><see langword="true"/> if the property was changed, <see langword="false"/> otherwise.</returns>
+    /// <remarks>
+    /// The <see cref="PropertyChanging"/> and <see cref="PropertyChanged"/> events are not raised
+    /// if the current and new value for the target property are the same.
+    /// </remarks>
+    protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, [CallerMemberName] string? propertyName = null)
+    {
+        // We duplicate the code here instead of calling the overload because we can't
+        // guarantee that the invoked SetProperty<T> will be inlined, and we need the JIT
+        // to be able to see the full EqualityComparer<T>.Default.Equals call, so that
+        // it'll use the intrinsics version of it and just replace the whole invocation
+        // with a direct comparison when possible (eg. for primitive numeric types).
+        // This is the fastest SetProperty<T> overload so we particularly care about
+        // the codegen quality here, and the code is small and simple enough so that
+        // duplicating it still doesn't make the whole class harder to maintain.
+        if (EqualityComparer<T>.Default.Equals(field, newValue)) { return false; }
 
-//            if (handler != null)
-//            {
-//                var propertyName = GetPropertyName(propertyExpression);
+        OnPropertyChanging(newValue, propertyName);
 
-//                if (!string.IsNullOrEmpty(propertyName))
-//                {
-//                    // ReSharper disable once ExplicitCallerInfoArgument
-//                    RaisePropertyChanged(propertyName);
-//                }
-//            }
-//        }
+        var old = field;
 
-//        /// <summary>
-//        /// Extracts the name of a property from an expression.
-//        /// </summary>
-//        /// <typeparam name="T">The type of the property.</typeparam>
-//        /// <param name="propertyExpression">An expression returning the property's name.</param>
-//        /// <returns>The name of the property returned by the expression.</returns>
-//        /// <exception cref="ArgumentNullException">If the expression is null.</exception>
-//        /// <exception cref="ArgumentException">If the expression does not represent a property.</exception>
-//        [SuppressMessage(
-//            "Microsoft.Design", 
-//            "CA1011:ConsiderPassingBaseTypesAsParameters",
-//            Justification = "This syntax is more convenient than the alternatives."), 
-//         SuppressMessage(
-//            "Microsoft.Design",
-//            "CA1006:DoNotNestGenericTypesInMemberSignatures",
-//            Justification = "This syntax is more convenient than the alternatives.")]
-//        protected static string GetPropertyName<T>(Expression<Func<T>> propertyExpression)
-//        {
-//            if (propertyExpression == null)
-//            {
-//                throw new ArgumentNullException("propertyExpression");
-//            }
+        field = newValue;
 
-//            var body = propertyExpression.Body as MemberExpression;
+        OnPropertyChanged(old, propertyName);
 
-//            if (body == null)
-//            {
-//                throw new ArgumentException("Invalid argument", "propertyExpression");
-//            }
+        return true;
+    }
 
-//            var property = body.Member as PropertyInfo;
+    /// <summary>
+    /// Compares the current and new values for a given property. If the value has changed,
+    /// raises the <see cref="PropertyChanging"/> event, updates the property with the new
+    /// value, then raises the <see cref="PropertyChanged"/> event.
+    /// See additional notes about this overload in <see cref="SetProperty{T}(ref T,T,string)"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the property that changed.</typeparam>
+    /// <param name="field">The field storing the property's value.</param>
+    /// <param name="newValue">The property's value after the change occurred.</param>
+    /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> instance to use to compare the input values.</param>
+    /// <param name="propertyName">(optional) The name of the property that changed.</param>
+    /// <returns><see langword="true"/> if the property was changed, <see langword="false"/> otherwise.</returns>
+    protected bool SetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, IEqualityComparer<T> comparer, [CallerMemberName] string? propertyName = null)
+    {
+        if (comparer.Equals(field, newValue)) { return false; }
 
-//            if (property == null)
-//            {
-//                throw new ArgumentException("Argument is not a property", "propertyExpression");
-//            }
+        OnPropertyChanging(newValue, propertyName);
 
-//            return property.Name;
-//        }
+        field = newValue;
 
-//        /// <summary>
-//        /// Assigns a new value to the property. Then, raises the
-//        /// PropertyChanged event if needed. 
-//        /// </summary>
-//        /// <typeparam name="T">The type of the property that
-//        /// changed.</typeparam>
-//        /// <param name="propertyExpression">An expression identifying the property
-//        /// that changed.</param>
-//        /// <param name="field">The field storing the property's value.</param>
-//        /// <param name="newValue">The property's value after the change
-//        /// occurred.</param>
-//        /// <returns>True if the PropertyChanged event has been raised,
-//        /// false otherwise. The event is not raised if the old
-//        /// value is equal to the new value.</returns>
-//        [SuppressMessage(
-//            "Microsoft.Design",
-//            "CA1006:DoNotNestGenericTypesInMemberSignatures",
-//            Justification = "This syntax is more convenient than the alternatives."), 
-//         SuppressMessage(
-//            "Microsoft.Design", 
-//            "CA1045:DoNotPassTypesByReference",
-//            MessageId = "1#",
-//            Justification = "This syntax is more convenient than the alternatives.")]
-//        protected bool Set<T>(
-//            Expression<Func<T>> propertyExpression,
-//            ref T field,
-//            T newValue)
-//        {
-//            if (EqualityComparer<T>.Default.Equals(field, newValue))
-//            {
-//                return false;
-//            }
+        var old = field;
 
-//#if !PORTABLE && !SL4
-//            RaisePropertyChanging(propertyExpression);
-//#endif
-//            field = newValue;
-//            RaisePropertyChanged(propertyExpression);
-//            return true;
-//        }
+        field = newValue;
 
-//        /// <summary>
-//        /// Assigns a new value to the property. Then, raises the
-//        /// PropertyChanged event if needed. 
-//        /// </summary>
-//        /// <typeparam name="T">The type of the property that
-//        /// changed.</typeparam>
-//        /// <param name="propertyName">The name of the property that
-//        /// changed.</param>
-//        /// <param name="field">The field storing the property's value.</param>
-//        /// <param name="newValue">The property's value after the change
-//        /// occurred.</param>
-//        /// <returns>True if the PropertyChanged event has been raised,
-//        /// false otherwise. The event is not raised if the old
-//        /// value is equal to the new value.</returns>
-//        [SuppressMessage(
-//            "Microsoft.Design", 
-//            "CA1045:DoNotPassTypesByReference",
-//            MessageId = "1#",
-//            Justification = "This syntax is more convenient than the alternatives.")]
-//        protected bool Set<T>(
-//            string propertyName,
-//            ref T field,
-//            T newValue)
-//        {
-//            if (EqualityComparer<T>.Default.Equals(field, newValue))
-//            {
-//                return false;
-//            }
+        OnPropertyChanged(old, propertyName);
 
-//#if !PORTABLE && !SL4
-//            RaisePropertyChanging(propertyName);
-//#endif
-//            T old = field;      // mod:2018/6/21
+        return true;
+    }
 
-//            field = newValue;
+    /// <summary>
+    /// Compares the current and new values for a given property. If the value has changed,
+    /// raises the <see cref="PropertyChanging"/> event, updates the property with the new
+    /// value, then raises the <see cref="PropertyChanged"/> event.
+    /// This overload is much less efficient than <see cref="SetProperty{T}(ref T,T,string)"/> and it
+    /// should only be used when the former is not viable (eg. when the target property being
+    /// updated does not directly expose a backing field that can be passed by reference).
+    /// For performance reasons, it is recommended to use a stateful callback if possible through
+    /// the <see cref="SetProperty{TModel,T}(T,T,TModel,Action{TModel,T},string?)"/> whenever possible
+    /// instead of this overload, as that will allow the C# compiler to cache the input callback and
+    /// reduce the memory allocations. More info on that overload are available in the related XML
+    /// docs. This overload is here for completeness and in cases where that is not applicable.
+    /// </summary>
+    /// <typeparam name="T">The type of the property that changed.</typeparam>
+    /// <param name="oldValue">The current property value.</param>
+    /// <param name="newValue">The property's value after the change occurred.</param>
+    /// <param name="callback">A callback to invoke to update the property value.</param>
+    /// <param name="propertyName">(optional) The name of the property that changed.</param>
+    /// <returns><see langword="true"/> if the property was changed, <see langword="false"/> otherwise.</returns>
+    /// <remarks>
+    /// The <see cref="PropertyChanging"/> and <see cref="PropertyChanged"/> events are not raised
+    /// if the current and new value for the target property are the same.
+    /// </remarks>
+    protected bool SetProperty<T>(T oldValue, T newValue, Action<T> callback, [CallerMemberName] string? propertyName = null)
+    {
+        // We avoid calling the overload again to ensure the comparison is inlined
+        if (EqualityComparer<T>.Default.Equals(oldValue, newValue)) { return false; }
 
-//            // ReSharper disable ExplicitCallerInfoArgument
-//            RaisePropertyChanged(propertyName, newValue, old);
-//            // ReSharper restore ExplicitCallerInfoArgument
-            
-//            return true;
-//        }
+        OnPropertyChanging(newValue, propertyName);
 
-//#if CMNATTR
-//        /// <summary>
-//        /// Assigns a new value to the property. Then, raises the
-//        /// PropertyChanged event if needed. 
-//        /// </summary>
-//        /// <typeparam name="T">The type of the property that
-//        /// changed.</typeparam>
-//        /// <param name="field">The field storing the property's value.</param>
-//        /// <param name="newValue">The property's value after the change
-//        /// occurred.</param>
-//        /// <param name="propertyName">(optional) The name of the property that
-//        /// changed.</param>
-//        /// <returns>True if the PropertyChanged event has been raised,
-//        /// false otherwise. The event is not raised if the old
-//        /// value is equal to the new value.</returns>
-//        protected bool Set<T>(
-//            ref T field,
-//            T newValue,
-//            [CallerMemberName] string propertyName = null)
-//        {
-//            return Set(propertyName, ref field, newValue);
-//        }
-//#endif
-//    }
-//}
+        callback(newValue);
+
+        OnPropertyChanged(oldValue, propertyName);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Compares the current and new values for a given property. If the value has changed,
+    /// raises the <see cref="PropertyChanging"/> event, updates the property with the new
+    /// value, then raises the <see cref="PropertyChanged"/> event.
+    /// See additional notes about this overload in <see cref="SetProperty{T}(T,T,Action{T},string)"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the property that changed.</typeparam>
+    /// <param name="oldValue">The current property value.</param>
+    /// <param name="newValue">The property's value after the change occurred.</param>
+    /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> instance to use to compare the input values.</param>
+    /// <param name="callback">A callback to invoke to update the property value.</param>
+    /// <param name="propertyName">(optional) The name of the property that changed.</param>
+    /// <returns><see langword="true"/> if the property was changed, <see langword="false"/> otherwise.</returns>
+    protected bool SetProperty<T>(T oldValue, T newValue, IEqualityComparer<T> comparer, Action<T> callback, [CallerMemberName] string? propertyName = null)
+    {
+        if (comparer.Equals(oldValue, newValue)) { return false; }
+
+        OnPropertyChanging(newValue, propertyName);
+
+        callback(newValue);
+
+        OnPropertyChanged(oldValue, propertyName);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Compares the current and new values for a given nested property. If the value has changed,
+    /// raises the <see cref="PropertyChanging"/> event, updates the property and then raises the
+    /// <see cref="PropertyChanged"/> event. The behavior mirrors that of <see cref="SetProperty{T}(ref T,T,string)"/>,
+    /// with the difference being that this method is used to relay properties from a wrapped model in the
+    /// current instance. This type is useful when creating wrapping, bindable objects that operate over
+    /// models that lack support for notification (eg. for CRUD operations).
+    /// Suppose we have this model (eg. for a database row in a table):
+    /// <code>
+    /// public class Person
+    /// {
+    ///     public string Name { get; set; }
+    /// }
+    /// </code>
+    /// We can then use a property to wrap instances of this type into our observable model (which supports
+    /// notifications), injecting the notification to the properties of that model, like so:
+    /// <code>
+    /// public class BindablePerson : ObservableObject
+    /// {
+    ///     public Model { get; }
+    ///
+    ///     public BindablePerson(Person model)
+    ///     {
+    ///         Model = model;
+    ///     }
+    ///
+    ///     public string Name
+    ///     {
+    ///         get => Model.Name;
+    ///         set => Set(Model.Name, value, Model, (model, name) => model.Name = name);
+    ///     }
+    /// }
+    /// </code>
+    /// This way we can then use the wrapping object in our application, and all those "proxy" properties will
+    /// also raise notifications when changed. Note that this method is not meant to be a replacement for
+    /// <see cref="SetProperty{T}(ref T,T,string)"/>, and it should only be used when relaying properties to a model that
+    /// doesn't support notifications, and only if you can't implement notifications to that model directly (eg. by having
+    /// it inherit from <see cref="ObservableObject"/>). The syntax relies on passing the target model and a stateless callback
+    /// to allow the C# compiler to cache the function, which results in much better performance and no memory usage.
+    /// </summary>
+    /// <typeparam name="TModel">The type of model whose property (or field) to set.</typeparam>
+    /// <typeparam name="T">The type of property (or field) to set.</typeparam>
+    /// <param name="oldValue">The current property value.</param>
+    /// <param name="newValue">The property's value after the change occurred.</param>
+    /// <param name="model">The model containing the property being updated.</param>
+    /// <param name="callback">The callback to invoke to set the target property value, if a change has occurred.</param>
+    /// <param name="propertyName">(optional) The name of the property that changed.</param>
+    /// <returns><see langword="true"/> if the property was changed, <see langword="false"/> otherwise.</returns>
+    /// <remarks>
+    /// The <see cref="PropertyChanging"/> and <see cref="PropertyChanged"/> events are not
+    /// raised if the current and new value for the target property are the same.
+    /// </remarks>
+    protected bool SetProperty<TModel, T>(T oldValue, T newValue, TModel model, Action<TModel, T> callback, [CallerMemberName] string? propertyName = null)
+        where TModel : class
+    {
+        if (EqualityComparer<T>.Default.Equals(oldValue, newValue)) { return false; }
+
+        OnPropertyChanging(newValue, propertyName);
+
+        callback(model, newValue);
+
+        OnPropertyChanged(oldValue, propertyName);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Compares the current and new values for a given nested property. If the value has changed,
+    /// raises the <see cref="PropertyChanging"/> event, updates the property and then raises the
+    /// <see cref="PropertyChanged"/> event. The behavior mirrors that of <see cref="SetProperty{T}(ref T,T,string)"/>,
+    /// with the difference being that this method is used to relay properties from a wrapped model in the
+    /// current instance. See additional notes about this overload in <see cref="SetProperty{TModel,T}(T,T,TModel,Action{TModel,T},string)"/>.
+    /// </summary>
+    /// <typeparam name="TModel">The type of model whose property (or field) to set.</typeparam>
+    /// <typeparam name="T">The type of property (or field) to set.</typeparam>
+    /// <param name="oldValue">The current property value.</param>
+    /// <param name="newValue">The property's value after the change occurred.</param>
+    /// <param name="comparer">The <see cref="IEqualityComparer{T}"/> instance to use to compare the input values.</param>
+    /// <param name="model">The model containing the property being updated.</param>
+    /// <param name="callback">The callback to invoke to set the target property value, if a change has occurred.</param>
+    /// <param name="propertyName">(optional) The name of the property that changed.</param>
+    /// <returns><see langword="true"/> if the property was changed, <see langword="false"/> otherwise.</returns>
+    protected bool SetProperty<TModel, T>(T oldValue, T newValue, IEqualityComparer<T> comparer, TModel model, Action<TModel, T> callback, [CallerMemberName] string? propertyName = null)
+        where TModel : class
+    {
+        if (comparer.Equals(oldValue, newValue)) { return false; }
+
+        OnPropertyChanging(newValue, propertyName);
+
+        callback(model, newValue);
+
+        OnPropertyChanged(oldValue, propertyName);
+
+        return true;
+    }
+
+    /// <summary>
+    /// Compares the current and new values for a given field (which should be the backing
+    /// field for a property). If the value has changed, raises the <see cref="PropertyChanging"/>
+    /// event, updates the field and then raises the <see cref="PropertyChanged"/> event.
+    /// The behavior mirrors that of <see cref="SetProperty{T}(ref T,T,string)"/>, with the difference being that
+    /// this method will also monitor the new value of the property (a generic <see cref="Task"/>) and will also
+    /// raise the <see cref="PropertyChanged"/> again for the target property when it completes.
+    /// This can be used to update bindings observing that <see cref="Task"/> or any of its properties.
+    /// This method and its overload specifically rely on the <see cref="TaskNotifier"/> type, which needs
+    /// to be used in the backing field for the target <see cref="Task"/> property. The field doesn't need to be
+    /// initialized, as this method will take care of doing that automatically. The <see cref="TaskNotifier"/>
+    /// type also includes an implicit operator, so it can be assigned to any <see cref="Task"/> instance directly.
+    /// Here is a sample property declaration using this method:
+    /// <code>
+    /// private TaskNotifier myTask;
+    ///
+    /// public Task MyTask
+    /// {
+    ///     get => myTask;
+    ///     private set => SetAndNotifyOnCompletion(ref myTask, value);
+    /// }
+    /// </code>
+    /// </summary>
+    /// <param name="taskNotifier">The field notifier to modify.</param>
+    /// <param name="newValue">The property's value after the change occurred.</param>
+    /// <param name="propertyName">(optional) The name of the property that changed.</param>
+    /// <returns><see langword="true"/> if the property was changed, <see langword="false"/> otherwise.</returns>
+    /// <remarks>
+    /// The <see cref="PropertyChanging"/> and <see cref="PropertyChanged"/> events are not raised if the current
+    /// and new value for the target property are the same. The return value being <see langword="true"/> only
+    /// indicates that the new value being assigned to <paramref name="taskNotifier"/> is different than the previous one,
+    /// and it does not mean the new <see cref="Task"/> instance passed as argument is in any particular state.
+    /// </remarks>
+    protected bool SetPropertyAndNotifyOnCompletion([NotNull] ref TaskNotifier? taskNotifier, Task? newValue, [CallerMemberName] string? propertyName = null)
+    {
+        // We invoke the overload with a callback here to avoid code duplication, and simply pass an empty callback.
+        // The lambda expression here is transformed by the C# compiler into an empty closure class with a
+        // static singleton field containing a closure instance, and another caching the instantiated Action<TTask>
+        // instance. This will result in no further allocations after the first time this method is called for a given
+        // generic type. We only pay the cost of the virtual call to the delegate, but this is not performance critical
+        // code and that overhead would still be much lower than the rest of the method anyway, so that's fine.
+        return SetPropertyAndNotifyOnCompletion(taskNotifier ??= new(), newValue, static _ => { }, propertyName);
+    }
+
+    /// <summary>
+    /// Compares the current and new values for a given field (which should be the backing
+    /// field for a property). If the value has changed, raises the <see cref="PropertyChanging"/>
+    /// event, updates the field and then raises the <see cref="PropertyChanged"/> event.
+    /// This method is just like <see cref="SetPropertyAndNotifyOnCompletion(ref TaskNotifier,Task,string)"/>,
+    /// with the difference being an extra <see cref="Action{T}"/> parameter with a callback being invoked
+    /// either immediately, if the new task has already completed or is <see langword="null"/>, or upon completion.
+    /// </summary>
+    /// <param name="taskNotifier">The field notifier to modify.</param>
+    /// <param name="newValue">The property's value after the change occurred.</param>
+    /// <param name="callback">A callback to invoke to update the property value.</param>
+    /// <param name="propertyName">(optional) The name of the property that changed.</param>
+    /// <returns><see langword="true"/> if the property was changed, <see langword="false"/> otherwise.</returns>
+    /// <remarks>
+    /// The <see cref="PropertyChanging"/> and <see cref="PropertyChanged"/> events are not raised
+    /// if the current and new value for the target property are the same.
+    /// </remarks>
+    protected bool SetPropertyAndNotifyOnCompletion([NotNull] ref TaskNotifier? taskNotifier, Task? newValue, Action<Task?> callback, [CallerMemberName] string? propertyName = null)
+    {
+        return SetPropertyAndNotifyOnCompletion(taskNotifier ??= new(), newValue, callback, propertyName);
+    }
+
+    /// <summary>
+    /// Compares the current and new values for a given field (which should be the backing
+    /// field for a property). If the value has changed, raises the <see cref="PropertyChanging"/>
+    /// event, updates the field and then raises the <see cref="PropertyChanged"/> event.
+    /// The behavior mirrors that of <see cref="SetProperty{T}(ref T,T,string)"/>, with the difference being that
+    /// this method will also monitor the new value of the property (a generic <see cref="Task"/>) and will also
+    /// raise the <see cref="PropertyChanged"/> again for the target property when it completes.
+    /// This can be used to update bindings observing that <see cref="Task"/> or any of its properties.
+    /// This method and its overload specifically rely on the <see cref="TaskNotifier{T}"/> type, which needs
+    /// to be used in the backing field for the target <see cref="Task"/> property. The field doesn't need to be
+    /// initialized, as this method will take care of doing that automatically. The <see cref="TaskNotifier{T}"/>
+    /// type also includes an implicit operator, so it can be assigned to any <see cref="Task"/> instance directly.
+    /// Here is a sample property declaration using this method:
+    /// <code>
+    /// private TaskNotifier&lt;int&gt; myTask;
+    ///
+    /// public Task&lt;int&gt; MyTask
+    /// {
+    ///     get => myTask;
+    ///     private set => SetAndNotifyOnCompletion(ref myTask, value);
+    /// }
+    /// </code>
+    /// </summary>
+    /// <typeparam name="T">The type of result for the <see cref="Task{TResult}"/> to set and monitor.</typeparam>
+    /// <param name="taskNotifier">The field notifier to modify.</param>
+    /// <param name="newValue">The property's value after the change occurred.</param>
+    /// <param name="propertyName">(optional) The name of the property that changed.</param>
+    /// <returns><see langword="true"/> if the property was changed, <see langword="false"/> otherwise.</returns>
+    /// <remarks>
+    /// The <see cref="PropertyChanging"/> and <see cref="PropertyChanged"/> events are not raised if the current
+    /// and new value for the target property are the same. The return value being <see langword="true"/> only
+    /// indicates that the new value being assigned to <paramref name="taskNotifier"/> is different than the previous one,
+    /// and it does not mean the new <see cref="Task{TResult}"/> instance passed as argument is in any particular state.
+    /// </remarks>
+    protected bool SetPropertyAndNotifyOnCompletion<T>([NotNull] ref TaskNotifier<T>? taskNotifier, Task<T>? newValue, [CallerMemberName] string? propertyName = null)
+    {
+        return SetPropertyAndNotifyOnCompletion(taskNotifier ??= new(), newValue, static _ => { }, propertyName);
+    }
+
+    /// <summary>
+    /// Compares the current and new values for a given field (which should be the backing
+    /// field for a property). If the value has changed, raises the <see cref="PropertyChanging"/>
+    /// event, updates the field and then raises the <see cref="PropertyChanged"/> event.
+    /// This method is just like <see cref="SetPropertyAndNotifyOnCompletion{T}(ref TaskNotifier{T},Task{T},string)"/>,
+    /// with the difference being an extra <see cref="Action{T}"/> parameter with a callback being invoked
+    /// either immediately, if the new task has already completed or is <see langword="null"/>, or upon completion.
+    /// </summary>
+    /// <typeparam name="T">The type of result for the <see cref="Task{TResult}"/> to set and monitor.</typeparam>
+    /// <param name="taskNotifier">The field notifier to modify.</param>
+    /// <param name="newValue">The property's value after the change occurred.</param>
+    /// <param name="callback">A callback to invoke to update the property value.</param>
+    /// <param name="propertyName">(optional) The name of the property that changed.</param>
+    /// <returns><see langword="true"/> if the property was changed, <see langword="false"/> otherwise.</returns>
+    /// <remarks>
+    /// The <see cref="PropertyChanging"/> and <see cref="PropertyChanged"/> events are not raised
+    /// if the current and new value for the target property are the same.
+    /// </remarks>
+    protected bool SetPropertyAndNotifyOnCompletion<T>([NotNull] ref TaskNotifier<T>? taskNotifier, Task<T>? newValue, Action<Task<T>?> callback, [CallerMemberName] string? propertyName = null)
+    {
+        return SetPropertyAndNotifyOnCompletion(taskNotifier ??= new(), newValue, callback, propertyName);
+    }
+
+    /// <summary>
+    /// Implements the notification logic for the related methods.
+    /// </summary>
+    /// <typeparam name="TTask">The type of <see cref="Task"/> to set and monitor.</typeparam>
+    /// <param name="taskNotifier">The field notifier.</param>
+    /// <param name="newValue">The property's value after the change occurred.</param>
+    /// <param name="callback">A callback to invoke to update the property value.</param>
+    /// <param name="propertyName">(optional) The name of the property that changed.</param>
+    /// <returns><see langword="true"/> if the property was changed, <see langword="false"/> otherwise.</returns>
+    private bool SetPropertyAndNotifyOnCompletion<TTask>(ITaskNotifier<TTask> taskNotifier, TTask? newValue, Action<TTask?> callback, [CallerMemberName] string? propertyName = null)
+        where TTask : Task
+    {
+        if (ReferenceEquals(taskNotifier.Task, newValue)) { return false; }
+
+        // Check the status of the new task before assigning it to the
+        // target field. This is so that in case the task is either
+        // null or already completed, we can avoid the overhead of
+        // scheduling the method to monitor its completion.
+        bool isAlreadyCompletedOrNull = newValue?.IsCompleted ?? true;
+
+        OnPropertyChanging(newValue, propertyName);
+
+        var old = taskNotifier.Task;
+        taskNotifier.Task = newValue;
+
+        OnPropertyChanged(old, propertyName);
+
+        // If the input task is either null or already completed, we don't need to
+        // execute the additional logic to monitor its completion, so we can just bypass
+        // the rest of the method and return that the field changed here. The return value
+        // does not indicate that the task itself has completed, but just that the property
+        // value itself has changed (ie. the referenced task instance has changed).
+        // This mirrors the return value of all the other synchronous Set methods as well.
+        if (isAlreadyCompletedOrNull)
+        {
+            callback(newValue);
+
+            return true;
+        }
+
+        // We use a local async function here so that the main method can
+        // remain synchronous and return a value that can be immediately
+        // used by the caller. This mirrors Set<T>(ref T, T, string).
+        // We use an async void function instead of a Task-returning function
+        // so that if a binding update caused by the property change notification
+        // causes a crash, it is immediately reported in the application instead of
+        // the exception being ignored (as the returned task wouldn't be awaited),
+        // which would result in a confusing behavior for users.
+        async void MonitorTask()
+        {
+            try
+            {
+                // Await the task and ignore any exceptions
+                await newValue!;
+            }
+            catch { }
+
+            // Only notify if the property hasn't changed
+            if (ReferenceEquals(taskNotifier.Task, newValue)) { OnPropertyChanged(propertyName); }
+
+            callback(newValue);
+        }
+
+        MonitorTask();
+
+        return true;
+    }
+
+    /// <summary>
+    /// An interface for task notifiers of a specified type.
+    /// </summary>
+    /// <typeparam name="TTask">The type of value to store.</typeparam>
+    private interface ITaskNotifier<TTask>
+        where TTask : Task
+    {
+        /// <summary>
+        /// Gets or sets the wrapped <typeparamref name="TTask"/> value.
+        /// </summary>
+        TTask? Task { get; set; }
+    }
+
+    /// <summary>
+    /// A wrapping class that can hold a <see cref="Task"/> value.
+    /// </summary>
+    protected sealed class TaskNotifier : ITaskNotifier<Task>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskNotifier"/> class.
+        /// </summary>
+        internal TaskNotifier() { }
+
+        private Task? task;
+
+        /// <inheritdoc/>
+        Task? ITaskNotifier<Task>.Task { get => this.task; set => this.task = value; }
+
+        /// <summary>
+        /// Unwraps the <see cref="Task"/> value stored in the current instance.
+        /// </summary>
+        /// <param name="notifier">The input <see cref="TaskNotifier{TTask}"/> instance.</param>
+        public static implicit operator Task?(TaskNotifier? notifier) { return notifier?.task; }
+    }
+
+    /// <summary>
+    /// A wrapping class that can hold a <see cref="Task{T}"/> value.
+    /// </summary>
+    /// <typeparam name="T">The type of value for the wrapped <see cref="Task{T}"/> instance.</typeparam>
+    protected sealed class TaskNotifier<T> : ITaskNotifier<Task<T>>
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskNotifier{TTask}"/> class.
+        /// </summary>
+        internal TaskNotifier() { }
+
+        private Task<T>? task;
+
+        /// <inheritdoc/>
+        Task<T>? ITaskNotifier<Task<T>>.Task { get => this.task; set => this.task = value; }
+
+        /// <summary>
+        /// Unwraps the <see cref="Task{T}"/> value stored in the current instance.
+        /// </summary>
+        /// <param name="notifier">The input <see cref="TaskNotifier{TTask}"/> instance.</param>
+        public static implicit operator Task<T>?(TaskNotifier<T>? notifier) { return notifier?.task; }
+    }
+
+
+
+    #region Cached Property
+
+    protected bool CacheSetProperty<T>([NotNullIfNotNull("newValue")] ref T field, T newValue, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, newValue)) { return false; }
+
+        var old = field;
+
+        field = newValue;
+
+        // cache changed event
+        CashedPropertyChanges.Add(propertyName);
+
+        return true;
+    }
+
+    protected void NotifyCashedPropertyChanges()
+    {
+        CashedPropertyChanges.ForEach(p => OnPropertyChanged(p));
+        CashedPropertyChanges.Clear();
+    }
+
+    protected void ClearCashedPropertyChanges()     // 只清除，不通知
+    {
+        CashedPropertyChanges.Clear();
+    }
+
+    protected List<string> CashedPropertyChanges = new List<string>();
+
+    #endregion
+
+}
+}

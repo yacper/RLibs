@@ -103,7 +103,7 @@ public class CommandVm : VmBase
     public Dock               DisplayNameDock { get; set; }                                     // DisplayName 和 StatImg Dock 方式
     public object             Tooltip            { get=>GetProperty(()=>Tooltip); set=>SetProperty(()=>Tooltip, value); }                                      // tooltip
 
-    public double            MinWidth        { get; set; }                                      // 最小宽度，用于对齐
+    public new double            MinWidth        { get; set; }                                      // 最小宽度，用于对齐
 
 
      public  CommandVm WithPropertyBinding<TSource>( 

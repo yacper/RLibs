@@ -625,5 +625,14 @@ public class ObservableObject : INotifyPropertyChanged, INotifyPropertyChanging
 
     #endregion
 
+    /// <summary>
+    /// 通知propertyChanged
+    /// </summary>
+    /// <param name="name"></param>
+    public void NotifyPropertyChanged(string name)
+    {
+        OnPropertyChanged(name);
+    }
+
 }
 }

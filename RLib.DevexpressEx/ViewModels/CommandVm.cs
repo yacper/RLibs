@@ -31,11 +31,23 @@ using DevExpress.Mvvm.UI;
 
 namespace RLib.DevexpressEx.ViewModels;
 
+public enum EToolShowPostion
+{
+    None = 0,
+    Row = 1,
+    GroupRow = 1 << 1,
+    RowMenu = 1 << 2,
+    GroupRowMenu = 1 << 3,
+}
+
 public class CommandVm : VmBase
 {
     public override string ToString() => $"Command:{DisplayName}";
 
     public virtual object      Owner  { get=>GetProperty(()=>Owner); set=>SetProperty(()=> Owner, value); }
+
+    public virtual EToolShowPostion ToolShowPostion { get; set; } = EToolShowPostion.Row;
+    public virtual int GroupIndex { get; set; } = -1;
 
     public virtual ICommand LoadedCommand { get; set; }                 // UI Loaded Success Callback
     public CommandVm SetOwner(object newOwner)
@@ -62,7 +74,7 @@ public class CommandVm : VmBase
             GlyphAlignment = GlyphAlignment,
             Alignment = Alignment,
             IsSubItem = IsSubItem,
-            IsCheckBox = IsChecked,
+            IsCheckBox = IsCheckBox,
             IsChecked = IsChecked,
             IsLink = IsLink,
             IsSeparator = IsSeparator,
@@ -71,6 +83,8 @@ public class CommandVm : VmBase
             Tag = Tag,
             Visibility = Visibility,
             Tooltip = Tooltip,
+            GroupIndex= GroupIndex,
+            ToolShowPostion = ToolShowPostion,
             LoadedCommand = LoadedCommand
         };
 

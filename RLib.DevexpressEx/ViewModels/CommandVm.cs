@@ -35,9 +35,7 @@ public enum EToolShowPostion
 {
     None = 0,
     Row = 1,
-    GroupRow = 1 << 1,
-    RowMenu = 1 << 2,
-    GroupRowMenu = 1 << 3,
+    RowMenu = 1 << 1,
 }
 
 public class CommandVm : VmBase

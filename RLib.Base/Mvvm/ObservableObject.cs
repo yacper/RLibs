@@ -13,7 +13,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace RLib.Base.Mvvm
+namespace RLib.Base
 {
 
 

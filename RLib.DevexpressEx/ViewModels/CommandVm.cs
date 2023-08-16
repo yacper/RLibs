@@ -28,6 +28,7 @@ using System.Reflection;
 using PropertyInfo = System.Reflection.PropertyInfo;
 using DevExpress.Xpf.Editors;
 using DevExpress.Mvvm.UI;
+using ObjectEx = RLib.Base.ObjectEx;
 
 namespace RLib.DevexpressEx.ViewModels;
 
@@ -42,7 +43,21 @@ public class CommandVm : VmBase
 {
     public override string ToString() => $"Command:{DisplayName}";
 
-    public virtual object      Owner  { get=>GetProperty(()=>Owner); set=>SetProperty(()=> Owner, value); }
+    public virtual object      Owner  
+    { 
+        get=>GetProperty(()=>Owner); 
+        set 
+        { 
+
+            SetProperty(() => Owner, value, (old) => 
+            {
+                foreach (var binding in Bindings)
+                {                    
+                }
+
+            }); 
+        } 
+    }
 
     public virtual EToolShowPostion ToolShowPostion { get; set; } = EToolShowPostion.Row;
     public virtual int GroupIndex { get; set; } = -1;
@@ -50,10 +65,10 @@ public class CommandVm : VmBase
     public virtual ICommand LoadedCommand { get; set; }                 // UI Loaded Success Callback
     public CommandVm SetOwner(object newOwner)
     {
+        Owner = newOwner;
         Bindings.ForEach(b => { b.Reset(); });
-        Owner = newOwner;        
         Commands?.ForEach(p => p.SetOwner(newOwner));
-        
+
         return this;
     }
 
@@ -66,8 +81,7 @@ public class CommandVm : VmBase
             StateImg = StateImg,
             BadgeContent = BadgeContent,
 
-            Commands = Commands?.Select(p => p.Clone(owner)).ToObservableCollection(),
-
+            Commands = Commands?.Select(p => p.Clone(owner)).ToObservableCollection(),            
             DisplayMode = DisplayMode,
             GlyphAlignment = GlyphAlignment,
             Alignment = Alignment,
@@ -82,12 +96,14 @@ public class CommandVm : VmBase
             Visibility = Visibility,
             Tooltip = Tooltip,
             GroupIndex= GroupIndex,
-            ToolShowPostion = ToolShowPostion,
+            ToolShowPostion = ToolShowPostion,            
             LoadedCommand = LoadedCommand
+            
         };
 
         o.Bindings = this.Bindings.Select(p => p.Clone(o)).ToList();
         o.Bindings.ForEach(p => p.Apply());
+
         return o;
     }
 
@@ -136,7 +152,7 @@ public class CommandVm : VmBase
             Converter            = converter,
             BindMode             = bindMode,
         };
-        binding.Apply();
+        //binding.Apply();
         Bindings.Add(binding);
 
         return this;
@@ -158,7 +174,7 @@ public class CommandVm : VmBase
             Converter            = converter,
             BindMode             = bindMode,
         };
-        binding.Apply();
+        //binding.Apply();
         Bindings.Add(binding);
 
 
@@ -259,7 +275,9 @@ public class CommandVmPropertyBinding
     public void Reset()
     {
         BindingEngine.ClearBinding(Target);
-        Apply();
+        if (TargetExpression != null)
+            ObjectEx.WithProperty(Target, TargetExpression, default);            
+        Apply();        
     }
 
     public virtual void Apply()
@@ -292,6 +310,17 @@ public class CommandVmPropertyBinding
 
         return ret;
     }
+
+    /// <summary>
+    ///  手動調用
+    /// </summary>
+    public virtual void InvokeTargetChangedHandler()
+    {
+        if (TargetChangedHandler == null)
+            return;
+        
+    }
+
 
     protected WeakPropertyBinding Binding;
 }

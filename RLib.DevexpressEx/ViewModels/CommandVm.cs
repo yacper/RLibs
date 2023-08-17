@@ -51,10 +51,6 @@ public class CommandVm : VmBase
 
             SetProperty(() => Owner, value, (old) => 
             {
-                foreach (var binding in Bindings)
-                {                    
-                }
-
             }); 
         } 
     }
@@ -152,7 +148,8 @@ public class CommandVm : VmBase
             Converter            = converter,
             BindMode             = bindMode,
         };
-        //binding.Apply();
+        if (Owner != null)
+            binding.Apply();
         Bindings.Add(binding);
 
         return this;
@@ -311,17 +308,6 @@ public class CommandVmPropertyBinding
 
         return ret;
     }
-
-    /// <summary>
-    ///  手動調用
-    /// </summary>
-    public virtual void InvokeTargetChangedHandler()
-    {
-        if (TargetChangedHandler == null)
-            return;
-        
-    }
-
 
     protected WeakPropertyBinding Binding;
 }

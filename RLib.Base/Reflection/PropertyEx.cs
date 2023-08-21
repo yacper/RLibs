@@ -38,35 +38,43 @@ public static class PropertyEx
         return pi;
     }
 
-    public static List<PropertyInfo> GetPropertiesWithAttribute(this Type t, Type attributeType) // 系统的不会搜寻interface
+    public static List<PropertyInfo> GetPropertiesWithAttribute(this Type t, Type attributeType, IEnumerable<string> excepts = null) // 系统的不会搜寻interface
     {
         List<PropertyInfo> ret = new List<PropertyInfo>();
 
         // 遍历t的继承链上的interface等
-        foreach (Type it in t.GetInterfaces()) { ret.AddRange(it.GetPropertiesWithAttribute(attributeType)); }
+        foreach (Type it in t.GetInterfaces()) { ret.AddRange(it.GetPropertiesWithAttribute(attributeType, excepts)); }
 
         // 遍历t的所有property，找到带有attr的属性
         foreach (PropertyInfo pi in t.GetProperties())
         {
             var d = pi.GetCustomAttribute(attributeType);
             if (d != null && !ret.Contains(pi))
-                ret.Add(pi);
+            {
+                if (excepts != null)
+                {
+                    if (!excepts.Contains(pi.Name))
+                        ret.Add(pi);
+                }
+                else
+                    ret.Add(pi);
+            }
         }
 
         return ret;
     }
 
-    public static List<PropertyInfo> GetPropertiesWithAttribute<T>(this Type t) where T : Attribute // 系统的不会搜寻interface
+    public static List<PropertyInfo> GetPropertiesWithAttribute<T>(this Type t, IEnumerable<string> excepts = null) where T : Attribute // 系统的不会搜寻interface
     {
-        return t.GetPropertiesWithAttribute(typeof(T));
+        return t.GetPropertiesWithAttribute(typeof(T), excepts);
     }
 
-    public static List<PropertyInfo> GetPropertiesWithAttribute(this Type t, IEnumerable<Type> attributeTypes) // 系统的不会搜寻interface
+    public static List<PropertyInfo> GetPropertiesWithAttribute(this Type t, IEnumerable<Type> attributeTypes, IEnumerable<string> excepts = null) // 系统的不会搜寻interface
     {
         List<PropertyInfo> pInfos = new List<PropertyInfo>();
         foreach (Type attr in attributeTypes) 
         {
-            foreach(var pinfo in t.GetPropertiesWithAttribute(attr))
+            foreach(var pinfo in t.GetPropertiesWithAttribute(attr, excepts))
             {
                 if(pInfos.Contains(pinfo))
                     continue;
@@ -76,11 +84,11 @@ public static class PropertyEx
         return pInfos;
     }
 
-    public static List<PropertyInfo> GetPropertiesWithAttribute<T>(this object o) where T : Attribute // 系统的不会搜寻interface
-        => o.GetType().GetPropertiesWithAttribute<T>();
+    public static List<PropertyInfo> GetPropertiesWithAttribute<T>(this object o, IEnumerable<string> excepts = null) where T : Attribute // 系统的不会搜寻interface
+        => o.GetType().GetPropertiesWithAttribute<T>(excepts);
 
-     public static List<PropertyInfo> GetPropertiesWithAttribute(this object o, IEnumerable<Type> attributeTypes) // 系统的不会搜寻interface
-        => o.GetType().GetPropertiesWithAttribute(attributeTypes);
+     public static List<PropertyInfo> GetPropertiesWithAttribute(this object o, IEnumerable<Type> attributeTypes, IEnumerable<string> excepts = null) // 系统的不会搜寻interface
+        => o.GetType().GetPropertiesWithAttribute(attributeTypes, excepts);
   
     public static string ToKvPropertiesJson(this object o, IEnumerable<string> properties, IEnumerable<JsonConverter>? exConverters=null )
     {

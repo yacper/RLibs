@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Org.BouncyCastle.Operators;
 
 namespace RLib.Base
 {
@@ -237,6 +238,12 @@ namespace RLib.Base
             File.WriteAllText(path, content);
         }
 
+        public static string[] SplitLines(this string content)
+        {
+            return content.Split(new string[] { "\r\n", "\r", "\n" },
+                                 StringSplitOptions.None
+                                );
+        }
 
     }
 }

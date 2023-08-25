@@ -41,7 +41,15 @@ public static class DefaultValueAttributeEx
                     else
                         pi.SetValue(o, Convert.ChangeType(d.Value, pi.PropertyType)); 
                 }
-                else { pi.SetValue(o, Convert.ChangeType(d.Value, pi.PropertyType)); }
+                else
+                {
+                        ///nullable处理
+                    Type ut = Nullable.GetUnderlyingType(pi.PropertyType) ?? pi.PropertyType;
+                    object safeValue = (d.Value == null) ? null : Convert.ChangeType(d.Value, ut);
+
+                    pi.SetValue(o, safeValue, null);
+                    //pi.SetValue(o, Convert.ChangeType(d.Value, pi.PropertyType));
+                }
             }
         }
     }
@@ -68,7 +76,15 @@ public static class DefaultValueAttributeEx
                     else
                         pi.SetValue(o, Convert.ChangeType(d.Value, pi.PropertyType)); 
                 }
-                else { pi.SetValue(o, Convert.ChangeType(d.Value, pi.PropertyType)); }
+                else
+                {
+                    ///nullable处理
+                    Type   ut        = Nullable.GetUnderlyingType(pi.PropertyType) ?? pi.PropertyType;
+                    object safeValue = (d.Value == null) ? null : Convert.ChangeType(d.Value, ut);
+
+                    pi.SetValue(o, safeValue, null);
+                    //pi.SetValue(o, Convert.ChangeType(d.Value, pi.PropertyType));
+                }
             }
         }
 

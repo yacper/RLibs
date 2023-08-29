@@ -8,7 +8,7 @@
 using System;
 using FluentAssertions;
 
-namespace RLib.Base.Utils
+namespace RLib.Base
 {
 
 

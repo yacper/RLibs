@@ -99,7 +99,7 @@ namespace RLib.Base
 	    {
 	        try
 	        {
-                using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     using (StreamReader sr = new StreamReader(fs, System.Text.Encoding.Default))
                     {

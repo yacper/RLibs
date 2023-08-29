@@ -148,8 +148,7 @@ public class CommandVm : VmBase
             Converter            = converter,
             BindMode             = bindMode,
         };
-        if (Owner != null)
-            binding.Apply();
+        binding.Apply();
         Bindings.Add(binding);
 
         return this;
@@ -171,8 +170,7 @@ public class CommandVm : VmBase
             Converter            = converter,
             BindMode             = bindMode,
         };
-        if(Owner != null) 
-            binding.Apply();
+        binding.Apply();
         Bindings.Add(binding);
 
 

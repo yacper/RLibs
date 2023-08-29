@@ -65,109 +65,111 @@ public class ObservableObject : INotifyPropertyChanged, INotifyPropertyChanging
     }
 
 
-    protected object Source { get;  set; }
-    public void BeginSource(object source)
-    {
-        Source = source;
-    }
-    public void EndSource()
-    {
-        Source = null;
-    }
+    //protected object Source { get;  set; }
+    //public void BeginSource(object source)
+    //{
+    //    Source = source;
+    //}
+    //public void EndSource()
+    //{
+    //    Source = null;
+    //}
 
-    public void RemoveAllHandlersFrom(object source)
-    {
-        if (source == null)
-            return;
+    //public void RemoveAllHandlersFrom(object source)
+    //{
+    //    if (source == null)
+    //        return;
 
-        if (ChangedSourceHandlers_.TryGetValue(source, out List<PropertyChangedEventHandler> l))
-        {
-            foreach (var handler in l) { PropertyChanged_ -= handler; }
+    //    if (ChangedSourceHandlers_.TryGetValue(source, out List<PropertyChangedEventHandler> l))
+    //    {
+    //        foreach (var handler in l) { PropertyChanged_ -= handler; }
 
-            ChangedSourceHandlers_.Remove(source);
-        }
+    //        ChangedSourceHandlers_.Remove(source);
+    //    }
 
-        if (ChangingSourceHandlers_.TryGetValue(source, out List<PropertyChangingEventHandler> l2))
-        {
-            foreach (var handler in l2) { PropertyChanging_ -= handler; }
+    //    if (ChangingSourceHandlers_.TryGetValue(source, out List<PropertyChangingEventHandler> l2))
+    //    {
+    //        foreach (var handler in l2) { PropertyChanging_ -= handler; }
 
-            ChangingSourceHandlers_.Remove(source);
-        }
+    //        ChangingSourceHandlers_.Remove(source);
+    //    }
 
-    }
+    //}
 
-    protected event PropertyChangedEventHandler? PropertyChanged_;
-    public event PropertyChangedEventHandler? PropertyChanged
-    {
-        add
-        {
-            if (Source != null)
-            {
-                if (!ChangedSourceHandlers_.ContainsKey(Source))
-                    ChangedSourceHandlers_[Source] = new();
+    //protected event PropertyChangedEventHandler? PropertyChanged_;
+    //public event PropertyChangedEventHandler? PropertyChanged
+    //{
+    //    add
+    //    {
+    //        if (Source != null)
+    //        {
+    //            if (!ChangedSourceHandlers_.ContainsKey(Source))
+    //                ChangedSourceHandlers_[Source] = new();
 
-                ChangedSourceHandlers_[Source].Add(value);
-            }
+    //            ChangedSourceHandlers_[Source].Add(value);
+    //        }
 
-            PropertyChanged_ += value;
-        }
-        remove
-        {
-            if (Source != null)
-            {
-                // 如果多个相同，只需删除一个就行了
-                if (ChangedSourceHandlers_.ContainsKey(Source))
-                    ChangedSourceHandlers_[Source].Remove(ChangedSourceHandlers_[Source].FirstOrDefault(p => p == value));
-            }
+    //        PropertyChanged_ += value;
+    //    }
+    //    remove
+    //    {
+    //        if (Source != null)
+    //        {
+    //            // 如果多个相同，只需删除一个就行了
+    //            if (ChangedSourceHandlers_.ContainsKey(Source))
+    //                ChangedSourceHandlers_[Source].Remove(ChangedSourceHandlers_[Source].FirstOrDefault(p => p == value));
+    //        }
 
-            PropertyChanged_ -= value;
-        }
-    }
-    protected Dictionary<object, List<PropertyChangedEventHandler>> ChangedSourceHandlers_ = new();
+    //        PropertyChanged_ -= value;
+    //    }
+    //}
+    //protected Dictionary<object, List<PropertyChangedEventHandler>> ChangedSourceHandlers_ = new();
 
-    /// <inheritdoc cref="INotifyPropertyChanging.PropertyChanging"/>
-    protected event PropertyChangingEventHandler? PropertyChanging_;
-    public event PropertyChangingEventHandler? PropertyChanging
-    {
-        add
-        {
-            if (Source != null)
-            {
-                if (!ChangingSourceHandlers_.ContainsKey(Source))
-                    ChangingSourceHandlers_[Source] = new();
+    ///// <inheritdoc cref="INotifyPropertyChanging.PropertyChanging"/>
+    //protected event PropertyChangingEventHandler? PropertyChanging_;
+    //public event PropertyChangingEventHandler? PropertyChanging
+    //{
+    //    add
+    //    {
+    //        if (Source != null)
+    //        {
+    //            if (!ChangingSourceHandlers_.ContainsKey(Source))
+    //                ChangingSourceHandlers_[Source] = new();
 
-                ChangingSourceHandlers_[Source].Add(value);
-            }
+    //            ChangingSourceHandlers_[Source].Add(value);
+    //        }
 
-            PropertyChanging_ += value;
-        }
-        remove
-        {
-            if (Source != null)
-            {
-                // 如果多个相同，只需删除一个就行了
-                if (ChangingSourceHandlers_.ContainsKey(Source))
-                    ChangingSourceHandlers_[Source].Remove(ChangingSourceHandlers_[Source].FirstOrDefault(p => p == value));
-            }
+    //        PropertyChanging_ += value;
+    //    }
+    //    remove
+    //    {
+    //        if (Source != null)
+    //        {
+    //            // 如果多个相同，只需删除一个就行了
+    //            if (ChangingSourceHandlers_.ContainsKey(Source))
+    //                ChangingSourceHandlers_[Source].Remove(ChangingSourceHandlers_[Source].FirstOrDefault(p => p == value));
+    //        }
 
-            PropertyChanging_ -= value;
-        }
-    }
-    protected Dictionary<object, List<PropertyChangingEventHandler>> ChangingSourceHandlers_ = new();
+    //        PropertyChanging_ -= value;
+    //    }
+    //}
+    //protected Dictionary<object, List<PropertyChangingEventHandler>> ChangingSourceHandlers_ = new();
 
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+    public event PropertyChangingEventHandler? PropertyChanging;
 
     /// <summary>
     /// Raises the <see cref="PropertyChanged"/> event.
     /// </summary>
     /// <param name="e">The input <see cref="PropertyChangedEventArgs"/> instance.</param>
-    protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) { PropertyChanged_?.Invoke(this, e); }
+    protected virtual void OnPropertyChanged(PropertyChangedEventArgs e) { PropertyChanged?.Invoke(this, e); }
 
     /// <summary>
     /// Raises the <see cref="PropertyChanging"/> event.
     /// </summary>
     /// <param name="e">The input <see cref="PropertyChangingEventArgs"/> instance.</param>
-    protected virtual void OnPropertyChanging(PropertyChangingEventArgs e) { PropertyChanging_?.Invoke(this, e); }
+    protected virtual void OnPropertyChanging(PropertyChangingEventArgs e) { PropertyChanging?.Invoke(this, e); }
 
     /// <summary>
     /// Raises the <see cref="PropertyChanged"/> event.

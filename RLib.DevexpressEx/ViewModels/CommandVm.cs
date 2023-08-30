@@ -97,6 +97,8 @@ public class CommandVm : VmBase
             
         };
 
+        //o.SetOwner(owner);
+
         o.Bindings = this.Bindings.Select(p => p.Clone(o)).ToList();
         o.Bindings.ForEach(p => p.Apply());
 
@@ -270,9 +272,7 @@ public class CommandVmPropertyBinding
 
     public void Reset()
     {
-        BindingEngine.ClearBinding(Target);
-        if (TargetExpression != null)
-            ObjectEx.WithProperty(Target, TargetExpression, default);            
+        BindingEngine.ClearBinding(Target);                    
         Apply();        
     }
 
@@ -317,6 +317,9 @@ public class CommandVmPropertyBinding<T>:CommandVmPropertyBinding
 
     public override void Apply()
     {
+        if (TargetExpression != null)    // 注释: 由于 BindingEngine 原因，每次Applay之前需要重置 Target TargetExpression 对应的属性值
+            ObjectEx.WithProperty(Target, TargetExpression, default);
+
         if (Converter == null)
             Binding = BindingEngine.SetPropertyBinding(Target, TargetExpression, Source, SourceExpression, false).SetMode(BindMode) as WeakPropertyBinding;
         else

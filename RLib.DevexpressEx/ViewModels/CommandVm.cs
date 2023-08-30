@@ -262,13 +262,13 @@ public class CommandVm : VmBase
 
 public class CommandVmPropertyBinding
 {
-    public CommandVm                                   Target               { get; set; }
+    public CommandVm                           Target               { get; set; }
     public Expression<Func<CommandVm, object>> TargetExpression     { get; set; }
-    public object                                   Source               { get; set; }
-    public Expression<Func<object, object>>         SourceExpression     { get; set; }
+    public object                              Source               { get; set; }
+    public Expression<Func<object, object>>    SourceExpression     { get; set; }
     public BindingValueChangedHandler          TargetChangedHandler { get; set; }
-    public IDataConverter                       Converter { get; set; }
-    public BindMode                             BindMode { get; set; }
+    public IDataConverter                      Converter            { get; set; }
+    public BindMode                            BindMode             { get; set; } = BindMode.TwoWay;
 
     public void Reset()
     {

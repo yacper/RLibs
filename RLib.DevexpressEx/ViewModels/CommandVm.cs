@@ -317,7 +317,7 @@ public class CommandVmPropertyBinding<T>:CommandVmPropertyBinding
 
     public override void Apply()
     {
-        if (TargetExpression != null)    // 注释: 由于 BindingEngine 原因，每次Applay之前需要重置 Target TargetExpression 对应的属性值
+        if (Target.Owner != null && TargetExpression != null)    // 注释: 由于 BindingEngine 原因，每次Applay之前需要重置 Target TargetExpression 对应的属性值
             ObjectEx.WithProperty(Target, TargetExpression, default);
 
         if (Converter == null)

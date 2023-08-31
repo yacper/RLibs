@@ -29,27 +29,34 @@ public static class DefaultValueAttributeEx
 
         // 遍历t的所有property，找到带有attr的属性
         foreach (PropertyInfo pi in t.GetProperties().Where(p=>!excludes.Contains(p.PropertyType)))
-        { 
-            var d = pi.GetCustomAttribute<DefaultValueAttribute>();
-            if (d != null)
+        {
+            try
             {
-                if (d.Value is string && Type.GetTypeCode(pi.PropertyType) != TypeCode.String)
+                var d = pi.GetCustomAttribute<DefaultValueAttribute>();
+                if (d != null)
                 {
-                    TypeConverter converter = TypeDescriptor.GetConverter(pi.PropertyType);
-                    if(converter != null)
-                        pi.SetValue(o, converter.ConvertFromInvariantString(d.Value as string)); 
+                    if (d.Value is string && Type.GetTypeCode(pi.PropertyType) != TypeCode.String)
+                    {
+                        TypeConverter converter = TypeDescriptor.GetConverter(pi.PropertyType);
+                        if (converter != null)
+                            pi.SetValue(o, converter.ConvertFromInvariantString(d.Value as string));
+                        else
+                            pi.SetValue(o, Convert.ChangeType(d.Value, pi.PropertyType));
+                    }
                     else
-                        pi.SetValue(o, Convert.ChangeType(d.Value, pi.PropertyType)); 
-                }
-                else
-                {
+                    {
                         ///nullable处理
-                    Type ut = Nullable.GetUnderlyingType(pi.PropertyType) ?? pi.PropertyType;
-                    object safeValue = (d.Value == null) ? null : Convert.ChangeType(d.Value, ut);
+                        Type   ut        = Nullable.GetUnderlyingType(pi.PropertyType) ?? pi.PropertyType;
+                        object safeValue = (d.Value == null) ? null : Convert.ChangeType(d.Value, ut);
 
-                    pi.SetValue(o, safeValue, null);
-                    //pi.SetValue(o, Convert.ChangeType(d.Value, pi.PropertyType));
+                        pi.SetValue(o, safeValue, null);
+                        //pi.SetValue(o, Convert.ChangeType(d.Value, pi.PropertyType));
+                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                throw new Exception($"初始化{pi.Name}失败:{ex}");
             }
         }
     }
@@ -68,23 +75,27 @@ public static class DefaultValueAttributeEx
             var d = pi.GetCustomAttribute<DefaultValueAttribute>();
             if (d != null)
             {
-                if (d.Value is string && Type.GetTypeCode(pi.PropertyType) != TypeCode.String)
+                try
                 {
-                    TypeConverter converter = TypeDescriptor.GetConverter(pi.PropertyType);
-                    if(converter != null)
-                        pi.SetValue(o, converter.ConvertFromInvariantString(d.Value as string)); 
+                    if (d.Value is string && Type.GetTypeCode(pi.PropertyType) != TypeCode.String)
+                    {
+                        TypeConverter converter = TypeDescriptor.GetConverter(pi.PropertyType);
+                        if (converter != null)
+                            pi.SetValue(o, converter.ConvertFromInvariantString(d.Value as string));
+                        else
+                            pi.SetValue(o, Convert.ChangeType(d.Value, pi.PropertyType));
+                    }
                     else
-                        pi.SetValue(o, Convert.ChangeType(d.Value, pi.PropertyType)); 
-                }
-                else
-                {
-                    ///nullable处理
-                    Type   ut        = Nullable.GetUnderlyingType(pi.PropertyType) ?? pi.PropertyType;
-                    object safeValue = (d.Value == null) ? null : Convert.ChangeType(d.Value, ut);
+                    {
+                        ///nullable处理
+                        Type   ut        = Nullable.GetUnderlyingType(pi.PropertyType) ?? pi.PropertyType;
+                        object safeValue = (d.Value == null) ? null : Convert.ChangeType(d.Value, ut);
 
-                    pi.SetValue(o, safeValue, null);
-                    //pi.SetValue(o, Convert.ChangeType(d.Value, pi.PropertyType));
+                        pi.SetValue(o, safeValue, null);
+                        //pi.SetValue(o, Convert.ChangeType(d.Value, pi.PropertyType));
+                    }
                 }
+                catch (Exception ex) { throw new Exception($"初始化{pi.Name}失败:{ex}"); }
             }
         }
 

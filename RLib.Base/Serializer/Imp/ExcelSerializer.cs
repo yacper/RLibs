@@ -498,7 +498,8 @@ namespace RLib.Base
                         cell.SetCellValue((float) v);
                         break;
                     case "System.Double":
-                        cell.SetCellValue((double) v);
+                        if(!double.IsNaN((double)v))
+                            cell.SetCellValue((double) v);
                         break;
 
                     case "System.DateTime":
@@ -593,7 +594,7 @@ namespace RLib.Base
                             info.SetValue(obj, Convert.ToDouble(cell.NumericCellValue)); // 必须转（double无法隐式转single）
                             break;
 
-                        case "DateTime":
+                        case "System.DateTime":
                             info.SetValue(obj, cell.DateCellValue); // parse成dateime，在转ticks
                             break;
                         default:
